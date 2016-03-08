@@ -8,10 +8,10 @@ class Client
 {
 public:
 
-	Client();
-	~Client();
+	Client() {};
+	~Client() {};
 
-	Game* currentGame;
+//	Game* currentGame;
 	
 	void clientMenu();
 	void connectToServer();

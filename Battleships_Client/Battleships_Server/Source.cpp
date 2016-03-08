@@ -7,5 +7,5 @@ int main()
 	gameManager Game;
 
 
-
+	return 0;
 }

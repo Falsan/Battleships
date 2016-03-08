@@ -9,5 +9,5 @@ public:
 
 	std::vector<Cell*> m_board;
 	void createBoard();
-	int m_boardSize = 50;
+	int m_boardDimentions = 10;
 };
