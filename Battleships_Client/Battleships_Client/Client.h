@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <SFML\Network.hpp>
 
 #include "Game.h"
 
@@ -8,10 +9,10 @@ class Client
 {
 public:
 
-	Client();
-	~Client();
+	Client() {};
+	~Client() {};
 
-	Game* currentGame;
+	//Game* currentGame;
 	
 	void clientMenu();
 	void connectToServer();
