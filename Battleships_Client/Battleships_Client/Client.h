@@ -5,6 +5,8 @@
 
 #include "Game.h"
 
+class Game;
+
 class Client
 {
 public:
@@ -12,10 +14,10 @@ public:
 	Client() {};
 	~Client() {};
 
-	//Game* currentGame;
+	Game* currentGame;
 	
 	void clientMenu();
-	void connectToServer();
+	bool connectToServer();
 	void runClient();
 
 
@@ -23,4 +25,5 @@ protected:
 
 private:
 
+	bool serverConnected;
 };

@@ -9,7 +9,8 @@ Game::Game()
 
 Game::~Game()
 {
-	
+	delete inputHandler;
+	delete clientServerPort;
 	//all deletion goes here
 }
 
@@ -33,17 +34,18 @@ void Game::setup()
 	}
 }
 
-void Game::update()
+bool Game::update()
 {
-	std::thread inputThread(inputHandler->pollInput);
+	//std::thread inputThread(inputHandler->pollInput);
 	//update the game logic from the last server data
 
 	//put that to the screen using the UI manager
 
 	//request any input from the input manager
-
+	std::cout << "Loop test";
 	//if needed, pass the input to the packet manager to be sent to the server
-	inputThread.join();
+	//inputThread.join();
+	return true;
 }
 
 void Game::render()
