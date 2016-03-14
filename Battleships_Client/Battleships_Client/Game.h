@@ -26,9 +26,6 @@ private:
 	std::string userCommand;
 
 	InputManager* inputHandler;
-	ServerPort* clientServerPort;
-
-	sf::TcpSocket socket;
-	sf::SocketSelector selector;
+	
 
 };
