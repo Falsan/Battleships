@@ -6,5 +6,5 @@ void PacketManager::sendPacket(std::string stringPacket)
 
 	packet >> stringPacket;
 
-	socket.send(packet);
+	//socket.send(packet);
 }
