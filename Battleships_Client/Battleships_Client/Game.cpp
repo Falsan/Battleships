@@ -4,13 +4,11 @@ Game::Game()
 {
 	//all initial creation for the game goes here
 	inputHandler = new InputManager;
-	clientServerPort = new ServerPort;
 }
 
 Game::~Game()
 {
 	delete inputHandler;
-	delete clientServerPort;
 	//all deletion goes here
 }
 
@@ -21,17 +19,6 @@ void Game::setup()
 	//any leftover variables are set up
 
 	//begins update loop
-
-	socket.setBlocking(false);
-
-	sf::Socket::Status status = socket.connect("127.0.0.1", clientServerPort->SERVER_PORT);
-
-	selector.add(socket);
-
-	if (status != sf::Socket::Done)
-	{
-		std::cout << "Error, could not connect to server";
-	}
 }
 
 bool Game::update()
