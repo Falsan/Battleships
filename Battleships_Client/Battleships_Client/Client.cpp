@@ -15,29 +15,25 @@ void Client::runClient()
 		//if they choose to play a new game, connect to the server
 		if (clientState == CLIENT_READY)
 		{
-			connectToServer();
+			if (connectToServer() == false)//if they can't connect, say so and return to menu
+			{
+				clientState = CLIENT_MENU;
+			}
+			else	//if they can connect to the server, make a new instance of the game and call the 'play game' function
+			{
+				clientState = CLIENT_PLAY_GAME;
+				currentGame = new Game;
+				currentGame->setup();
+
+				while (clientState == CLIENT_PLAY_GAME)
+				{
+					currentGame->update();
+					currentGame->render();
+				}
+				delete currentGame;	//once the game is done, delete that new instance
+			}
 		}
 		
-		if (connectToServer() == false)//if they can't connect, say so and return to menu
-
-		{
-			std::cout << "Error, cannot connect to server";
-			clientState == CLIENT_MENU;
-		}
-		else	//if they can connect to the server, make a new instance of the game and call the 'play game' function
-		{
-			clientState == CLIENT_PLAY_GAME;
-			currentGame = new Game;
-			currentGame->setup();
-
-			while (currentGame->update() == true)
-			{
-				currentGame->update();
-				currentGame->render();
-			}
-			delete currentGame;	//once the game is done, delete that new instance
-		}
-
 		//if they choose to quit then exit the loop
 	}
 	delete clientServerPort;

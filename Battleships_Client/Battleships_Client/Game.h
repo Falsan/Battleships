@@ -14,7 +14,7 @@ public:
 	Game();
 	~Game();
 
-	bool update();
+	void update();
 	void render();
 	void setup();
 
