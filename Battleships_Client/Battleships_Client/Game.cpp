@@ -21,9 +21,9 @@ void Game::setup()
 	//begins update loop
 }
 
-bool Game::update()
+void Game::update()
 {
-	//std::thread inputThread(inputHandler->pollInput);
+	//std::thread inputThread(&InputManager::pollInput, this);
 	//update the game logic from the last server data
 
 	//put that to the screen using the UI manager
@@ -32,7 +32,6 @@ bool Game::update()
 	std::cout << "Loop test";
 	//if needed, pass the input to the packet manager to be sent to the server
 	//inputThread.join();
-	return true;
 }
 
 void Game::render()

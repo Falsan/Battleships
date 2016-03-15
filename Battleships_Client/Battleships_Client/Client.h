@@ -42,7 +42,7 @@ private:
 	std::string userCommand;
 
 	ServerPort* clientServerPort;
-
+	
 	sf::TcpSocket socket;
 	sf::SocketSelector selector;
 };
