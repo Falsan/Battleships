@@ -13,5 +13,5 @@ public:
 protected:
 
 private:
-
+	std::string command;
 };

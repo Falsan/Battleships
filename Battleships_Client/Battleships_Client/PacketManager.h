@@ -8,10 +8,10 @@ public:
 	PacketManager() {};
 	~PacketManager() {};
 
-	void sendPacket(std::string stringPacket);
+	void sendPacket(std::string stringPacket, sf::TcpSocket socket);
 	void sendPacket(int integerPacket);
 
-	void recievePacket();
+	void recievePacket(sf::TcpSocket socket);
 
 protected:
 

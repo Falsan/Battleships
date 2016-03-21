@@ -2,7 +2,7 @@
 
 void InputManager::pollInput()
 {
-	std::string command = "none";
+	command = "none";
 	while (command == "none")
 	{
 		//listen for input
