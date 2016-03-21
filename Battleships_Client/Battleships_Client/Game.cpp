@@ -23,7 +23,8 @@ void Game::setup()
 
 void Game::update()
 {
-	//std::thread inputThread(&InputManager::pollInput, this);
+	std::thread inputThread(&InputManager::pollInput, InputManager());
+	std::thread serverThread(&PacketManager::recievePacket, PacketManager());
 	//update the game logic from the last server data
 
 	//put that to the screen using the UI manager
@@ -31,12 +32,21 @@ void Game::update()
 	//request any input from the input manager
 	std::cout << "Loop test";
 	//if needed, pass the input to the packet manager to be sent to the server
-	//inputThread.join();
+
+	//listen for messages from the server
+
+	inputThread.join();
+	serverThread.join();
 }
 
 void Game::render()
 {
 	//use the ui manager to render everything to screen
+}
+
+void Game::gameInputHandle()
+{
+	inputHandler->pollInput();
 }
 
 /*socket.setBlocking(false);

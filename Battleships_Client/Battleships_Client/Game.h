@@ -3,10 +3,12 @@
 #include "Client.h"
 #include "InputManager.h"
 #include "ServerPort.h"
+#include "PacketManager.h"
 #include <thread>
 #include <SFML\Network.hpp>
 
 class InputManager;
+class PacketManager;
 
 class Game
 {
@@ -17,6 +19,7 @@ public:
 	void update();
 	void render();
 	void setup();
+	void gameInputHandle();
 
 protected:
 	
