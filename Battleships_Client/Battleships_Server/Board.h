@@ -1,13 +1,20 @@
-#include <vector>
+#ifndef _BOARD_
+#define _BOARD_
+
+
+#include <array>
 #include "Cell.h"
+#include "GameData.h"
 
 class board
 {
 public:
-	board();
+	board(gameData * _GD);
 	~board();
-
-	std::vector<Cell*> m_board;
 	void createBoard();
-	int m_boardSize = 50;
+	std::array<std::array<Cell*,10 >, 10> m_board;
+	gameData * m_GD;
+	
 };
+
+#endif

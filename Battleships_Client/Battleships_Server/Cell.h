@@ -1,13 +1,20 @@
-#pragma once
+#ifndef _CELL_
+#define _CELL_
 
 
 class Cell
 {
 public:
-	unsigned short int cellType : 2;
+	Cell();
+	~Cell() = default;
 
+	unsigned short int getCellType() { return m_cellType; };
+private:
+	unsigned short int m_cellType : 2;
 
 };
+
+#endif
 
 
 /*

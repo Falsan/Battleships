@@ -13,15 +13,60 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Source">
+      <UniqueIdentifier>{7b166e57-9f8c-4aff-986c-c04aa13a654f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Headder">
+      <UniqueIdentifier>{6450bebd-8f23-4114-a173-590731b1fe1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Server.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Row.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="OutPut.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Cell.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Board.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameData.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Listern.cpp">
+      <Filter>Source Files\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Server.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Row.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="OutPut.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="Cell.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="Board.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="GameData.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="Listern.h">
+      <Filter>Source Files\Headder</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
