@@ -73,7 +73,6 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="PacketManager.h" />
     <ClInclude Include="ServerPort.h" />
-    <ClInclude Include="UIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />

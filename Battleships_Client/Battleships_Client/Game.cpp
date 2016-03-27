@@ -4,27 +4,29 @@ Game::Game()
 {
 	//all initial creation for the game goes here
 	inputHandler = new InputManager;
+	packetHandler = new PacketManager;
 }
 
 Game::~Game()
 {
 	delete inputHandler;
+	delete packetHandler;
 	//all deletion goes here
 }
 
-void Game::setup()
+void Game::setup(sf::TcpSocket& thisClient)
 {
 	//threads launch here
 
 	//any leftover variables are set up
-
+	thisClient;
 	//begins update loop
 }
 
-void Game::update()
+void Game::update(sf::TcpSocket& thisClient)
 {
-	std::thread inputThread(&InputManager::pollInput, InputManager());
-	std::thread serverThread(&PacketManager::recievePacket, PacketManager());
+	std::thread inputThread(&Game::gameInputHandle, this);
+	//std::thread serverThread(&Game::gamePacketHandle, this);
 	//update the game logic from the last server data
 
 	//put that to the screen using the UI manager
@@ -36,17 +38,24 @@ void Game::update()
 	//listen for messages from the server
 
 	inputThread.join();
-	serverThread.join();
+	//serverThread.join();
+	render();
 }
 
 void Game::render()
 {
-	//use the ui manager to render everything to screen
+	//render everything to screen
+	std::cout << displayedMap << std::endl;
 }
 
 void Game::gameInputHandle()
 {
 	inputHandler->pollInput();
+}
+
+void Game::gamePacketHandle(sf::TcpSocket& thisClient)
+{
+	displayedMap = packetHandler->recieveMapUpdate(thisClient);
 }
 
 /*socket.setBlocking(false);
