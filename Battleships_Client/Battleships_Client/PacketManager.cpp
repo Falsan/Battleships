@@ -1,6 +1,6 @@
 #include "PacketManager.h"
 
-void PacketManager::sendPacket(std::string stringPacket, sf::TcpSocket socket)
+void PacketManager::sendPacket(std::string stringPacket, sf::TcpSocket& socket)
 {
 	sf::Packet packet;
 
@@ -9,7 +9,7 @@ void PacketManager::sendPacket(std::string stringPacket, sf::TcpSocket socket)
 	socket.send(packet);
 }
 
-void PacketManager::recievePacket(sf::TcpSocket socket)
+std::string PacketManager::recievePacket(sf::TcpSocket& socket)
 {
 	sf::Packet incomingPacket;
 
@@ -18,4 +18,19 @@ void PacketManager::recievePacket(sf::TcpSocket socket)
 	socket.receive(incomingPacket);
 
 	incomingPacket << incomingData;
+
+	return incomingData;
+}
+
+std::string PacketManager::recieveMapUpdate(sf::TcpSocket& socket)
+{
+	sf::Packet mapPacket;
+
+	std::string incomingMap;
+
+	socket.receive(mapPacket);
+
+	mapPacket << incomingMap;
+
+	return incomingMap;
 }

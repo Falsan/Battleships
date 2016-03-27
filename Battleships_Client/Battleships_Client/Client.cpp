@@ -23,12 +23,11 @@ void Client::runClient()
 			{
 				clientState = CLIENT_PLAY_GAME;
 				currentGame = new Game;
-				currentGame->setup();
+				currentGame->setup(socket);
 
 				while (clientState == CLIENT_PLAY_GAME)
 				{
-					currentGame->update();
-					currentGame->render();
+					currentGame->update(socket);
 				}
 				delete currentGame;	//once the game is done, delete that new instance
 			}
@@ -45,13 +44,13 @@ bool Client::connectToServer()
 	
 	socket.setBlocking(false);
 
-	sf::Socket::Status status = socket.connect("127.0.0.1", clientServerPort->SERVER_PORT);
+	sf::TcpSocket::Status status = socket.connect("127.0.0.1", clientServerPort->SERVER_PORT);
 	
 	//if it's up, then try to connect to a listener
 	selector.add(socket);
 	
 	//wait for a little bit
-	if (status != sf::Socket::Done)
+	if (status != sf::TcpSocket::Done)
 	{
 		std::cout << "Error, could not connect to server";
 		return false;

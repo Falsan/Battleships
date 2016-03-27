@@ -16,10 +16,11 @@ public:
 	Game();
 	~Game();
 
-	void update();
+	void update(sf::TcpSocket&);
 	void render();
-	void setup();
+	void setup(sf::TcpSocket&);
 	void gameInputHandle();
+	void gamePacketHandle(sf::TcpSocket&);
 
 protected:
 	
@@ -27,8 +28,9 @@ protected:
 private:
 
 	std::string userCommand;
-
+	sf::TcpSocket currentClient;
 	InputManager* inputHandler;
+	PacketManager* packetHandler;
 	
-
+	std::string displayedMap;
 };
