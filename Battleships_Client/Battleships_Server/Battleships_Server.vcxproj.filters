@@ -45,6 +45,15 @@
     <ClCompile Include="Listern.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
+    <ClCompile Include="InputAction.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="HeartBeat.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Row.h">
@@ -66,6 +75,15 @@
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
     <ClInclude Include="Listern.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="InputAction.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="HeartBeat.h">
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
   </ItemGroup>
