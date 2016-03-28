@@ -7,7 +7,7 @@
 
 class Game;
 
-class ServerPort;
+struct ServerPort;
 
 class Client
 {
