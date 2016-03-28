@@ -26,7 +26,11 @@ void Game::setup(sf::TcpSocket& thisClient)
 void Game::update(sf::TcpSocket& thisClient)
 {
 	std::thread inputThread(&Game::gameInputHandle, this);
-	//std::thread serverThread(&Game::gamePacketHandle, this);
+	
+	//std::thread serverThread(&Game::gamePacketHandle, &thisClient, this);
+	
+	//serverThread.join();
+	inputThread.join();
 	//update the game logic from the last server data
 
 	//put that to the screen using the UI manager
@@ -36,9 +40,12 @@ void Game::update(sf::TcpSocket& thisClient)
 	//if needed, pass the input to the packet manager to be sent to the server
 
 	//listen for messages from the server
+	
+	if (userCommand[0] == '/')
+	{
+		packetHandler->sendPacket(userCommand, thisClient);
+	}
 
-	inputThread.join();
-	//serverThread.join();
 	render();
 }
 
@@ -50,7 +57,7 @@ void Game::render()
 
 void Game::gameInputHandle()
 {
-	inputHandler->pollInput();
+	userCommand = inputHandler->pollInput();
 }
 
 void Game::gamePacketHandle(sf::TcpSocket& thisClient)

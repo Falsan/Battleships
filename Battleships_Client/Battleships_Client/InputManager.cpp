@@ -1,6 +1,6 @@
 #include "InputManager.h"
 
-void InputManager::pollInput()
+std::string InputManager::pollInput()
 {
 	command = "none";
 	while (command == "none")
@@ -13,8 +13,8 @@ void InputManager::pollInput()
 		if (command[0] == '/')
 		{
 			//if it's valid, then set the command and pass it to the server via the packet manager
-
 			
+			return command;
 		}
 		else
 		{
