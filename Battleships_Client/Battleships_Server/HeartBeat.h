@@ -5,11 +5,11 @@
 
 
 
-class heartBeat
+class heartBeatClass
 {
 public:
-	heartBeat(std::vector<sf::TcpSocket*> * _clintVector);
-	~heartBeat();
+	heartBeatClass(std::vector<sf::TcpSocket*> * _clintVector);
+	~heartBeatClass();
 
 	void update(std::vector<sf::TcpSocket*>  _clintVector);
 

@@ -1,5 +1,6 @@
 #include "GameManager.h"
 #include "Listern.h"
+#include "HeartBeat.h"
 
 gameManager::gameManager(gameData * _GD)
 {
@@ -19,9 +20,9 @@ gameManager::gameManager(gameData * _GD)
 
 //thread for listerning out for a signal from the clients
 bool gameManager::listerner()
-{	
-	m_listern = new listern(m_sockets,m_selector,m_listener);
-	
+{
+	m_listern = new listern(m_sockets, m_selector, m_listener);
+
 	m_listern->runServer();
 	return true;
 }
@@ -38,7 +39,7 @@ bool gameManager::logic()
 			//If the current action has not been compleated 
 			if (!(*it)->getActionCompleate())
 			{
-				switch ((*it)->getActionID)
+				switch ((*it)->getActionID())
 				{
 					//Send chat message
 				case 0:
@@ -64,6 +65,7 @@ bool gameManager::logic()
 //thread for pinging with the clients
 bool gameManager::heartBeat()
 {
+	heartBeatClass * m_heartBeat = new heartBeatClass(m_sockets);
 	while (true)
 	{
 
