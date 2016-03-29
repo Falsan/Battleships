@@ -13,6 +13,7 @@ public:
 	void setPlayerID(std::string _in) { PlayerID = _in; };
 	void setActionID(int _in) { actionID = _in; };
 	void setPos(int _in, int _in2) { pos.first = _in; pos.second = _in2; };
+	void setPos(std::pair<int, int> _in) { pos = _in; };
 	void setMessage(std::string _in) { message = _in; };
 	void setMenuAction(int _in) { menuAction = _in; };
 	void setActionCompleate(bool _in) { actioncomplete = _in; }

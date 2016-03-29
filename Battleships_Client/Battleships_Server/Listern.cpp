@@ -3,15 +3,12 @@
 
 #include <iostream>
 
-const int SERVER_PORT(53000);
 
 
-listern::listern(std::vector<sf::TcpSocket*> * _sockets, sf::SocketSelector * _selector, sf::TcpListener * _listener)
+listern::listern(std::vector<Client* > _listOfClients, std::vector<inputAction*> _actionList)
 {
-//	m_sockets = _sockets;
-//m_selector = _selector;
-//	m_listener = _listener;
-
+	//m_listOfClients = _listOfClients;
+	m_actionList = _actionList;
 }
 
 
@@ -49,7 +46,7 @@ void listern::listen(sf::SocketSelector& selector, std::vector<sf::TcpSocket*>& 
 	while (true)
 	{
 		//is there comms?
-		//if (selector.wait())
+		if (selector.wait())
 		//{
 			//is someone trying to connect?
 			if (selector.isReady(listener))
@@ -77,23 +74,65 @@ void listern::listen(sf::SocketSelector& selector, std::vector<sf::TcpSocket*>& 
 					//check to see if it's got something to say
 					if (selector.isReady(*client))
 					{
-						sf::Packet packet;
-						std::string s;
+						inputAction * HOLD = new inputAction();
 
-						//store packet as string
-						packet >> s;
+						sf::Packet packet;
+						std::string ID;
+						std::string chatMessage;
+						int actionID;
+						int posOne;
+						int posTwo;
+						int menuOption;
+
+						//Takes the sending players ID and adds it to the message object
+						packet >> ID;
+						HOLD->setPlayerID(ID);
+
+						//takes the action distabution ID from the message and stores it
+						packet >> actionID;
+						HOLD->setActionID(actionID);
+
+						//swaps to the appropriate element based on in sent requet marker
+						switch (actionID)
+						{
+							//Send chat message
+						case 0:
+							packet >> chatMessage;
+							HOLD->setMessage(chatMessage);
+							break;
+							
+							//shoot at board
+						case 1:
+							//take out any board pos request
+							packet >> posOne;
+							packet >> posTwo;
+							HOLD->setPos(posOne, posTwo);
+							break;
+							//menu option
+						case 2:
+							packet >> menuOption;
+
+							HOLD->setMenuAction(menuOption);
+							break;
+							//client disconnect game 
+						case 3:
+							
+							break;
+						}
+						//infroms the input handler that the action still needs to be carried out
+						HOLD->setActionCompleate(false);
+
+						//V may need a mutex and function here V
+						m_actionList.push_back(HOLD);
 
 						//send packet to connected clients
-						client->send(packet);
+						//client->send(packet);
 
 						//recieve packet
-						client->receive(packet);
+						//client->receive(packet);
 
 						//this is where messages will be passed to the message hadler
 
-						packet >> s;
-
-						std::cout << s;
 
 					}
 				}

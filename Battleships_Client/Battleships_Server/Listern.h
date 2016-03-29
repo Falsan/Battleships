@@ -3,10 +3,12 @@
 #include <iostream>
 #include <SFML\Network.hpp>
 #include <vector>
+#include "Client.h"
+#include "InputAction.h"
 class listern
 {
 public:
-	listern(std::vector<sf::TcpSocket*> * m_sockets, sf::SocketSelector * m_selector,sf::TcpListener * m_listener);
+	listern(std::vector<Client* > _listOfClients, std::vector<inputAction*> m_actionList);
 	~listern() = default;
 
 	void update();
@@ -19,9 +21,9 @@ public:
 
 	//std::vector<sf::TcpSocket*>  getSockets() { return m_sockets; };
 
+	std::vector<Client* >* m_listOfClients;
 
-
-
+	std::vector<inputAction*> m_actionList;
 
 protected:
 	//std::vector<sf::TcpSocket*> m_sockets;
