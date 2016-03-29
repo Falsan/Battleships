@@ -14,21 +14,22 @@ public:
 	const int SERVER_PORT = 53000;
 
 	void runServer();
-	void bindServerPort(sf::SocketSelector* selector, std::vector<sf::TcpSocket*>* sockets, sf::TcpListener* listener);
-	void listen(sf::SocketSelector* selector, std::vector<sf::TcpSocket*>* sockets, sf::TcpListener* listener);
+	void bindServerPort(sf::SocketSelector& selector, sf::TcpListener& listerner);
+	void listen(sf::SocketSelector& selector, std::vector<sf::TcpSocket*>& sockets, sf::TcpListener& listener);
 
-	std::vector<sf::TcpSocket*> * getSockets() { return m_sockets; };
+	//std::vector<sf::TcpSocket*>  getSockets() { return m_sockets; };
 
 
 
 
 
 protected:
-
+	//std::vector<sf::TcpSocket*> m_sockets;
+	//sf::SocketSelector  m_selector;
 private:
-	std::vector<sf::TcpSocket*> * m_sockets;
 
-	sf::SocketSelector * m_selector;
 
-	sf::TcpListener * m_listener;
+
+
+	//sf::TcpListener * m_listener;
 };

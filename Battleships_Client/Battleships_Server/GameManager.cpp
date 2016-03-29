@@ -5,16 +5,21 @@
 gameManager::gameManager(gameData * _GD)
 {
 	//swap for smart pointer 
-	std::unique_ptr<board> m_gameBoard;
-	m_gameBoard.reset(new board(_GD));
+	//std::unique_ptr<board> m_gameBoard;
+	//m_gameBoard.reset(new board(_GD));
 
 	//liseten out for new clients and add them to our client list
 	std::thread Listern(&gameManager::listerner, this);
 	//test the current clients to make sure they are still connected 
-	std::thread heartBeat(&gameManager::heartBeat, this);
+	//std::thread heartBeat(&gameManager::heartBeat, this);
 
 	//carry out the comunicated actions 
-	logic();
+	//logic();
+	while (true)
+	{
+		std::cout << "Server is running" << std::endl;
+	}
+
 
 }
 
