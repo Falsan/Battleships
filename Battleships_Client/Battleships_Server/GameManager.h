@@ -16,7 +16,7 @@ public:
 	~gameManager() = default;
 
 	listern * m_listern;
-	
+
 	bool listerner();
 
 	bool logic();

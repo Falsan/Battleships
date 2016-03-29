@@ -2,9 +2,9 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
-	using namespace std::literals;
+using namespace std::literals;
 
-heartBeat::heartBeat(std::vector<sf::TcpSocket*> * _clientVector)
+heartBeatClass::heartBeatClass(std::vector<sf::TcpSocket*> * _clientVector)
 {
 	//auto start = std::chrono::high_resolution_clock::now();
 	//auto end = std::chrono::high_resolution_clock::now();
@@ -14,22 +14,30 @@ heartBeat::heartBeat(std::vector<sf::TcpSocket*> * _clientVector)
 
 
 
-	
+
 }
 
-heartBeat::~heartBeat()
+heartBeatClass::~heartBeatClass()
 {
 
 }
 
-void heartBeat::update(std::vector<sf::TcpSocket*> _clientVector)
+void heartBeatClass::update(std::vector<sf::TcpSocket*> _clientVector)
 {
 	//for all the clients on our list 
 	for (auto it = _clientVector.begin(); it != _clientVector.end(); it++)
 	{
-		
+
+		//create and send a packet "PONG" 
+
+		//Hold for return
+
+		//if no return is found 
+
+		//add one to the the time out counter
 
 
+		//If this puts the client over 5 timeouts, set there connected to false
 
 	}
 
