@@ -17,12 +17,14 @@ public:
 	void setMenuAction(int _in) { menuAction = _in; };
 	void setActionCompleate(bool _in) { actioncomplete = _in; }
 
+
 	std::string getPlayerID() { return PlayerID; };
 	int getActionID() { return actionID; };
 	std::pair<int, int> getPos() { return pos; };
 	std::string getMessage() { return message; };
 	int getMenuAction() { return menuAction; };
 	int getActionCompleate() { return actioncomplete; }
+
 
 private:
 	std::string PlayerID;
@@ -31,4 +33,5 @@ private:
 	std::string message;
 	int menuAction;
 	bool actioncomplete = false;
+
 };

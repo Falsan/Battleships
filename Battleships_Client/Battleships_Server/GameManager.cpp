@@ -5,23 +5,30 @@
 gameManager::gameManager(gameData * _GD)
 {
 	//swap for smart pointer 
-	std::unique_ptr<board> m_gameBoard;
-	m_gameBoard.reset(new board(_GD));
+	//std::unique_ptr<board> m_gameBoard;
+	//m_gameBoard.reset(new board(_GD));
 
 	//liseten out for new clients and add them to our client list
 	std::thread Listern(&gameManager::listerner, this);
 	//test the current clients to make sure they are still connected 
-	std::thread heartBeat(&gameManager::heartBeat, this);
+	//std::thread heartBeat(&gameManager::heartBeat, this);
 
 	//carry out the comunicated actions 
-	logic();
+	//logic();
+	while (true)
+	{
+		// V Remove for final V
+		system("CLS");
+		std::cout << "Server is running" << std::endl << "currently [" << m_clientList.size() << "] connected clients" << std::endl;
+	}
+
 
 }
 
 //thread for listerning out for a signal from the clients
 bool gameManager::listerner()
 {
-	m_listern = new listern(m_sockets, m_selector, m_listener);
+	m_listern = new listern(getClientList(), getActionList());
 
 	m_listern->runServer();
 	return true;
@@ -30,11 +37,11 @@ bool gameManager::listerner()
 //thread for acting on signels from the clients
 bool gameManager::logic()
 {
-	if (m_actionList.size() > 0)
+	if (getActionList().size() > 0)
 	{
 		//if our list of actions is not empty carry out all the actions on our list;
 		//This list is read only 
-		for (auto it = m_actionList.begin(); it != m_actionList.end(); it++)
+		for (auto it = getActionList().begin(); it != getActionList().end(); it++)
 		{
 			//If the current action has not been compleated 
 			if (!(*it)->getActionCompleate())
