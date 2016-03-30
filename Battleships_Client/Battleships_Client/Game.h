@@ -13,13 +13,13 @@ class PacketManager;
 class Game
 {
 public:
-	Game();
+	Game(sf::TcpSocket& thisClient);
 	~Game();
 
 	void update(sf::TcpSocket&);
 	void render();
 	void setup(sf::TcpSocket&);
-	void gameInputHandle();
+	void gameInputHandle(sf::TcpSocket&);
 	void gamePacketHandle(sf::TcpSocket&);
 
 protected:

@@ -5,7 +5,7 @@
 class PacketManager
 {
 public:
-	PacketManager() {};
+	PacketManager();
 	~PacketManager() {};
 
 	void sendPacket(std::string stringPacket, sf::TcpSocket& socket);
@@ -16,5 +16,13 @@ public:
 protected:
 
 private:
+	sf::Packet packetToSend;
+	sf::Packet incomingPacket;
+	sf::Packet pongPacket;
+	sf::Packet mapPacket;
+	std::string incomingMap;
+	std::string incomingData;
+	std::string pong;
+
 };
 

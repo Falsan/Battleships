@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game()
+Game::Game(sf::TcpSocket& thisClient)
 {
 	//all initial creation for the game goes here
 	inputHandler = new InputManager;
@@ -19,20 +19,20 @@ void Game::setup(sf::TcpSocket& thisClient)
 	//threads launch here
 
 	//any leftover variables are set up
-	thisClient;
+	
 	//begins update loop
 }
 
 void Game::update(sf::TcpSocket& thisClient)
 {
-	std::thread inputThread(&Game::gameInputHandle, this);
+	//std::thread inputThread(&Game::gameInputHandle, this, thisClient);
 	
 	//std::thread serverThread(&Game::gamePacketHandle, &thisClient, this);
 	
 	//serverThread.join();
-	inputThread.join();
+	//inputThread.join();
 	//update the game logic from the last server data
-
+	
 	//put that to the screen using the UI manager
 
 	//request any input from the input manager
@@ -40,11 +40,6 @@ void Game::update(sf::TcpSocket& thisClient)
 	//if needed, pass the input to the packet manager to be sent to the server
 
 	//listen for messages from the server
-	
-	if (userCommand[0] == '/')
-	{
-		packetHandler->sendPacket(userCommand, thisClient);
-	}
 
 	render();
 }
@@ -55,9 +50,14 @@ void Game::render()
 	std::cout << displayedMap << std::endl;
 }
 
-void Game::gameInputHandle()
+void Game::gameInputHandle(sf::TcpSocket& thisClient)
 {
 	userCommand = inputHandler->pollInput();
+
+	if (userCommand[0] == '/')
+	{
+		packetHandler->sendPacket(userCommand, thisClient);
+	}
 }
 
 void Game::gamePacketHandle(sf::TcpSocket& thisClient)

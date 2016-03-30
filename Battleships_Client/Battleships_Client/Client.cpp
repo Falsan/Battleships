@@ -22,7 +22,7 @@ void Client::runClient()
 			else	//if they can connect to the server, make a new instance of the game and call the 'play game' function
 			{
 				clientState = CLIENT_PLAY_GAME;
-				currentGame = new Game;
+				currentGame = new Game(socket);
 				currentGame->setup(socket);
 
 				while (clientState == CLIENT_PLAY_GAME)
@@ -52,7 +52,7 @@ bool Client::connectToServer()
 	//wait for a little bit
 	if (status != sf::TcpSocket::Done)
 	{
-		std::cout << "Error, could not connect to server";
+		std::cout << "Error, could not connect to server" << std::endl;
 		return false;
 	}
 	//if the server takes too long, it must be down, so return a string which says so
@@ -62,7 +62,7 @@ bool Client::connectToServer()
 void Client::clientMenu()
 {
 	//ask if the player wants to input something
-	std::cout << "Please input a command";
+	std::cout << "Please input a command" << std::endl;
 
 	//if they do, check the input
 	std::cin >> userCommand;
@@ -85,11 +85,12 @@ void Client::clientMenu()
 
 int main()
 {
-	Client* newClient = new Client;
+	//Client* newClient = new Client;
+	std::unique_ptr<Client> newClient(new Client);
 
 	newClient->runClient();
 
-	delete newClient;
+	//delete newClient
 
 	return 0;
 }
