@@ -27,16 +27,16 @@ public:
 	board * getBoard() { return m_gameBoard; };
 
 	std::vector<inputAction*> getActionList() { return m_actionList; };
-	std::vector<Client*> getClientList() { return m_clientList; };
+	std::vector<sf::TcpSocket*> getClientList() { return m_clientList; };
 
 	void setActionList(inputAction* _in) { m_actionList.push_back(_in); };
-	void setClientList(Client* _in) { m_clientList.push_back(_in); }
+	void setClientList(sf::TcpSocket* _in) { m_clientList.push_back(_in); }
 
 private:
 	board * m_gameBoard;
 
 	std::vector<inputAction*> m_actionList;
-	std::vector<Client*> m_clientList;
+	std::vector<sf::TcpSocket*> m_clientList;
 
 	std::vector<sf::TcpSocket*> * m_sockets;
 

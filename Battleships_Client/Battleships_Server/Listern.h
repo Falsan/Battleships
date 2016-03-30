@@ -8,7 +8,7 @@
 class listern
 {
 public:
-	listern(std::vector<Client* > _listOfClients, std::vector<inputAction*> m_actionList);
+	listern(std::vector<sf::TcpSocket*> _listOfClients, std::vector<inputAction*> m_actionList);
 	~listern() = default;
 
 	void update();
@@ -21,12 +21,13 @@ public:
 
 	//std::vector<sf::TcpSocket*>  getSockets() { return m_sockets; };
 
-	std::vector<Client* >* m_listOfClients;
+	std::vector<sf::TcpSocket*> m_listOfClients;
 
 	std::vector<inputAction*> m_actionList;
 
 protected:
-	//std::vector<sf::TcpSocket*> m_sockets;
+
+	std::vector<sf::TcpSocket*> m_sockets;
 	//sf::SocketSelector  m_selector;
 private:
 
