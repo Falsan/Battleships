@@ -5,10 +5,11 @@
 
 
 
-listern::listern(std::vector<Client*> _listOfClients, std::vector<inputAction*> _actionList)
+listern::listern(std::vector<Client*> _listOfClients, std::vector<inputAction*> _actionList, sf::SocketSelector& _selector)
 {
 	m_listOfClients = _listOfClients;
 	m_actionList = _actionList;
+	m_selector = _selector;
 }
 
 
@@ -19,11 +20,7 @@ void listern::update()
 
 void listern::runServer()
 {
-
-
-	sf::TcpListener m_listerner;
-	sf::SocketSelector m_selector;
-
+	
 	bindServerPort(m_selector, m_listerner);
 
 	listen(m_selector, m_listOfClients, m_listerner);
@@ -42,20 +39,17 @@ void listern::bindServerPort(sf::SocketSelector& selector, sf::TcpListener& list
 
 void listern::listen(sf::SocketSelector& selector, std::vector<Client*>& sockets, sf::TcpListener& listener)
 {
-	Client * m_client = new Client();
+
 	sf::TcpSocket * socket = new sf::TcpSocket;
 	//listen for conneections
 	while (true)
 	{
 		//is there comms?
-		if (selector.wait())
+		//if (selector.wait())
 			//{
 			//is someone trying to connect?
 			if (selector.isReady(listener))
 			{
-
-				
-
 				if (listener.accept(*socket) != sf::Socket::Done)
 				{
 					//throw error
@@ -63,6 +57,7 @@ void listern::listen(sf::SocketSelector& selector, std::vector<Client*>& sockets
 				}
 				else
 				{
+					Client * m_client = new Client();
 					//attach our socket to our client
 					m_client->setSocket(socket);
 
@@ -78,7 +73,7 @@ void listern::listen(sf::SocketSelector& selector, std::vector<Client*>& sockets
 			{
 				//loop through each client in the sockets list
 
-				for (auto& iterator = sockets.begin(); iterator != sockets.end(); iterator++)
+				for (auto& it = sockets.begin(); it != sockets.end(); it++)
 				{
 					//check to see if it's got something to say
 					if (selector.isReady(*socket))
@@ -127,11 +122,18 @@ void listern::listen(sf::SocketSelector& selector, std::vector<Client*>& sockets
 							//client disconnect game 
 						case 3:
 							
+
+
+
 							break;
 							//Ping
 						case 4:
 							packet >> pingValue;
 
+							break;
+							//setup
+						case 5:
+						
 							break;
 						}
 						//infroms the input handler that the action still needs to be carried out
