@@ -8,7 +8,7 @@
 class listern
 {
 public:
-	listern(std::vector<Client*> _listOfClients, std::vector<inputAction*> m_actionList);
+	listern(std::vector<Client*> _listOfClients, std::vector<inputAction*> m_actionList, sf::SocketSelector& _selector);
 	~listern() = default;
 
 	void update();
@@ -33,6 +33,6 @@ private:
 
 
 
-
-	//sf::TcpListener * m_listener;
+	sf::TcpListener m_listerner;
+	sf::SocketSelector m_selector;
 };
