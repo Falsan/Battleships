@@ -1,32 +1,34 @@
 #include "PacketManager.h"
 
+PacketManager::PacketManager()
+{
+	pong = "pong";
+}
+
 void PacketManager::sendPacket(std::string stringPacket, sf::TcpSocket& socket)
 {
-	sf::Packet packet;
+	packetToSend >> stringPacket;
 
-	packet >> stringPacket;
-
-	socket.send(packet);
+	socket.send(packetToSend);
 }
 
 std::string PacketManager::recievePacket(sf::TcpSocket& socket)
 {
-	sf::Packet incomingPacket;
-
-	std::string incomingData;
-
 	socket.receive(incomingPacket);
 
 	incomingPacket << incomingData;
+
+	if (incomingData == "ping")
+	{
+		pongPacket >> pong;
+		socket.send(pongPacket);
+	}
 
 	return incomingData;
 }
 
 std::string PacketManager::recieveMapUpdate(sf::TcpSocket& socket)
 {
-	sf::Packet mapPacket;
-
-	std::string incomingMap;
 
 	socket.receive(mapPacket);
 

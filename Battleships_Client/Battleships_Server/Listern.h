@@ -19,10 +19,6 @@ public:
 
 	std::vector<sf::TcpSocket*> * getSockets() { return m_sockets; };
 
-
-
-
-
 protected:
 
 private:

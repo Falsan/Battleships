@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-const int SERVER_PORT(53000);
+//const int SERVER_PORT(53000);
 
 
 listern::listern(std::vector<sf::TcpSocket*> * _sockets, sf::SocketSelector * _selector, sf::TcpListener * _listener)
@@ -30,7 +30,7 @@ void listern::runServer()
 void listern::bindServerPort(sf::SocketSelector * selector, std::vector<sf::TcpSocket*>* sockets, sf::TcpListener* listener)
 {
 
-	if (listener->listen(SERVER_PORT) != sf::Socket::Done)
+	if (listener->listen(SERVER_PORT) != sf::TcpSocket::Done)
 	{
 		//error
 		std::cout << "Error, couldn't find server";
