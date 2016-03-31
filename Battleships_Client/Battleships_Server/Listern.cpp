@@ -5,7 +5,7 @@
 
 
 
-listern::listern(std::vector<Client*> _listOfClients, std::vector<inputAction*> _actionList, sf::SocketSelector& _selector)
+Listener::Listener(std::vector<Client*> _listOfClients, std::vector<inputAction*> _actionList, sf::SocketSelector& _selector)
 {
 	m_listOfClients = _listOfClients;
 	m_actionList = _actionList;
@@ -13,12 +13,12 @@ listern::listern(std::vector<Client*> _listOfClients, std::vector<inputAction*> 
 }
 
 
-void listern::update()
+void Listener::update()
 {
 
 }
 
-void listern::runServer()
+void Listener::runServer()
 {
 	
 	bindServerPort(m_selector, m_listerner);
@@ -26,7 +26,7 @@ void listern::runServer()
 	listen(m_selector, m_listOfClients, m_listerner);
 }
 
-void listern::bindServerPort(sf::SocketSelector& selector, sf::TcpListener& listerner)
+void Listener::bindServerPort(sf::SocketSelector& selector, sf::TcpListener& listerner)
 {
 	if (listerner.listen(SERVER_PORT) != sf::Socket::Done)
 	{
@@ -37,7 +37,7 @@ void listern::bindServerPort(sf::SocketSelector& selector, sf::TcpListener& list
 	selector.add(listerner);
 }
 
-void listern::listen(sf::SocketSelector& selector, std::vector<Client*>& sockets, sf::TcpListener& listener)
+void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& sockets, sf::TcpListener& listener)
 {
 
 	sf::TcpSocket * socket = new sf::TcpSocket;

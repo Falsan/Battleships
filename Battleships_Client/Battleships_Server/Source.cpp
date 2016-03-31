@@ -6,8 +6,8 @@
 int main()
 {
 	gameData * m_GD = new gameData;
-	std::unique_ptr<gameManager> Game;
-	Game.reset(new gameManager(m_GD));
+	std::unique_ptr<GameManager> Game;
+	Game.reset(new GameManager(m_GD));
 	
 	return 0;
 }
