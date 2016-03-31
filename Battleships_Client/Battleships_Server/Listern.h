@@ -5,11 +5,11 @@
 #include <vector>
 #include "Client.h"
 #include "InputAction.h"
-class listern
+class Listener
 {
 public:
-	listern(std::vector<Client*> _listOfClients, std::vector<inputAction*> m_actionList, sf::SocketSelector& _selector);
-	~listern() = default;
+	Listener(std::vector<Client*> _listOfClients, std::vector<inputAction*> m_actionList, sf::SocketSelector& _selector);
+	~Listener() = default;
 
 	void update();
 

@@ -129,6 +129,7 @@
     <ClInclude Include="..\Battleships_Server\Board.h" />
     <ClInclude Include="..\Battleships_Server\Cell.h" />
     <ClInclude Include="..\Battleships_Server\GameManager.h" />
+    <ClInclude Include="Celltypes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

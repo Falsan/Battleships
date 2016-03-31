@@ -9,22 +9,22 @@
 #include "Listern.h"
 #include "InputAction.h"
 
-class gameManager {
+class GameManager {
 
 public:
-	gameManager(gameData * _GD);
-	~gameManager() = default;
+	GameManager(gameData * _GD);
+	~GameManager() = default;
 
-	listern * m_listern;
+	Listener * m_listern;
 
-	bool listerner();
+	bool listener();
 
 	bool logic();
 	bool heartBeat();
 
 
 
-	board * getBoard() { return m_gameBoard; };
+	Board * getBoard() { return m_gameBoard; };
 
 	std::vector<inputAction*> getActionList() { return m_actionList; };
 	std::vector<Client*> getClientList() { return m_clientList; };
@@ -35,7 +35,7 @@ public:
 	void setSelector(sf::SocketSelector* _in) { m_selector = _in; }
 
 private:
-	board * m_gameBoard;
+	Board * m_gameBoard;
 
 	std::vector<inputAction*> m_actionList;
 	std::vector<Client*> m_clientList;

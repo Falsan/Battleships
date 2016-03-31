@@ -2,7 +2,7 @@
 #include "Listern.h"
 #include "HeartBeat.h"
 
-gameManager::gameManager(gameData * _GD)
+GameManager::GameManager(gameData * _GD)
 {
 	//swap for smart pointer 
 	//std::unique_ptr<board> m_gameBoard;
@@ -11,7 +11,7 @@ gameManager::gameManager(gameData * _GD)
 	 m_selector = new sf::SocketSelector;
 
 	//liseten out for new clients and add them to our client list
-	std::thread Listern(&gameManager::listerner, this);
+	std::thread Listern(&GameManager::listener, this);
 	//test the current clients to make sure they are still connected 
 	//std::thread heartBeat(&gameManager::heartBeat, this);
 
@@ -28,16 +28,16 @@ gameManager::gameManager(gameData * _GD)
 }
 
 //thread for listerning out for a signal from the clients
-bool gameManager::listerner()
+bool GameManager::listener()
 {
-	m_listern = new listern(getClientList(), getActionList());
+	m_listern = new Listener(getClientList(), getActionList());
 
 	m_listern->runServer();
 	return true;
 }
 
 //thread for acting on signels from the clients
-bool gameManager::logic()
+bool GameManager::logic()
 {
 	if (getActionList().size() > 0)
 	{
@@ -72,7 +72,7 @@ bool gameManager::logic()
 }
 
 //thread for pinging with the clients
-bool gameManager::heartBeat()
+bool GameManager::heartBeat()
 {
 	heartBeatClass * m_heartBeat = new heartBeatClass(m_sockets);
 	while (true)

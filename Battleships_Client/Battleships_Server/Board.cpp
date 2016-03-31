@@ -1,12 +1,12 @@
 #include "Board.h"
 
-board::board(gameData * _GD)
+Board::Board(gameData * _GD)
 {
 	m_GD = _GD;
 	createBoard();
 }
 
-board::~board()
+Board::~Board()
 {
 	for (int i = 0; i < m_GD->GetBoardDi(); i++)
 	{
@@ -17,7 +17,7 @@ board::~board()
 	}
 }
 
-void board::createBoard()
+void Board::createBoard()
 {
 	for (int i = 0; i < m_GD->GetBoardDi(); i++)
 	{
