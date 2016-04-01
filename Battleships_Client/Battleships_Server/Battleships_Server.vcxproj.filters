@@ -54,6 +54,9 @@
     <ClCompile Include="Client.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Row.h">
@@ -84,6 +87,15 @@
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
     <ClInclude Include="HeartBeat.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePhase.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerTurn.h">
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
   </ItemGroup>

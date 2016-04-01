@@ -125,6 +125,7 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameData.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="HeartBeat.cpp" />
@@ -138,12 +139,15 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="GamePhase.h" />
     <ClInclude Include="HeartBeat.h" />
     <ClInclude Include="InputAction.h" />
     <ClInclude Include="Listern.h" />
     <ClInclude Include="OutPut.h" />
+    <ClInclude Include="PlayerTurn.h" />
     <ClInclude Include="Row.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
