@@ -1,8 +1,10 @@
 #include "Listern.h"
 #include "Server.h"
-
+#include <chrono>
 #include <iostream>
 
+
+typedef std::chrono::high_resolution_clock Clock;
 
 
 Listener::Listener(std::vector<Client*> _listOfClients, std::vector<inputAction*> _actionList, sf::SocketSelector& _selector)
@@ -18,7 +20,7 @@ Listener::Listener(std::vector<Client*> _listOfClients, std::vector<inputAction*
 void Listener::update()
 {
 
-	printNumOfConnectedClients();
+	//printNumOfConnectedClients();
 
 }
 
@@ -49,7 +51,7 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 	while (true)
 	{
 		//Has a communication come in?
-		if (selector.wait())
+		if (selector.wait(sf::microseconds(500)))
 		{
 			//If so->
 			//is someone trying to connect?
@@ -105,7 +107,6 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 						int actionID;
 						int posOne;
 						int posTwo;
-						float pingValue;
 						int menuOption;
 
 						//Takes the sending players ID and adds it to the message object
@@ -141,18 +142,16 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 							//client disconnect game 
 						case 3:
 							
-
-
-
-							break;
-							//Ping
-						case 4:
-							packet >> pingValue;
-
 							break;
 							//setup
-						case 5:
+						case 4:
 						
+							break;
+							//ping
+						case 5:
+							auto RecevedTime = Clock::now();
+
+
 							break;
 						}
 						//infroms the input handler that the action still needs to be carried out
@@ -174,6 +173,22 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 				}
 			}
 		}
+		else
+		{
+			for (auto& it = sockets.begin(); it != sockets.end(); it++)
+			{
+				auto sentTime = Clock::now();
+				sf::Packet pingPack;
+				std::string ping = "PING";
+				pingPack << ping;
+
+				(*it)->setLastPingVal(sentTime);
+				(*it)->getSocket()->send(pingPack);
+
+			}
+			printNumOfConnectedClients();
+			
+		}
 	}
 }
 
@@ -191,6 +206,8 @@ void Listener::printNumOfConnectedClients()
 	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
 	{
 		std::cout << (*it)->getClientID() << std::endl;
+				
+		std::cout << std::chrono::duration_cast<std::chrono::microseconds>((*it)->getLastPong() - (*it)->getLastPing()).count();
 	}
 
 }
