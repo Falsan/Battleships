@@ -11,32 +11,47 @@ GameManager::GameManager(gameData * _GD)
 	// m_selector = new sf::SocketSelector;
 
 	//liseten out for new clients and add them to our client list
-	std::thread Listern(&GameManager::listener, this);
+
 	//test the current clients to make sure they are still connected 
 	//std::thread heartBeat(&gameManager::heartBeat, this);
 
 	//carry out the comunicated actions 
 	//logic();
+
+	std::thread Listern(&GameManager::listener, this);
+
 	while (true)
 	{
-		// V Remove for final V
-		system("CLS");
-		std::cout << "Server is running" << std::endl << "currently [" << m_clientList.size() << "] connected clients" << std::endl;
+		//Do nothing
 	}
 
 
 }
+
 
 //thread for listerning out for a signal from the clients
 bool GameManager::listener()
 {
 	//Listener::Listener(std::vector<Client*>, std::vector<inputAction*>, sf::SocketSelector& _selector)
 	m_listern = new Listener(getClientList(), getActionList(), getSelector());
-
+	std::thread Draw(&GameManager::draw, this);
 	m_listern->runServer();
+
+
+
+
+
 	return true;
 }
 
+bool GameManager::draw()
+{
+	while (true)
+	{
+		m_listern->update();
+	}
+
+}
 //thread for acting on signels from the clients
 bool GameManager::logic()
 {
