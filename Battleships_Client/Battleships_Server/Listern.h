@@ -33,6 +33,6 @@ private:
 
 
 
-	sf::TcpListener m_listerner;
+	//sf::TcpListener m_listerner;
 	sf::SocketSelector m_selector;
 };

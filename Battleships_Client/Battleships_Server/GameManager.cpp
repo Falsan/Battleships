@@ -8,7 +8,7 @@ GameManager::GameManager(gameData * _GD)
 	//std::unique_ptr<board> m_gameBoard;
 	//m_gameBoard.reset(new board(_GD));
 
-	 m_selector = new sf::SocketSelector;
+	// m_selector = new sf::SocketSelector;
 
 	//liseten out for new clients and add them to our client list
 	std::thread Listern(&GameManager::listener, this);
@@ -30,7 +30,8 @@ GameManager::GameManager(gameData * _GD)
 //thread for listerning out for a signal from the clients
 bool GameManager::listener()
 {
-	m_listern = new Listener(getClientList(), getActionList());
+	//Listener::Listener(std::vector<Client*>, std::vector<inputAction*>, sf::SocketSelector& _selector)
+	m_listern = new Listener(getClientList(), getActionList(), getSelector());
 
 	m_listern->runServer();
 	return true;
@@ -74,7 +75,7 @@ bool GameManager::logic()
 //thread for pinging with the clients
 bool GameManager::heartBeat()
 {
-	heartBeatClass * m_heartBeat = new heartBeatClass(m_sockets);
+	//heartBeatClass * m_heartBeat = new heartBeatClass(m_sockets);
 	while (true)
 	{
 
