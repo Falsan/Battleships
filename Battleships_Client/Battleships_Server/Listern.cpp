@@ -20,7 +20,7 @@ void Listener::update()
 
 void Listener::runServer()
 {
-	
+	sf::TcpListener m_listerner;
 	bindServerPort(m_selector, m_listerner);
 
 	listen(m_selector, m_listOfClients, m_listerner);
@@ -44,9 +44,10 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 	//listen for conneections
 	while (true)
 	{
-		//is there comms?
-		//if (selector.wait())
-			//{
+		//Has a communication come in?
+		if (selector.wait())
+		{
+			//If so->
 			//is someone trying to connect?
 			if (selector.isReady(listener))
 			{
@@ -57,7 +58,17 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 				}
 				else
 				{
+					//Make a client object for the user to be housed in. 
 					Client * m_client = new Client();
+
+					//Create a generic ID for the user that connects
+					//pullout the current number of connected users
+					char IDHOLD = sockets.size();
+					std::string IDHOLDString;
+					IDHOLDString.push_back(IDHOLD);
+
+					m_client->setClientID(IDHOLDString);
+
 					//attach our socket to our client
 					m_client->setSocket(socket);
 
@@ -68,7 +79,7 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 					//add client to the selector
 					selector.add(*socket);
 				}
-			}
+			}//Otherwise what is the message being sent?
 			else
 			{
 				//loop through each client in the sockets list
@@ -154,6 +165,6 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 					}
 				}
 			}
-		//}
+		}
 	}
 }
