@@ -10,11 +10,15 @@ Listener::Listener(std::vector<Client*> _listOfClients, std::vector<inputAction*
 	m_listOfClients = _listOfClients;
 	m_actionList = _actionList;
 	m_selector = _selector;
+
+
 }
 
 
 void Listener::update()
 {
+
+	printNumOfConnectedClients();
 
 }
 
@@ -63,7 +67,7 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 
 					//Create a generic ID for the user that connects
 					//pullout the current number of connected users
-					char IDHOLD = sockets.size();
+					int IDHOLD = m_listOfClients.size()+1;
 					std::string IDHOLDString;
 					IDHOLDString.push_back(IDHOLD);
 
@@ -75,6 +79,10 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 					//add client to sockets list
 					
 					sockets.push_back(m_client);
+		
+
+
+
 
 					//add client to the selector
 					selector.add(*socket);
@@ -167,4 +175,22 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 			}
 		}
 	}
+}
+
+
+
+void Listener::printNumOfConnectedClients()
+{
+	while (true)
+	{
+		// V Remove for final V
+		system("CLS");
+		std::cout << "Server is running" << std::endl << "currently [" << m_listOfClients.size() << "] connected clients" << std::endl;
+	}
+
+	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
+	{
+		std::cout << (*it)->getClientID() << std::endl;
+	}
+
 }

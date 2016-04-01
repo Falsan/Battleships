@@ -19,6 +19,8 @@ public:
 	void bindServerPort(sf::SocketSelector& selector, sf::TcpListener& listerner);
 	void listen(sf::SocketSelector& selector, std::vector<Client*>& sockets, sf::TcpListener& listener);
 
+	void printNumOfConnectedClients();
+
 	//std::vector<sf::TcpSocket*>  getSockets() { return m_sockets; };
 
 	std::vector<Client*> m_listOfClients;

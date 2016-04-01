@@ -22,7 +22,7 @@ public:
 	bool logic();
 	bool heartBeat();
 
-
+	bool draw();
 
 	Board * getBoard() { return m_gameBoard; };
 
