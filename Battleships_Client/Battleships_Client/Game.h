@@ -19,7 +19,7 @@ public:
 	void update(sf::TcpSocket&);
 	void render();
 	void setup(sf::TcpSocket&);
-	void gameInputHandle(sf::TcpSocket&);
+	void gameInputHandle();
 	void gamePacketHandle(sf::TcpSocket&);
 
 protected:
