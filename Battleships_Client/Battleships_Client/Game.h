@@ -21,6 +21,7 @@ public:
 	void setup(sf::TcpSocket&);
 	void gameInputHandle();
 	void gamePacketHandle(sf::TcpSocket&);
+	void resolution();
 
 protected:
 	
@@ -31,6 +32,14 @@ private:
 	sf::TcpSocket currentClient;
 	InputManager* inputHandler;
 	PacketManager* packetHandler;
+	int phase;
 	
 	std::string displayedMap;
+
+	enum PhaseEnum
+	{
+		BOARDSETUP = 0,
+		BOARDPLAY = 1,
+		WIN = 2
+	};
 };
