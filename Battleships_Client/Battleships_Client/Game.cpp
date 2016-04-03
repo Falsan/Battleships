@@ -1,4 +1,7 @@
 #include "Game.h"
+#include "Helper.h"
+#include <future>
+
 
 Game::Game(sf::TcpSocket& thisClient)
 {
@@ -25,23 +28,32 @@ void Game::setup(sf::TcpSocket& thisClient)
 
 void Game::update(sf::TcpSocket& thisClient)
 {
-	//std::thread inputThread(&Game::gameInputHandle, this, thisClient);
+	std::thread inputThread(&Game::gameInputHandle, this);
 	
-	//std::thread serverThread(&Game::gamePacketHandle, &thisClient, this);
+	//std::thread serverThread(&Game::gamePacketHandle, &thisClient);
 	
-	//serverThread.join();
-	//inputThread.join();
 	//update the game logic from the last server data
 	
 	//put that to the screen using the UI manager
-
+	
 	//request any input from the input manager
-	std::cout << "Loop test";
+	std::cout << "Connection stable";
+	clearScreen();
 	//if needed, pass the input to the packet manager to be sent to the server
 
 	//listen for messages from the server
 
 	render();
+
+	inputThread.join();
+
+	if (userCommand[0] == '/')
+	{
+		packetHandler->sendPacket(userCommand, thisClient);
+	}
+
+	displayedMap = packetHandler->recieveMapUpdate(thisClient);
+
 }
 
 void Game::render()
@@ -50,19 +62,16 @@ void Game::render()
 	std::cout << displayedMap << std::endl;
 }
 
-void Game::gameInputHandle(sf::TcpSocket& thisClient)
+void Game::gameInputHandle()
 {
 	userCommand = inputHandler->pollInput();
-
-	if (userCommand[0] == '/')
-	{
-		packetHandler->sendPacket(userCommand, thisClient);
-	}
 }
 
 void Game::gamePacketHandle(sf::TcpSocket& thisClient)
 {
-	displayedMap = packetHandler->recieveMapUpdate(thisClient);
+	//auto map = std::async(std::launch::async, &PacketManager::recieveMapUpdate);
+
+	//displayedMap = packetHandler->recieveMapUpdate(thisClient);
 }
 
 /*socket.setBlocking(false);

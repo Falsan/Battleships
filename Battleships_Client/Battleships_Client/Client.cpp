@@ -1,4 +1,5 @@
 #include "Client.h"
+#include "Helper.h"
 
 void Client::runClient()
 {
