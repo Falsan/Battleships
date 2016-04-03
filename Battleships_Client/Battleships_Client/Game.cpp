@@ -8,6 +8,7 @@ Game::Game(sf::TcpSocket& thisClient)
 	//all initial creation for the game goes here
 	inputHandler = new InputManager;
 	packetHandler = new PacketManager;
+	phase = BOARDSETUP;
 }
 
 Game::~Game()
@@ -33,19 +34,17 @@ void Game::update(sf::TcpSocket& thisClient)
 	//std::thread serverThread(&Game::gamePacketHandle, &thisClient);
 	
 	//update the game logic from the last server data
-	
+	phase = packetHandler->recieveCurrentGameState(thisClient);
+	resolution();
+
 	//put that to the screen using the UI manager
-	
+	clearScreen();
+	render();
 	//request any input from the input manager
 	std::cout << "Connection stable";
-	clearScreen();
-	//if needed, pass the input to the packet manager to be sent to the server
-
-	//listen for messages from the server
-
-	render();
-
 	inputThread.join();
+
+	//if needed, pass the input to the packet manager to be sent to the server
 
 	if (userCommand[0] == '/')
 	{
@@ -54,6 +53,49 @@ void Game::update(sf::TcpSocket& thisClient)
 
 	displayedMap = packetHandler->recieveMapUpdate(thisClient);
 
+	//listen for messages from the server
+
+}
+
+void Game::resolution()
+{
+
+	switch (phase)
+	{
+	case PhaseEnum::BOARDSETUP:
+
+		//send the player input to the server
+
+		//get the map to be displayed
+
+		//check to see if done
+
+		//if done, send a command to the server saying so
+
+	case PhaseEnum::BOARDPLAY:
+
+		//send the player input to server
+
+		//get the map to be displayed
+
+		//ask the server if a win has been made
+
+		//if there is a win, say that 
+
+	case PhaseEnum::WIN:
+
+		//if the server report was a win, then say win
+
+		//if the server report was a lose, say lose
+
+		//display the last map
+
+		//send a quit command to the server after a minute
+
+	default:
+		std::cout << "Error";
+		break;
+	}
 }
 
 void Game::render()

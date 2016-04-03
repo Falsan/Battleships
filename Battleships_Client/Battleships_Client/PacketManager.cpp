@@ -29,10 +29,18 @@ std::string PacketManager::recievePacket(sf::TcpSocket& socket)
 
 std::string PacketManager::recieveMapUpdate(sf::TcpSocket& socket)
 {
-
 	socket.receive(mapPacket);
 
 	mapPacket << incomingMap;
 
 	return incomingMap;
+}
+
+int PacketManager::recieveCurrentGameState(sf::TcpSocket& socket)
+{
+	socket.receive(gameStatePacket);
+
+	gameStatePacket << gameState;
+
+	return gameState;
 }
