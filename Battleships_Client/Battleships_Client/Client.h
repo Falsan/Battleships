@@ -13,8 +13,8 @@ class Client
 {
 public:
 
-	Client() {};
-	~Client() {};
+	Client();
+	~Client();
 
 	Game* currentGame;
 	
@@ -44,5 +44,5 @@ private:
 	ServerPort* clientServerPort;
 	
 	sf::TcpSocket socket;
-	sf::SocketSelector selector;
+	sf::SocketSelector* selector;
 };

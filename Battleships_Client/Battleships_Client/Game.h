@@ -16,7 +16,7 @@ public:
 	Game(sf::TcpSocket& thisClient);
 	~Game();
 
-	void update(sf::TcpSocket&);
+	void update(sf::TcpSocket&, sf::SocketSelector*);
 	void render();
 	void setup(sf::TcpSocket&);
 	void gameInputHandle();

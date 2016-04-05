@@ -12,17 +12,25 @@ void PacketManager::sendPacket(std::string stringPacket, sf::TcpSocket& socket)
 	socket.send(packetToSend);
 }
 
-std::string PacketManager::recievePacket(sf::TcpSocket& socket)
+std::string PacketManager::recievePacket(sf::TcpSocket& socket, sf::SocketSelector* selector)
 {
-	socket.receive(incomingPacket);
-
-	incomingPacket << incomingData;
-
-	if (incomingData == "ping")
+	if (selector->wait(sf::milliseconds(500)) && selector->isReady(socket))
 	{
-		pongPacket >> pong;
-		socket.send(pongPacket);
+		if (socket.receive(incomingPacket) == sf::Socket::Done)
+		{
+			incomingPacket << incomingData;
+			
+			if (incomingData == "PING")
+			{
+				pongPacket >> pong;
+				socket.send(pongPacket);
+			}
+		}
 	}
+	
+	
+
+	//std::cout << incomingData;
 
 	return incomingData;
 }

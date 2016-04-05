@@ -27,9 +27,10 @@ void Game::setup(sf::TcpSocket& thisClient)
 	//begins update loop
 }
 
-void Game::update(sf::TcpSocket& thisClient)
+void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 {
 	std::thread inputThread(&Game::gameInputHandle, this);
+	packetHandler->recievePacket(thisClient, selector);
 	
 	//std::thread serverThread(&Game::gamePacketHandle, &thisClient);
 	
@@ -51,7 +52,7 @@ void Game::update(sf::TcpSocket& thisClient)
 		packetHandler->sendPacket(userCommand, thisClient);
 	}
 
-	displayedMap = packetHandler->recieveMapUpdate(thisClient);
+	//displayedMap = packetHandler->recieveMapUpdate(thisClient);
 
 	//listen for messages from the server
 
