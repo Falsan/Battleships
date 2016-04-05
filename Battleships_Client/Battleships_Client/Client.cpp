@@ -57,24 +57,18 @@ void Client::runClient()
 
 bool Client::connectToServer()
 {
+	socket.setBlocking(true);
 	sf::TcpSocket::Status status = socket.connect("127.0.0.1", clientServerPort->SERVER_PORT);
-	
+	if (status != sf::TcpSocket::Done)
+	{
+		std::cout << "Error, could not connect to server" << std::endl;
+		return false;
+	}
 	//if it's up, then try to connect to a listener
 	selector->add(socket);
-	
-	//wait for a little bit
-	if (selector->wait(sf::seconds(5)))
-	{
-		if (status != sf::TcpSocket::Done)
-		{
-			std::cout << "Error, could not connect to server" << std::endl;
-			return false;
-		}
-	}
 
 	//ask the server if it is up
 
-	
 	//if the server takes too long, it must be down, so return a string which says so
 	return true;
 }

@@ -10,7 +10,7 @@ public:
 	inputAction() = default ;
 	~inputAction() = default;
 
-	void setPlayerID(std::string _in) { PlayerID = _in; };
+	void setPlayerID(int _in) { PlayerID = _in; };
 	void setActionID(int _in) { actionID = _in; };
 	void setPos(int _in, int _in2) { pos.first = _in; pos.second = _in2; };
 	void setMessage(std::string _in) { message = _in; };
@@ -18,7 +18,7 @@ public:
 	void setActionCompleate(bool _in) { actioncomplete = _in; }
 	void setPlayerNickName(std::string _in){ PlayerNick = _in; }
 
-	std::string getPlayerID() { return PlayerID; };
+	int getPlayerID() { return PlayerID; };
 	int getActionID() { return actionID; };
 	std::pair<int, int> getPos() { return pos; };
 	std::string getMessage() { return message; };
@@ -27,7 +27,7 @@ public:
 	std::string getPlayerNick() { return PlayerNick; }
 
 private:
-	std::string PlayerID;
+	int PlayerID;
 	std::string PlayerNick;
 	int actionID;
 	std::pair<int, int> pos;
