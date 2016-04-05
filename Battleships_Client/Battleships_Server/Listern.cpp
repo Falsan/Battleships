@@ -3,7 +3,8 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
-
+ 
+#include <iomanip>      
 
 typedef std::chrono::high_resolution_clock Clock;
 
@@ -13,12 +14,12 @@ Listener::Listener(std::vector<Client*> _listOfClients, std::vector<inputAction*
 	m_listOfClients = _listOfClients;
 	m_actionList = _actionList;
 	m_selector = _selector;
-	
+
+
 	//Launches a thread with the removal function
-	std::thread Removal(&Listener::removeCompleatedTasks, this);
 	std::thread Listerner(&Listener::runServer, this);
 	Listerner.join();
-	Removal.join();
+
 }
 
 
@@ -50,19 +51,25 @@ void Listener::bindServerPort(sf::SocketSelector& selector, sf::TcpListener& lis
 
 void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& sockets, sf::TcpListener& listener)
 {
+	sf::Packet inPacket;
+	sf::Packet outPacket;
 
-	sf::TcpSocket * socket = new sf::TcpSocket;
 	//listen for conneections
 	while (true)
 	{
 		//Has a communication come in?
-		if (selector.wait(sf::seconds(1)))
+		if (selector.wait(sf::milliseconds(500)))
 		{
 			//If so->
 			//is someone trying to connect?
 			if (selector.isReady(listener))
-			{
-				if (listener.accept(*socket) != sf::Socket::Done)
+			{	
+				Client * m_client = new Client();
+				sf::TcpSocket* TCPSocket = new sf::TcpSocket;
+				m_client->setSocket(TCPSocket);
+
+
+				if (listener.accept(*m_client->getSocket()) != sf::Socket::Done)
 				{
 					//throw error
 					std::cout << "Error, listener could not accept the client";
@@ -70,125 +77,141 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 				else
 				{
 					//Make a client object for the user to be housed in. 
-					Client * m_client = new Client();
-
-					//Create a generic ID for the user that connects
-					//pullout the current number of connected users
-					int IDHOLD = m_listOfClients.size()+1;
+			
 					
-					//IDHOLDString.push_back(IDHOLD);
-
-					m_client->setClientID(IDHOLD);
-
+					//pullout the current number of connected users
+					m_client->setClientID(genID());
+		
 					//attach our socket to our client
-					m_client->setSocket(socket);
+
 
 					//add client to sockets list
-					
 					sockets.push_back(m_client);
 		
-
 					//add client to the selector
-					selector.add(*socket);
+					selector.add(*m_client->getSocket());
 
 					//Inform the client of there server side ID
 					sf::Packet p;
-					p << IDHOLD;
+					p << m_client->getClientID();
 
 					m_client->getSocket()->send(p);
 				}
+
+
+
+
+
 			}//Otherwise what is the message being sent?
 			else
 			{
 				//loop through each client in the sockets list
 
-				for (auto& it = sockets.begin(); it != sockets.end(); it++)
+				for (auto  it = sockets.begin(); it != sockets.end(); it++)
 				{
+					
 					//check to see if it's got something to say
-					if (selector.isReady(*socket))
+					if (selector.isReady(*(*it)->getSocket()))
 					{
-						sf::Packet packet;
-						socket->receive(packet);
-						inputAction * HOLD = new inputAction();
-						auto RecevedTime = Clock::now();
-						
 						int ID;
 						std::string nickName;
 						std::string chatMessage;
 						int actionID;
-						int posOne;
-						int posTwo;
+						std::pair<int, int> pos;
 						int menuOption;
 
+
+						//If the user had disconnected
+						if((*it)->getSocket()->receive(inPacket) == sf::Socket::Disconnected);
+						{
+							int nothing = 0;
+
+						//	removeClientWithSocket((*it)->getSocket());
+							(*it)->getSocket()->disconnect();
+						}
+						//inputAction * HOLD = new inputAction();
+						auto RecevedTime = Clock::now();
+
 						//Takes the sending players ID and adds it to the message object
-						packet >> ID;
-						HOLD->setPlayerID(ID);
+						inPacket >> ID;
+
+						//finds the client that this is applicable to
+						Client * clientHOLD = findClientWithID(ID);				
 
 						//takes the action distabution ID from the message and stores it
-						packet >> actionID;
-						HOLD->setActionID(actionID);
+						inPacket >> actionID;
 
 						//swaps to the appropriate element based on in sent requet marker
 						switch (actionID)
 						{
 							//Send chat message
 						case 0:
-							packet >> chatMessage;
-							HOLD->setMessage(chatMessage);
+
+							//localy store the chat message 
+							inPacket >> chatMessage;
+
+							//run through all connected clients forwarding the packet
+							for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
+							{
+								//Send the message out to all clients
+								(*it)->getSocket()->send(inPacket);
+							}
 							break;
 
 							//shoot at board
 						case 1:
 							//take out any board pos request
-							packet >> posOne;
-							packet >> posTwo;
-							HOLD->setPos(posOne, posTwo);
+							inPacket >> pos.first;
+							inPacket >> pos.second;			
 							break;
-							//menu option
-						case 2:
-							packet >> menuOption;
 
-							HOLD->setMenuAction(menuOption);
+							//join game
+						case 2:
+							inPacket >> menuOption;
+							if (prepareGame(clientHOLD) == 2)
+							{
+								//With two players ready the game starts
+								startGame(m_PlayerOne, m_PlayerTwo);
+							}
+							
 							break;
 							//client disconnect game 
 						case 3:
 							
 							break;
-							//setup
-						case 4:
-						
+							//Request current game Phase
+						case 7:
+							//If the current game has started
+							if (m_Game)
+							{
+								//Send the current phase that the game is in
+								outPacket << m_Game->getCurrentPhase();
+								clientHOLD->getSocket()->send(outPacket);
+							}
 							break;
-							//ping
+					
 						case 5:
-						
-							//marks down the exact time that the pong was receved 
-							HOLD->setPongTime(std::chrono::high_resolution_clock::now());
 
+			
 							break;
 							//NickName
 						case 6:
 							
-							packet >> nickName;
+							inPacket >> nickName;
 
-							HOLD->setPlayerNickName(nickName);
+							clientHOLD->setNickName(nickName);
+							break;
+							//Ping
+						case 4 :
+
+							//marks down the exact time that the pong was receved 
+							clientHOLD->setLastPongVal(RecevedTime);
 							break;
 						}
 						//infroms the input handler that the action still needs to be carried out
-						HOLD->setActionCompleate(false);
-
-						//V may need a mutex and function here V
-						m_actionList.push_back(HOLD);
-
-						//send packet to connected clients
-						//client->send(packet);
-
-						//recieve packet
-						//client->receive(packet);
-
-						//this is where messages will be passed to the message hadler
-
 
 					}
+					
 				}
 			}
 		}
@@ -197,11 +220,12 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 			//Send out ping to all connected clients
 			for (auto& it = sockets.begin(); it != sockets.end(); it++)
 			{
-				auto sentTime = Clock::now();
+
 				sf::Packet pingPack;
 				std::string ping = "PING";
 				pingPack << ping;
 
+				auto sentTime = Clock::now();
 				(*it)->setLastPingVal(sentTime);
 				(*it)->getSocket()->send(pingPack);
 
@@ -220,7 +244,7 @@ void Listener::printNumOfConnectedClients()
 		// V Remove for final V
 		system("CLS");
 		std::cout << "Server is running" << std::endl << "currently [" << m_listOfClients.size() << "] connected clients" << std::endl;
-	
+		int numPrinted = 1;
 
 	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
 	{
@@ -232,28 +256,98 @@ void Listener::printNumOfConnectedClients()
 		{
 			std::cout << (*it)->getNickName() << std::endl;
 		}
-		if (std::chrono::duration_cast<std::chrono::microseconds>((*it)->getLastPong() - (*it)->getLastPing()).count() > -100)
-		{
-			std::cout << std::chrono::duration_cast<std::chrono::microseconds>((*it)->getLastPong() - (*it)->getLastPing()).count() << std::endl;
-		}
+
+		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(( (*it)->getLastPing() - (*it)->getLastPong())).count();
+			
+		//Making the ping val readable
+		std::cout << std::setprecision(0) <<(duration)/numPrinted << std::endl;
+			
+		numPrinted++;
 	}
 
 }
 
-//If the input handeler was able to compleate a task it will be marks so
-//this function then removes the task from the task list
-void Listener::removeCompleatedTasks()
-{
-	while (true)
-	{
-	//	for (auto it = m_actionList.begin(); it != m_actionList.end(); it++)
-	//	{
-		//	if ((*it)->getActionCompleate())
-		//	{
-				
-				//m_actionList.erase(std::remove(m_actionList.begin(), m_actionList.end(), (*it)->getActionCompleate()), m_actionList.end());
 
-		//	}
-	//	}
+
+//serches and removes the passed client
+void Listener::removeClientWithSocket(sf::TcpSocket* _id)
+{
+	int loopVal = m_listOfClients.size();
+	for (int i = 0; i < loopVal; i++)
+	{
+		if (loopVal > 0)
+		{
+			if (m_listOfClients[i]->getSocket() == _id)
+			{
+				m_listOfClients.erase(m_listOfClients.begin() + i);
+				loopVal= loopVal - 1;
+			}
+		}
 	}
+}
+
+Client * Listener::findClientWithID(int _ID)
+{
+	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
+	{
+		if ((*it)->getClientID() == _ID)
+		{
+			return (*it);
+		}
+	}
+	return nullptr;
+}
+
+
+int Listener::genID()
+{
+	//Create a generic ID for the user
+	//loop through all of the users
+	int currentHigh=1; 
+		
+	//In order to ensure that users are not give matching values we always give them the highest
+	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
+	{
+		if((*it)->getClientID()> currentHigh);
+		{
+			currentHigh = (*it)->getClientID()+1;
+		}
+	}
+	
+	return currentHigh;
+}
+
+int Listener::prepareGame(Client * _player)
+{
+	//If playerOne is not a null pointer I.E. not currently containing a player
+	if (!m_PlayerOne)
+	{
+		//asign the player to the slot
+		m_PlayerOne = _player;
+		return 1;
+	}
+	//Otherwise test if player two is avalable
+	else if (!m_PlayerTwo)
+	{
+		m_PlayerTwo = _player;
+		return 2;
+	}
+	//Otherwise return false
+	return 0;
+}
+
+//Create a new game with the players who are now ready
+bool Listener::startGame(Client* _P1, Client* _P2)
+{
+	//create a new game 
+	m_Game = new BattleShipsGame(_P1, _P2);
+	//Inform the players that this is there game
+	_P1->setGame(m_Game);
+	_P2->setGame(m_Game);
+
+	//place the game on a new thread
+	//std::thread(&m_Game, BattleShipsGame(_P1, _P2));
+
+
+	return false;
 }

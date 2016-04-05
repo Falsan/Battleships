@@ -3,7 +3,10 @@
 #include <vector>
 #include "Cell.h"
 #include "GamePhase.h"
+#include "Client.h"
 
+
+class Client;
 class BattleShipsGame
 {
 public:
@@ -14,11 +17,13 @@ public:
 	Client * getPlayerTwo() { return PlayerTwo; };
 	std::vector<Cell*> getGameBoard() { return gameBoard; };
 	bool getCurrentTurn() { return currentTurn; }
+	int getCurrentPhase() { return currentPhase; }
 
 	void setPlayerOne(Client * _in) { PlayerOne = _in; };
 	void setPlayerTwo(Client * _in) { PlayerTwo = _in; };
 	void setGameBoard(std::vector<Cell*> _inBoard) { gameBoard = _inBoard; };
 	void setCurrentTurn(bool _in) { currentTurn = _in; }
+	void setCurrentPhase(int _in) { currentPhase = _in; }
 
 	void update();
 
