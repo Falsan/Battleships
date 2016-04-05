@@ -15,6 +15,8 @@ public:
 
 	const int SERVER_PORT = 53000;
 
+	void removeCompleatedTasks();
+
 	void runServer();
 	void bindServerPort(sf::SocketSelector& selector, sf::TcpListener& listerner);
 	void listen(sf::SocketSelector& selector, std::vector<Client*>& sockets, sf::TcpListener& listener);

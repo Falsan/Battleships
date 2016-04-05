@@ -11,7 +11,7 @@ class Client
 public:
 	Client() = default;
 	~Client() = default;
-	std::string getClientID() { return clientID; }
+	int getClientID() { return clientID; }
 	int getTimeOuts() { return timeOuts; }
 	bool getconnected() { return connected; }
 	std::chrono::steady_clock::time_point getLastPing() { return lastPingValue; }
@@ -23,7 +23,7 @@ public:
 	PlayerTurn * GetTurnAction() { return turnAction; }
 	std::string getNickName() { return nickName; }
 
-	void setClientID(std::string _in) { clientID = _in; }
+	void setClientID(int _in) { clientID = _in; }
 	void setTimeOuts(int _in) { timeOuts = _in; }
 	void setConnected(bool _in) { connected = _in; }
 	void setLastPingVal(std::chrono::steady_clock::time_point _in) { lastPingValue = _in; }
@@ -40,7 +40,7 @@ public:
 
 private:
 	// the Id used to identify the user
-	std::string clientID;
+	int clientID;
 
 	//the number of times the user has failed a heart beat test
 	int timeOuts = 0;
