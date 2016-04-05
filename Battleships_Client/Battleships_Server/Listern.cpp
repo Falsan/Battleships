@@ -219,9 +219,7 @@ void Listener::printNumOfConnectedClients()
 
 	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
 	{
-		if((*it)->
-			
-			() == "NULL")
+		if((*it)->getNickName() == "NULL")
 		{
 			std::cout << (*it)->getClientID() << std::endl;
 		}

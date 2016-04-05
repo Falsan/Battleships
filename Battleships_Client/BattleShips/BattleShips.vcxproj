@@ -18,6 +18,19 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Board.cpp" />
+    <ClCompile Include="BoardManager.cpp" />
+    <ClCompile Include="Cell.cpp" />
+    <ClCompile Include="Ship.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Board.h" />
+    <ClInclude Include="BoardManager.h" />
+    <ClInclude Include="Cell.h" />
+    <ClInclude Include="Celltypes.h" />
+    <ClInclude Include="Ship.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1E76C048-B50B-4763-9795-E2C23E4BECA2}</ProjectGuid>
     <RootNamespace>BattleShips</RootNamespace>
@@ -119,18 +132,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\Battleships_Server\Board.cpp" />
-    <ClCompile Include="..\Battleships_Server\Cell.cpp" />
-    <ClCompile Include="..\Battleships_Server\GameManager.cpp" />
-    <ClCompile Include="..\Battleships_Server\Source.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Battleships_Server\Board.h" />
-    <ClInclude Include="..\Battleships_Server\Cell.h" />
-    <ClInclude Include="..\Battleships_Server\GameManager.h" />
-    <ClInclude Include="Celltypes.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
