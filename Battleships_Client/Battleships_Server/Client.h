@@ -33,7 +33,10 @@ public:
 	void setPlayersBoard(std::vector <Cell*> _in) { m_PlayersBoard = _in; }
 	void setTakeTurn(bool _in) { takeTurn = _in; }
 	void setTurnAction(PlayerTurn * _in) { turnAction = _in; }
-	void setNickName(std::string _in) { nickName = _in; }
+	void setNickName(std::string _in)
+	{
+		nickName = _in;
+	}
 
 private:
 	// the Id used to identify the user

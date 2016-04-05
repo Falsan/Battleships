@@ -16,12 +16,12 @@ public:
 	Game(sf::TcpSocket& thisClient);
 	~Game();
 
-	void update(sf::TcpSocket&);
+	void update(sf::TcpSocket&, sf::SocketSelector*);
 	void render();
 	void setup(sf::TcpSocket&);
 	void gameInputHandle();
 	void gamePacketHandle(sf::TcpSocket&);
-	void resolution();
+	void resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector);
 
 protected:
 	
@@ -33,6 +33,7 @@ private:
 	InputManager* inputHandler;
 	PacketManager* packetHandler;
 	int phase;
+	int serverID;
 	
 	std::string displayedMap;
 
@@ -40,6 +41,9 @@ private:
 	{
 		BOARDSETUP = 0,
 		BOARDPLAY = 1,
-		WIN = 2
+		WIN = 2,
+		PLAYERIDENT = 3
 	};
+
+	int commandNumber;
 };

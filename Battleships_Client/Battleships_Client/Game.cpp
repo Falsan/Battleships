@@ -8,7 +8,7 @@ Game::Game(sf::TcpSocket& thisClient)
 	//all initial creation for the game goes here
 	inputHandler = new InputManager;
 	packetHandler = new PacketManager;
-	phase = BOARDSETUP;
+	phase = PLAYERIDENT;
 }
 
 Game::~Game()
@@ -27,41 +27,58 @@ void Game::setup(sf::TcpSocket& thisClient)
 	//begins update loop
 }
 
-void Game::update(sf::TcpSocket& thisClient)
+void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 {
-	std::thread inputThread(&Game::gameInputHandle, this);
+	//std::thread inputThread(&Game::gameInputHandle, this);
+	//std::cout << packetHandler->recievePacket(thisClient, selector);
 	
 	//std::thread serverThread(&Game::gamePacketHandle, &thisClient);
 	
 	//update the game logic from the last server data
-	phase = packetHandler->recieveCurrentGameState(thisClient);
-	resolution();
+	//phase = packetHandler->recieveCurrentGameState(thisClient);
+	resolution(thisClient, selector);
 
 	//put that to the screen using the UI manager
 	clearScreen();
 	render();
 	//request any input from the input manager
 	std::cout << "Connection stable";
-	inputThread.join();
+	
 
 	//if needed, pass the input to the packet manager to be sent to the server
 
-	if (userCommand[0] == '/')
-	{
-		packetHandler->sendPacket(userCommand, thisClient);
-	}
+	//if (userCommand[0] == '/')
+	//{
+	//	packetHandler->sendPacket(userCommand, thisClient);
+	//}
 
-	displayedMap = packetHandler->recieveMapUpdate(thisClient);
+	//displayedMap = packetHandler->recieveMapUpdate(thisClient);
 
 	//listen for messages from the server
 
 }
 
-void Game::resolution()
+void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 {
 
 	switch (phase)
 	{
+	case PhaseEnum::PLAYERIDENT:
+		
+		//ask the player their name
+		std::cout << "Please input a user name:" << std::endl;
+		std::cin >> userCommand;
+		//recieve server ID
+		serverID = packetHandler->recieveServerID(thisClient, selector);
+
+		commandNumber = 6;
+
+		//send name to server
+		packetHandler->sendPacket(userCommand, thisClient, selector, commandNumber, serverID);
+
+	
+		//std::cout << serverID;
+
 	case PhaseEnum::BOARDSETUP:
 
 		//send the player input to the server

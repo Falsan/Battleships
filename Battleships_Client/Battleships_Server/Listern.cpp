@@ -86,9 +86,9 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 					//add client to the selector
 					selector.add(*socket);
 
-					std::string s = "You have connected";
+					
 					sf::Packet p;
-					p << s;
+					p << IDHOLD;
 
 					m_client->getSocket()->send(p);
 				}
@@ -102,10 +102,15 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 					//check to see if it's got something to say
 					if (selector.isReady(*socket))
 					{
+						sf::Packet packet;
+						socket->receive(packet);
 						inputAction * HOLD = new inputAction();
 						auto RecevedTime = Clock::now();
-						sf::Packet packet;
-						std::string ID;
+						
+
+
+						int ID;
+						std::string nickName;
 						std::string chatMessage;
 						int actionID;
 						int posOne;
@@ -159,9 +164,9 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 							//NickName
 						case 6:
 							
-							packet >> ID;
+							packet >> nickName;
 
-							HOLD->setPlayerNickName(ID);
+							HOLD->setPlayerNickName(nickName);
 							break;
 						}
 						//infroms the input handler that the action still needs to be carried out
@@ -214,7 +219,9 @@ void Listener::printNumOfConnectedClients()
 
 	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
 	{
-		if((*it)->getNickName() == "NULL")
+		if((*it)->
+			
+			() == "NULL")
 		{
 			std::cout << (*it)->getClientID() << std::endl;
 		}

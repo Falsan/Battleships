@@ -8,11 +8,12 @@ public:
 	PacketManager();
 	~PacketManager() {};
 
-	void sendPacket(std::string stringPacket, sf::TcpSocket& socket);
+	void sendPacket(std::string stringPacket, sf::TcpSocket& socket, sf::SocketSelector* selector, int, int);
 
-	std::string recievePacket(sf::TcpSocket& socket);
+	std::string recievePacket(sf::TcpSocket& socket, sf::SocketSelector* selector);
 	std::string recieveMapUpdate(sf::TcpSocket& socket);
 	int recieveCurrentGameState(sf::TcpSocket& socket);
+	int recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* selector);
 
 protected:
 
