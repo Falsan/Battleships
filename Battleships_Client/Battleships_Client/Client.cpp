@@ -16,6 +16,8 @@ void Client::runClient()
 		//if they choose to play a new game, connect to the server
 		if (clientState == CLIENT_READY)
 		{
+
+
 			if (connectToServer() == false)//if they can't connect, say so and return to menu
 			{
 				clientState = CLIENT_MENU;
@@ -32,6 +34,9 @@ void Client::runClient()
 				}
 				delete currentGame;	//once the game is done, delete that new instance
 			}
+
+
+
 		}
 		
 		//if they choose to quit then exit the loop
@@ -41,9 +46,7 @@ void Client::runClient()
 
 bool Client::connectToServer()
 {
-	//ask the server if it is up
-	
-	socket.setBlocking(false);
+
 
 	sf::TcpSocket::Status status = socket.connect("127.0.0.1", clientServerPort->SERVER_PORT);
 	
@@ -51,11 +54,18 @@ bool Client::connectToServer()
 	selector.add(socket);
 	
 	//wait for a little bit
-	if (status != sf::TcpSocket::Done)
+	if (selector.wait(sf::seconds(5)))
 	{
-		std::cout << "Error, could not connect to server" << std::endl;
-		return false;
+		if (status != sf::TcpSocket::Done)
+		{
+			std::cout << "Error, could not connect to server" << std::endl;
+			return false;
+		}
 	}
+
+	//ask the server if it is up
+
+	socket.setBlocking(false);
 	//if the server takes too long, it must be down, so return a string which says so
 	return true;
 }

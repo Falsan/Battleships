@@ -16,7 +16,7 @@ public:
 	void setMessage(std::string _in) { message = _in; };
 	void setMenuAction(int _in) { menuAction = _in; };
 	void setActionCompleate(bool _in) { actioncomplete = _in; }
-
+	void setPlayerNickName(std::string _in){ PlayerNick = _in; }
 
 	std::string getPlayerID() { return PlayerID; };
 	int getActionID() { return actionID; };
@@ -24,10 +24,11 @@ public:
 	std::string getMessage() { return message; };
 	int getMenuAction() { return menuAction; };
 	int getActionCompleate() { return actioncomplete; }
-
+	std::string getPlayerNick() { return PlayerNick; }
 
 private:
 	std::string PlayerID;
+	std::string PlayerNick;
 	int actionID;
 	std::pair<int, int> pos;
 	std::string message;

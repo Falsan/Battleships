@@ -21,7 +21,7 @@ public:
 	std::vector <Cell*> getPlayersBoard() { return m_PlayersBoard; }
 	bool getTakeTurn() { return takeTurn; }
 	PlayerTurn * GetTurnAction() { return turnAction; }
-
+	std::string getNickName() { return nickName; }
 
 	void setClientID(std::string _in) { clientID = _in; }
 	void setTimeOuts(int _in) { timeOuts = _in; }
@@ -33,6 +33,7 @@ public:
 	void setPlayersBoard(std::vector <Cell*> _in) { m_PlayersBoard = _in; }
 	void setTakeTurn(bool _in) { takeTurn = _in; }
 	void setTurnAction(PlayerTurn * _in) { turnAction = _in; }
+	void setNickName(std::string _in) { nickName = _in; }
 
 private:
 	// the Id used to identify the user
@@ -47,6 +48,7 @@ private:
 	bool boardSet = false;
 	std::vector <Cell*> m_PlayersBoard;
 	bool takeTurn = false;
+	std::string nickName = "NULL";
 
 
 	PlayerTurn * turnAction;

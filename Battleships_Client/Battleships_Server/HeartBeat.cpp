@@ -31,23 +31,23 @@ void heartBeatClass::update(std::vector<Client*> _clientVector)
 
 
 		//get this from the client
-		auto nextTime = Clock::now();
-		//(*it)->setLastPingVal(currentTime)
-		//send our current client a message containing the ping
-		sf::Packet PING;
-		PING << "PING";
-		
-		(*it)->getSocket()->send(PING);
+		//auto nextTime = Clock::now();
+		////(*it)->setLastPingVal(currentTime)
+		////send our current client a message containing the ping
+		//sf::Packet PING;
+		//PING << "PING";
+		//
+		//(*it)->getSocket()->send(PING);
 
-		if (m_selector.wait(sf::milliseconds(500)))
-		{
-			auto ping = std::chrono::duration_cast<std::chrono::microseconds>(nextTime - currentTime).count();
-			(*it)->setLastPingVal(ping);
-		}
-		else
-		{
-			(*it)->setTimeOuts((*it)->getTimeOuts() + 1);
-		}
+		//if (m_selector.wait(sf::milliseconds(500)))
+		//{
+		//	auto ping = std::chrono::duration_cast<std::chrono::microseconds>(nextTime - currentTime).count();
+		//	(*it)->setLastPingVal(ping);
+		//}
+		//else
+		//{
+		//	(*it)->setTimeOuts((*it)->getTimeOuts() + 1);
+		//}
 
 
 

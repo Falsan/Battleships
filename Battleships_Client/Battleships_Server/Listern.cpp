@@ -51,7 +51,7 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 	while (true)
 	{
 		//Has a communication come in?
-		if (selector.wait(sf::microseconds(500)))
+		if (selector.wait(sf::seconds(1)))
 		{
 			//If so->
 			//is someone trying to connect?
@@ -83,11 +83,14 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 					sockets.push_back(m_client);
 		
 
-
-
-
 					//add client to the selector
 					selector.add(*socket);
+
+					std::string s = "You have connected";
+					sf::Packet p;
+					p << s;
+
+					m_client->getSocket()->send(p);
 				}
 			}//Otherwise what is the message being sent?
 			else
@@ -100,7 +103,7 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 					if (selector.isReady(*socket))
 					{
 						inputAction * HOLD = new inputAction();
-
+						auto RecevedTime = Clock::now();
 						sf::Packet packet;
 						std::string ID;
 						std::string chatMessage;
@@ -149,9 +152,16 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 							break;
 							//ping
 						case 5:
-							auto RecevedTime = Clock::now();
+							RecevedTime = Clock::now();
 
 
+							break;
+							//NickName
+						case 6:
+							
+							packet >> ID;
+
+							HOLD->setPlayerNickName(ID);
 							break;
 						}
 						//infroms the input handler that the action still needs to be carried out
@@ -196,18 +206,23 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 
 void Listener::printNumOfConnectedClients()
 {
-	while (true)
-	{
+
 		// V Remove for final V
 		system("CLS");
 		std::cout << "Server is running" << std::endl << "currently [" << m_listOfClients.size() << "] connected clients" << std::endl;
-	}
+	
 
 	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
 	{
-		std::cout << (*it)->getClientID() << std::endl;
-				
-		std::cout << std::chrono::duration_cast<std::chrono::microseconds>((*it)->getLastPong() - (*it)->getLastPing()).count();
+		if((*it)->getNickName() == "NULL")
+		{
+			std::cout << (*it)->getClientID() << std::endl;
+		}
+		else
+		{
+			std::cout << (*it)->getNickName() << std::endl;
+		}
+		std::cout << std::chrono::duration_cast<std::chrono::microseconds>((*it)->getLastPong() - (*it)->getLastPing()).count() << std::endl;
 	}
 
 }
