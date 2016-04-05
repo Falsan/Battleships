@@ -10,10 +10,12 @@ public:
 
 	void sendPacket(std::string stringPacket, sf::TcpSocket& socket, sf::SocketSelector* selector, int, int);
 
-	std::string recievePacket(sf::TcpSocket& socket, sf::SocketSelector* selector);
+	std::string recievePacket(sf::TcpSocket& socket, sf::SocketSelector* selector, int serverID);
 	std::string recieveMapUpdate(sf::TcpSocket& socket);
 	int recieveCurrentGameState(sf::TcpSocket& socket);
 	int recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* selector);
+
+
 
 protected:
 

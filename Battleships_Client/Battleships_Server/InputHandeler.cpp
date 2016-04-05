@@ -47,7 +47,8 @@ bool inputHandeler::handelInputs()
 				case 2:
 					break;
 					//client disconnect game 
-				case 3:
+				case 3:		
+
 					break;
 					//setup
 				case 4:

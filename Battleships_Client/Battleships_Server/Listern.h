@@ -5,6 +5,7 @@
 #include <vector>
 #include "Client.h"
 #include "InputAction.h"
+#include "Game.h"
 class Listener
 {
 public:
@@ -15,11 +16,16 @@ public:
 
 	const int SERVER_PORT = 53000;
 
-	void removeCompleatedTasks();
+	void removeClientWithSocket(sf::TcpSocket* _id);
+	Client * findClientWithID(int _ID);
 
 	void runServer();
 	void bindServerPort(sf::SocketSelector& selector, sf::TcpListener& listerner);
 	void listen(sf::SocketSelector& selector, std::vector<Client*>& sockets, sf::TcpListener& listener);
+	int prepareGame(Client *);
+	bool startGame(Client*, Client*);
+
+	int genID();
 
 	void printNumOfConnectedClients();
 
@@ -35,7 +41,10 @@ protected:
 	//sf::SocketSelector  m_selector;
 private:
 
+	BattleShipsGame * m_Game;
 
+	Client * m_PlayerOne = nullptr;
+	Client * m_PlayerTwo = nullptr;
 
 	//sf::TcpListener m_listerner;
 	sf::SocketSelector m_selector;

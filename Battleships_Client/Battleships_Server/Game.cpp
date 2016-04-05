@@ -14,44 +14,38 @@ void BattleShipsGame::update()
 {
 	sf::Packet s;
 	std::string HOLD;
-
-
-
-
+	bool playing = true;
 	//test to ensure that both players are still connected
-
-
-
+	
 	//If one has left 
 	//set phase to reslove
-	
 
 
-	switch (currentPhase)
+	while (!playing)
 	{
-	case GAMEPHASE::SETUP:
-	//Make the gameboard with function from the static lib
-	//setGameBoard();
-		
-		HOLD = "set up board ";
-		s << HOLD;
-		
-		getPlayerOne()->getSocket()->send(s);
-		getPlayerOne()->getSocket()->send(s);
+		switch (currentPhase)
+		{
+		case GAMEPHASE::SETUP:
+			//Make the gameboard with function from the static lib
+			//setGameBoard();
 
-		if (!(getPlayerOne()->getBoardSet()) || !(getPlayerTwo()->getBoardSet()))
-		{
-			//Hold and wait for boads to be settup
-		}
-		else
-		{
-			currentPhase = GAMEPHASE::TURN;
-		}
-		break;
-	case GAMEPHASE::TURN:
-		switch (getCurrentTurn())
-		{
-		case 1:
+			HOLD = "set up board ";
+			s << HOLD;
+
+			getPlayerOne()->getSocket()->send(s);
+			getPlayerOne()->getSocket()->send(s);
+
+			if (!(getPlayerOne()->getBoardSet()) || !(getPlayerTwo()->getBoardSet()))
+			{
+				//Hold and wait for boads to be settup
+			}
+			else
+			{
+				currentPhase = GAMEPHASE::TURNONE;
+			}
+			break;
+		case GAMEPHASE::TURNONE:
+
 			//If the player has sent a turn
 			if (getPlayerOne()->getTakeTurn())
 			{
@@ -59,21 +53,15 @@ void BattleShipsGame::update()
 				{
 
 					//Use the shot held in turn with the static lib to shoot at the board;
-
-
 					currentPhase = GAMEPHASE::TESTWIN;
 					getPlayerOne()->GetTurnAction()->setActedUpon(true);
 				}
-			}
-			else
-			{
-				//do nothing
-			}
 
 
 
-			break;
-		case 2:
+
+				break;
+		case GAMEPHASE::TURNTWO:
 
 
 			//If the player has sent a turn
@@ -81,45 +69,37 @@ void BattleShipsGame::update()
 			{
 				if (getPlayerTwo()->GetTurnAction()->getActedUpon())
 				{
-
 					//Use the shot held in turn with the static lib to shoot at the board;
-
-
 					currentPhase = GAMEPHASE::TESTWIN;
 					getPlayerTwo()->GetTurnAction()->setActedUpon(true);
 				}
 			}
+
+			break;
+		case GAMEPHASE::RESOLVEGAME:
+
+			//send message to remaining player congratulating them on there win and asking if they would like to save
+
+
+			break;
+		case GAMEPHASE::TESTWIN:
+
+			//Static lib board testing here
+
+
+
+			if (getCurrentTurn())
+			{
+				currentPhase = GAMEPHASE::TURNTWO;
+				setCurrentTurn(false);
+			}
 			else
 			{
-				//do nothing
+				currentPhase = GAMEPHASE::TURNONE;
+				setCurrentTurn(true);
 			}
 			break;
+			}
 		}
-		break;
-	case GAMEPHASE::RESOLVEGAME:
-		
-		//send message to remaining player congratulating them on there win and asking if they would like to save
-
-		
-		break;
-	case GAMEPHASE::TESTWIN:
-
-		//Static lib board testing here
-
-
-
-		if (getCurrentTurn())
-		{
-			setCurrentTurn(2);
-		}
-		else
-		{
-			setCurrentTurn(1);
-		}
-
-		currentPhase = GAMEPHASE::TURN;
-
-		break;
-
 	}
 }

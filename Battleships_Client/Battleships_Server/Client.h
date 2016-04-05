@@ -5,6 +5,9 @@
 #include "PlayerTurn.h"
 #include "Cell.h"
 #include <chrono>
+#include "Game.h"
+
+class BattleShipsGame;
 
 class Client
 {
@@ -22,6 +25,9 @@ public:
 	bool getTakeTurn() { return takeTurn; }
 	PlayerTurn * GetTurnAction() { return turnAction; }
 	std::string getNickName() { return nickName; }
+	BattleShipsGame * getGame() { return currentGame; }
+
+
 
 	void setClientID(int _in) { clientID = _in; }
 	void setTimeOuts(int _in) { timeOuts = _in; }
@@ -33,10 +39,8 @@ public:
 	void setPlayersBoard(std::vector <Cell*> _in) { m_PlayersBoard = _in; }
 	void setTakeTurn(bool _in) { takeTurn = _in; }
 	void setTurnAction(PlayerTurn * _in) { turnAction = _in; }
-	void setNickName(std::string _in)
-	{
-		nickName = _in;
-	}
+	void setNickName(std::string _in){	nickName = _in; }
+	void setGame(BattleShipsGame * _in) { currentGame = _in; }
 
 private:
 	// the Id used to identify the user
@@ -53,6 +57,7 @@ private:
 	bool takeTurn = false;
 	std::string nickName = "NULL";
 
+	BattleShipsGame * currentGame;
 
 	PlayerTurn * turnAction;
 
