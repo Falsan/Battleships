@@ -1,13 +1,14 @@
 #pragma once
 #include <string>
+#include <chrono>
 
-
+typedef  std::chrono::high_resolution_clock Clock;
 
 
 class inputAction
 {
 public:
-	inputAction() = default ;
+	inputAction() = default;
 	~inputAction() = default;
 
 	void setPlayerID(int _in) { PlayerID = _in; };
@@ -16,7 +17,8 @@ public:
 	void setMessage(std::string _in) { message = _in; };
 	void setMenuAction(int _in) { menuAction = _in; };
 	void setActionCompleate(bool _in) { actioncomplete = _in; }
-	void setPlayerNickName(std::string _in){ PlayerNick = _in; }
+	void setPlayerNickName(std::string _in) { PlayerNick = _in; }
+	void setPongTime(std::chrono::high_resolution_clock::time_point _in) { pongTime = _in; }
 
 	int getPlayerID() { return PlayerID; };
 	int getActionID() { return actionID; };
@@ -25,8 +27,11 @@ public:
 	int getMenuAction() { return menuAction; };
 	int getActionCompleate() { return actioncomplete; }
 	std::string getPlayerNick() { return PlayerNick; }
+	std::chrono::high_resolution_clock::time_point getPongTime() { return pongTime; }
 
 private:
+
+	std::chrono::high_resolution_clock::time_point pongTime;
 	int PlayerID;
 	std::string PlayerNick;
 	int actionID;

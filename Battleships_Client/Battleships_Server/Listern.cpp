@@ -2,6 +2,7 @@
 #include "Server.h"
 #include <chrono>
 #include <iostream>
+#include <thread>
 
 
 typedef std::chrono::high_resolution_clock Clock;
@@ -12,8 +13,12 @@ Listener::Listener(std::vector<Client*> _listOfClients, std::vector<inputAction*
 	m_listOfClients = _listOfClients;
 	m_actionList = _actionList;
 	m_selector = _selector;
-
-
+	
+	//Launches a thread with the removal function
+	std::thread Removal(&Listener::removeCompleatedTasks, this);
+	std::thread Listerner(&Listener::runServer, this);
+	Listerner.join();
+	Removal.join();
 }
 
 
@@ -70,10 +75,10 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 					//Create a generic ID for the user that connects
 					//pullout the current number of connected users
 					int IDHOLD = m_listOfClients.size()+1;
-					std::string IDHOLDString;
-					IDHOLDString.push_back(IDHOLD);
+					
+					//IDHOLDString.push_back(IDHOLD);
 
-					m_client->setClientID(IDHOLDString);
+					m_client->setClientID(IDHOLD);
 
 					//attach our socket to our client
 					m_client->setSocket(socket);
@@ -86,7 +91,7 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 					//add client to the selector
 					selector.add(*socket);
 
-					
+					//Inform the client of there server side ID
 					sf::Packet p;
 					p << IDHOLD;
 
@@ -107,8 +112,6 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 						inputAction * HOLD = new inputAction();
 						auto RecevedTime = Clock::now();
 						
-
-
 						int ID;
 						std::string nickName;
 						std::string chatMessage;
@@ -157,8 +160,9 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 							break;
 							//ping
 						case 5:
-							RecevedTime = Clock::now();
-
+						
+							//marks down the exact time that the pong was receved 
+							HOLD->setPongTime(std::chrono::high_resolution_clock::now());
 
 							break;
 							//NickName
@@ -190,6 +194,7 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 		}
 		else
 		{
+			//Send out ping to all connected clients
 			for (auto& it = sockets.begin(); it != sockets.end(); it++)
 			{
 				auto sentTime = Clock::now();
@@ -227,7 +232,28 @@ void Listener::printNumOfConnectedClients()
 		{
 			std::cout << (*it)->getNickName() << std::endl;
 		}
-		std::cout << std::chrono::duration_cast<std::chrono::microseconds>((*it)->getLastPong() - (*it)->getLastPing()).count() << std::endl;
+		if (std::chrono::duration_cast<std::chrono::microseconds>((*it)->getLastPong() - (*it)->getLastPing()).count() > -100)
+		{
+			std::cout << std::chrono::duration_cast<std::chrono::microseconds>((*it)->getLastPong() - (*it)->getLastPing()).count() << std::endl;
+		}
 	}
 
+}
+
+//If the input handeler was able to compleate a task it will be marks so
+//this function then removes the task from the task list
+void Listener::removeCompleatedTasks()
+{
+	while (true)
+	{
+	//	for (auto it = m_actionList.begin(); it != m_actionList.end(); it++)
+	//	{
+		//	if ((*it)->getActionCompleate())
+		//	{
+				
+				//m_actionList.erase(std::remove(m_actionList.begin(), m_actionList.end(), (*it)->getActionCompleate()), m_actionList.end());
+
+		//	}
+	//	}
+	}
 }

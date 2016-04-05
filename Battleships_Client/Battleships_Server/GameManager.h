@@ -8,19 +8,19 @@
 #include <thread>
 #include "Listern.h"
 #include "InputAction.h"
+#include "InputHandeler.h"
 
 class GameManager {
 
 public:
 	GameManager(gameData * _GD);
-	~GameManager() = default;
+	~GameManager();
 
 	Listener * m_listern;
 
 	bool listener();
 
-	bool logic();
-	bool heartBeat();
+	inputHandeler * m_inputManager;
 
 	bool draw();
 
