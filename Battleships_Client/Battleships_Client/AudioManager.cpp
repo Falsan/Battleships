@@ -1,23 +1,36 @@
 #include "AudioManager.h"
 
-sf::SoundBuffer* AudioManager::createSoundBuffer() 
+AudioManager::AudioManager()
 {
-	//auto HOLD = new sf::SoundBuffer;
-	//m_soundFiles.push_back(std::pair<HOLD, >)
-	//return HOLD;
+	connectionSoundBuffer = createSoundBuffer();
+	connectionSound = createSound();
 }
 
-sf::Sound* AudioManager::createSounds()
+AudioManager::~AudioManager()
 {
-	auto HOLD = new sf::Sound;
-	m_sounds.push_back(HOLD);
-	return HOLD;
+
 }
 
-void AudioManager::setSoundBuffers(std::vector<std::pair<sf::SoundBuffer, std::string>> m_soundFiles)
+void AudioManager::loadSoundFromFile(/*std::ifstream m_dataFile*/)
 {
-	for (auto iter = m_soundFiles.begin(); iter != m_soundFiles.end(); iter++)
-	{
-		(*iter).first.loadFromFile((*iter).second);
-	}
+	//m_dataFile.open("AudioDatafile");
+	//m_dataFile >> connectionSoundFile;
+	//m_dataFile.close();
+	connectionSoundFile = "connectionSound.wav";
+}
+
+sf::SoundBuffer* AudioManager::createSoundBuffer()
+{
+	return new sf::SoundBuffer;
+}
+
+sf::Sound* AudioManager::createSound()
+{
+	return new sf::Sound;
+}
+
+void AudioManager::loadSound()
+{
+	connectionSoundBuffer->loadFromFile(connectionSoundFile);
+	connectionSound->setBuffer(*connectionSoundBuffer);
 }

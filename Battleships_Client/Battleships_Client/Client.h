@@ -5,8 +5,10 @@
 #include <SFML\Audio.hpp>
 
 #include "Game.h"
+#include "AudioManager.h"
 
 class Game;
+class AudioManager;
 
 struct ServerPort;
 
@@ -38,6 +40,10 @@ protected:
 
 private:
 
+	//std::ifstream m_dataFile;
+
+	AudioManager* audioManager;
+
 	bool serverConnected;
 
 	std::string userCommand;
@@ -46,6 +52,5 @@ private:
 	
 	sf::TcpSocket socket;
 	sf::SocketSelector* selector;
-	sf::SoundBuffer* soundBuffer;
-	sf::Sound connectionSound;
+	
 };

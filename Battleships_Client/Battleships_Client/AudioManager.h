@@ -2,25 +2,29 @@
 #include "Client.h"
 #include <SFML\Audio.hpp>
 #include <vector>
+#include <fstream>
+
 class AudioManager
 {
 public:
 	AudioManager();
-	~AudioManager() {	for (auto it = m_soundFiles.begin(); it != m_soundFiles.end(); it++) { delete (*it); }	};
+	~AudioManager();
 
-	void loadSounds();
-	void setSoundBuffers(std::vector<std::pair<sf::SoundBuffer, std::string>> m_soundFiles);
+	void loadSound();
+	//void setSoundBuffer(sf::SoundBuffer*);
 
 	sf::SoundBuffer* createSoundBuffer();
-	sf::Sound* createSounds();
+	sf::Sound* createSound();
+	void loadSoundFromFile(/*std::ifstream*/);
+
+	sf::SoundBuffer* connectionSoundBuffer;
+	sf::Sound* connectionSound;
+	std::string connectionSoundFile;
 
 protected:
 
 private:
-	//std::vector<sf::SoundBuffer *> m_soundBuffers;
-	std::vector<sf::Sound *> m_sounds;
-	std::vector<std::pair<sf::SoundBuffer, std::string>> m_soundFiles;
+	
 
-	//sf::SoundBuffer;
 
 };

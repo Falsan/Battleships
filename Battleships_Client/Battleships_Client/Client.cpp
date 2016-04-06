@@ -4,23 +4,24 @@
 Client::Client()
 {
 	selector = new sf::SocketSelector;
-	soundBuffer = new sf::SoundBuffer;
+	audioManager = new AudioManager;
+	clientServerPort = new ServerPort;
 }
 
 Client::~Client()
 {
 	delete selector;
-	delete soundBuffer;
+	delete audioManager;
+	delete clientServerPort;
 }
 
 void Client::runClient()
 {
 	clientState = CLIENT_MENU;
-
-	soundBuffer->loadFromFile("connectionSound.wav");
-	connectionSound.setBuffer(*soundBuffer);
+	audioManager->loadSoundFromFile();
+	audioManager->loadSound();
 	//start the main game loop
-	clientServerPort = new ServerPort;
+	
 
 	while (clientState != CLIENT_QUIT)
 	{
@@ -41,10 +42,10 @@ void Client::runClient()
 			}
 			else	//if they can connect to the server, make a new instance of the game and call the 'play game' function
 			{
+				audioManager->connectionSound->play();
 				clientState = CLIENT_PLAY_GAME;
 				currentGame = new Game(socket);
 				currentGame->setup(socket);
-				connectionSound.play();
 
 				while (clientState == CLIENT_PLAY_GAME)
 				{
@@ -59,7 +60,7 @@ void Client::runClient()
 		
 		//if they choose to quit then exit the loop
 	}
-	delete clientServerPort;
+	
 }
 
 bool Client::connectToServer()
