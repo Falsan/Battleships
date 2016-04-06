@@ -58,7 +58,7 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 	while (true)
 	{
 		//Has a communication come in?
-		if (selector.wait(sf::milliseconds(500)))
+		if (selector.wait(sf::milliseconds(50)))
 		{
 			//If so->
 			//is someone trying to connect?
@@ -82,9 +82,6 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 					//pullout the current number of connected users
 					m_client->setClientID(genID());
 		
-					//attach our socket to our client
-
-
 					//add client to sockets list
 					sockets.push_back(m_client);
 		
@@ -97,11 +94,7 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 
 					m_client->getSocket()->send(p);
 				}
-
-
-
-
-
+				
 			}//Otherwise what is the message being sent?
 			else
 			{
@@ -127,8 +120,9 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 							int nothing = 0;
 
 						//	removeClientWithSocket((*it)->getSocket());
-							(*it)->getSocket()->disconnect();
+							//(*it)->getSocket()->disconnect();
 						}
+
 						//inputAction * HOLD = new inputAction();
 						auto RecevedTime = Clock::now();
 
@@ -147,15 +141,7 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 							//Send chat message
 						case 0:
 
-							//localy store the chat message 
-							inPacket >> chatMessage;
 
-							//run through all connected clients forwarding the packet
-							for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
-							{
-								//Send the message out to all clients
-								(*it)->getSocket()->send(inPacket);
-							}
 							break;
 
 							//shoot at board
@@ -192,6 +178,15 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 					
 						case 5:
 
+							//localy store the chat message 
+							inPacket >> chatMessage;
+
+							//run through all connected clients forwarding the packet
+							for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
+							{
+								//Send the message out to all clients
+								(*it)->getSocket()->send(inPacket);
+							}
 			
 							break;
 							//NickName
@@ -205,7 +200,9 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 						case 4 :
 
 							//marks down the exact time that the pong was receved 
-							clientHOLD->setLastPongVal(RecevedTime);
+
+							m_listOfClients[currentPing]->setLastPongVal(RecevedTime);
+							currentPing++;
 							break;
 						}
 						//infroms the input handler that the action still needs to be carried out
@@ -217,17 +214,21 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 		}
 		else
 		{
-			//Send out ping to all connected clients
-			for (auto& it = sockets.begin(); it != sockets.end(); it++)
+			if (m_listOfClients.size() > 0)
 			{
-
+				//If we have run through all the clients 
+				if (currentPing >= m_listOfClients.size())
+				{
+					currentPing = 0;
+				}
 				sf::Packet pingPack;
 				std::string ping = "PING";
 				pingPack << ping;
 
 				auto sentTime = Clock::now();
-				(*it)->setLastPingVal(sentTime);
-				(*it)->getSocket()->send(pingPack);
+				m_listOfClients[currentPing]->setLastPingVal(sentTime);
+				m_listOfClients[currentPing]->getSocket()->send(pingPack);
+
 
 			}
 			printNumOfConnectedClients();
@@ -257,10 +258,12 @@ void Listener::printNumOfConnectedClients()
 			std::cout << (*it)->getNickName() << std::endl;
 		}
 
-		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(( (*it)->getLastPing() - (*it)->getLastPong())).count();
-			
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(((*it)->getLastPing() - (*it)->getLastPong())).count() > 0)
+		{
+			(*it)->setDuration(std::chrono::duration_cast<std::chrono::milliseconds>(((*it)->getLastPing() - (*it)->getLastPong())).count());
+		}
 		//Making the ping val readable
-		std::cout << std::setprecision(0) <<(duration)/numPrinted << std::endl;
+		std::cout << (*it)->getDuration()<< std::endl;
 			
 		numPrinted++;
 	}
