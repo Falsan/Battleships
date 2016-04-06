@@ -4,18 +4,24 @@
 Client::Client()
 {
 	selector = new sf::SocketSelector;
+	soundBuffer = new sf::SoundBuffer;
 }
 
 Client::~Client()
 {
 	delete selector;
+	delete soundBuffer;
 }
 
 void Client::runClient()
 {
 	clientState = CLIENT_MENU;
+
+	soundBuffer->loadFromFile("connectionSound.wav");
+	connectionSound.setBuffer(*soundBuffer);
 	//start the main game loop
 	clientServerPort = new ServerPort;
+
 	while (clientState != CLIENT_QUIT)
 	{
 		//go to the menu and ask the user for input
@@ -38,6 +44,7 @@ void Client::runClient()
 				clientState = CLIENT_PLAY_GAME;
 				currentGame = new Game(socket);
 				currentGame->setup(socket);
+				connectionSound.play();
 
 				while (clientState == CLIENT_PLAY_GAME)
 				{

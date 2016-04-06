@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <SFML\Network.hpp>
+#include <SFML\Audio.hpp>
 
 #include "Game.h"
 
@@ -45,4 +46,6 @@ private:
 	
 	sf::TcpSocket socket;
 	sf::SocketSelector* selector;
+	sf::SoundBuffer* soundBuffer;
+	sf::Sound connectionSound;
 };
