@@ -26,7 +26,7 @@ public:
 	PlayerTurn * GetTurnAction() { return turnAction; }
 	std::string getNickName() { return nickName; }
 	BattleShipsGame * getGame() { return currentGame; }
-
+	int getDuration() { return duration; }
 
 
 	void setClientID(int _in) { clientID = _in; }
@@ -41,6 +41,7 @@ public:
 	void setTurnAction(PlayerTurn * _in) { turnAction = _in; }
 	void setNickName(std::string _in){	nickName = _in; }
 	void setGame(BattleShipsGame * _in) { currentGame = _in; }
+	void setDuration(int _in) { duration = _in; }
 
 private:
 	// the Id used to identify the user
@@ -50,6 +51,7 @@ private:
 	int timeOuts = 0;
 	std::chrono::steady_clock::time_point lastPingValue;
 	std::chrono::steady_clock::time_point lastPongValue;
+	float duration;
 	bool connected = false;
 	sf::TcpSocket* socket;
 	bool boardSet = false;

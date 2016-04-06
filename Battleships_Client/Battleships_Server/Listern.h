@@ -31,6 +31,8 @@ public:
 
 	//std::vector<sf::TcpSocket*>  getSockets() { return m_sockets; };
 
+	int currentPing = 0;
+
 	std::vector<Client*> m_listOfClients;
 
 	std::vector<inputAction*> m_actionList;

@@ -18,9 +18,13 @@ void PacketManager::sendPacket(std::string stringPacket, sf::TcpSocket& socket, 
 	}
 }
 
+//PUT SERVER ID IN HERE 
 std::string PacketManager::recievePacket(sf::TcpSocket& socket, sf::SocketSelector* selector, int serverID)
 {
-
+	while (serverID == 0)
+	{
+		serverID = recieveServerID(socket, selector);
+	}
 	while (true)
 	{
 		if (selector->wait(sf::milliseconds(10)) && selector->isReady(socket))
@@ -33,13 +37,12 @@ std::string PacketManager::recievePacket(sf::TcpSocket& socket, sf::SocketSelect
 				{
 					std::string s = "PONG";
 
-					pongPacket << 1;
+					pongPacket << serverID;
 					pongPacket << s;
 					socket.send(pongPacket);
 				}
 			}
 		}
-
 	}
 	
 	//std::cout << incomingData;

@@ -30,7 +30,7 @@ void Game::setup(sf::TcpSocket& thisClient)
 void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 {
 	//std::thread inputThread(&Game::gameInputHandle, this);
-	std::cout << packetHandler->recievePacket(thisClient, selector, serverID);
+	std::cout << packetHandler->recievePacket(thisClient, selector);
 	
 	//std::thread serverThread(&Game::gamePacketHandle, &thisClient);
 	
