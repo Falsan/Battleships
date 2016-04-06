@@ -12,7 +12,6 @@ Client::~Client()
 {
 	delete selector;
 	delete audioManager;
-	delete clientServerPort;
 }
 
 void Client::runClient()
@@ -21,7 +20,6 @@ void Client::runClient()
 	audioManager->loadSoundFromFile();
 	audioManager->loadSound();
 	//start the main game loop
-	
 
 	while (clientState != CLIENT_QUIT)
 	{
@@ -33,8 +31,6 @@ void Client::runClient()
 		//if they choose to play a new game, connect to the server
 		if (clientState == CLIENT_READY)
 		{
-
-			socket.setBlocking(false);
 
 			if (connectToServer() == false)//if they can't connect, say so and return to menu
 			{
@@ -60,24 +56,23 @@ void Client::runClient()
 		
 		//if they choose to quit then exit the loop
 	}
-	
+	delete clientServerPort;
 }
 
 bool Client::connectToServer()
 {
+	//ask the server if it is up
 	socket.setBlocking(true);
-	sf::TcpSocket::Status status = socket.connect("127.0.0.1", clientServerPort->SERVER_PORT);
+	sf::TcpSocket::Status status = socket.connect("127.0.0.1", 53000/*clientServerPort->SERVER_PORT*/);
 	if (status != sf::TcpSocket::Done)
 	{
+		//if the server takes too long, it must be down, so return a string which says so
 		std::cout << "Error, could not connect to server" << std::endl;
 		return false;
 	}
 	//if it's up, then try to connect to a listener
 	selector->add(socket);
-
-	//ask the server if it is up
-
-	//if the server takes too long, it must be down, so return a string which says so
+	
 	return true;
 }
 

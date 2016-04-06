@@ -46,4 +46,8 @@ private:
 	};
 
 	int commandNumber;
+	int windowLength;
+	int windowWidth;
+	std::string windowName;
+	sf::RenderWindow* window;
 };
