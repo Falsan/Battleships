@@ -9,19 +9,22 @@ Game::Game(sf::TcpSocket& thisClient)
 	inputHandler = new InputManager;
 	packetHandler = new PacketManager;
 	phase = PLAYERIDENT;
+	window = new sf::RenderWindow(sf::VideoMode(windowLength, windowWidth), windowName);
+	
 }
 
 Game::~Game()
 {
 	delete inputHandler;
 	delete packetHandler;
+	delete window;
 	//all deletion goes here
 }
 
 void Game::setup(sf::TcpSocket& thisClient)
 {
 	//threads launch here
-
+	sf::RenderWindow window(sf::VideoMode(800, 600), "Battleships");
 	//any leftover variables are set up
 	
 	//begins update loop
@@ -29,7 +32,7 @@ void Game::setup(sf::TcpSocket& thisClient)
 
 void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 {
-	//std::thread inputThread(&Game::gameInputHandle, this);
+	std::thread renderThread(&Game::render, this);
 	std::cout << packetHandler->recievePacket(thisClient, selector);
 	
 	//std::thread serverThread(&Game::gamePacketHandle, &thisClient);
@@ -40,7 +43,7 @@ void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 
 	//put that to the screen using the UI manager
 	clearScreen();
-	render();
+	//render();
 	//request any input from the input manager
 	std::cout << "Connection stable";
 	
@@ -118,6 +121,29 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 void Game::render()
 {
 	//render everything to screen
+	// run the program as long as the window is open
+	while (window->isOpen())
+	{
+		// check all the window's events that were triggered since the last iteration of the loop
+		sf::Event event;
+		while (window->pollEvent(event))
+		{
+			// "close requested" event: we close the window
+			if (event.type == sf::Event::Closed)
+			{
+				window->close();
+			}
+		}
+
+		// clear the window with black color
+		window->clear(sf::Color::Black);
+
+		// draw everything here...
+		// window.draw(...);
+
+		// end the current frame
+		window->display();
+	}
 	std::cout << displayedMap << std::endl;
 }
 
