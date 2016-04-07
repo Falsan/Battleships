@@ -14,6 +14,7 @@ public:
 	std::string recieveMapUpdate(sf::TcpSocket& socket);
 	int recieveCurrentGameState(sf::TcpSocket& socket);
 	int recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* selector);
+	void heartBeat(sf::TcpSocket& socket, sf::SocketSelector* selector, int serverID);
 
 
 

@@ -21,30 +21,24 @@ void PacketManager::sendPacket(std::string stringPacket, sf::TcpSocket& socket, 
 //PUT SERVER ID IN HERE 
 std::string PacketManager::recievePacket(sf::TcpSocket& socket, sf::SocketSelector* selector, int serverID)
 {
-	while (serverID == 0)
+	
+	if (selector->wait(sf::milliseconds(10)) && selector->isReady(socket))
 	{
-		serverID = recieveServerID(socket, selector);
-	}
-	while (true)
-	{
-		if (selector->wait(sf::milliseconds(10)) && selector->isReady(socket))
+		if (socket.receive(incomingPacket) == sf::Socket::Done)
 		{
-			if (socket.receive(incomingPacket) == sf::Socket::Done)
+			incomingPacket >> incomingData;
+
+			if (incomingData == "PING")
 			{
-				incomingPacket >> incomingData;
+				std::string s = "PONG";
 
-				if (incomingData == "PING")
-				{
-					std::string s = "PONG";
-
-					pongPacket << serverID;
-					pongPacket << s;
-					socket.send(pongPacket);
-				}
+				pongPacket << serverID;
+				pongPacket << s;
+				socket.send(pongPacket);
+				return NULL;
 			}
 		}
 	}
-	
 	//std::cout << incomingData;
 
 	return incomingData;
@@ -85,4 +79,33 @@ int PacketManager::recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* se
 	//std::cout << incomingData;
 
 	return serverIDRecieved;
+}
+
+void PacketManager::heartBeat(sf::TcpSocket& socket, sf::SocketSelector* selector, int serverID)
+{
+
+	while (serverID == 0)
+	{
+		serverID = recieveServerID(socket, selector);
+	}
+	while (true)
+	{
+		if (selector->wait(sf::milliseconds(10)) && selector->isReady(socket))
+		{
+			if (socket.receive(incomingPacket) == sf::Socket::Done)
+			{
+				incomingPacket >> incomingData;
+
+				if (incomingData == "PING")
+				{
+					std::string s = "PONG";
+
+					pongPacket << serverID;
+					pongPacket << s;
+					socket.send(pongPacket);
+				}
+			}
+		}
+	}
+
 }
