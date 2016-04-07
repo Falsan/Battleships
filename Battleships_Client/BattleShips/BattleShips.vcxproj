@@ -19,17 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Board.cpp" />
-    <ClCompile Include="BoardManager.cpp" />
-    <ClCompile Include="Cell.cpp" />
-    <ClCompile Include="Ship.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Board.h" />
     <ClInclude Include="BoardManager.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Celltypes.h" />
+    <ClInclude Include="DrawBoard.h" />
     <ClInclude Include="Ship.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DrawBoard.cpp" />
+    <ClCompile Include="GameBoard.cpp" />
+    <ClCompile Include="GameBoardManager.cpp" />
+    <ClCompile Include="GameCell.cpp" />
+    <ClCompile Include="Ship.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1E76C048-B50B-4763-9795-E2C23E4BECA2}</ProjectGuid>

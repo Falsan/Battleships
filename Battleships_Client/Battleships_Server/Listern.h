@@ -6,6 +6,7 @@
 #include "Client.h"
 #include "InputAction.h"
 #include "Game.h"
+#include <memory>
 class Listener
 {
 public:
@@ -35,6 +36,8 @@ public:
 
 	std::vector<Client*> m_listOfClients;
 
+	bool pingSent = false;
+
 	std::vector<inputAction*> m_actionList;
 
 protected:
@@ -42,6 +45,7 @@ protected:
 	//std::vector<sf::TcpSocket*> m_sockets;
 	//sf::SocketSelector  m_selector;
 private:
+
 
 	BattleShipsGame * m_Game;
 

@@ -152,6 +152,11 @@
     <ClInclude Include="PlayerTurn.h" />
     <ClInclude Include="Row.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BattleShips\BattleShips.vcxproj">
+      <Project>{1e76c048-b50b-4763-9795-e2c23e4beca2}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

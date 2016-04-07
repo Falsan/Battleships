@@ -15,13 +15,11 @@ public:
 
 	Client * getPlayerOne() { return PlayerOne; };
 	Client * getPlayerTwo() { return PlayerTwo; };
-	std::vector<Cell*> getGameBoard() { return gameBoard; };
 	bool getCurrentTurn() { return currentTurn; }
 	int getCurrentPhase() { return currentPhase; }
 
 	void setPlayerOne(Client * _in) { PlayerOne = _in; };
 	void setPlayerTwo(Client * _in) { PlayerTwo = _in; };
-	void setGameBoard(std::vector<Cell*> _inBoard) { gameBoard = _inBoard; };
 	void setCurrentTurn(bool _in) { currentTurn = _in; }
 	void setCurrentPhase(int _in) { currentPhase = _in; }
 
@@ -30,7 +28,7 @@ public:
 
 
 private:
-	std::vector<Cell*> gameBoard;
+
 	Client * PlayerOne;
 	Client * PlayerTwo;
 	int currentPhase = GAMEPHASE::SETUP; 
