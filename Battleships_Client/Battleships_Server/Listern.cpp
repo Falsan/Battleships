@@ -3,7 +3,7 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
- 
+
 #include <iomanip>      
 
 typedef std::chrono::high_resolution_clock Clock;
@@ -14,6 +14,7 @@ Listener::Listener(std::vector<Client*> _listOfClients, std::vector<inputAction*
 	m_listOfClients = _listOfClients;
 	m_actionList = _actionList;
 	m_selector = _selector;
+
 
 
 	//Launches a thread with the removal function
@@ -63,7 +64,7 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 			//If so->
 			//is someone trying to connect?
 			if (selector.isReady(listener))
-			{	
+			{
 				Client * m_client = new Client();
 				sf::TcpSocket* TCPSocket = new sf::TcpSocket;
 				m_client->setSocket(TCPSocket);
@@ -77,14 +78,14 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 				else
 				{
 					//Make a client object for the user to be housed in. 
-			
-					
+
+
 					//pullout the current number of connected users
 					m_client->setClientID(genID());
-		
+
 					//add client to sockets list
 					sockets.push_back(m_client);
-		
+
 					//add client to the selector
 					selector.add(*m_client->getSocket());
 
@@ -94,32 +95,41 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 
 					m_client->getSocket()->send(p);
 				}
-				
+
 			}//Otherwise what is the message being sent?
 			else
 			{
 				//loop through each client in the sockets list
 
-				for (auto  it = sockets.begin(); it != sockets.end(); it++)
+				for (auto it = sockets.begin(); it != sockets.end(); it++)
 				{
-					
+					auto socket = (*it)->getSocket();
+
+
 					//check to see if it's got something to say
-					if (selector.isReady(*(*it)->getSocket()))
+					if (selector.isReady(*socket))
 					{
+
+						//Template here?
+						outPacket.clear();
 						int ID;
 						std::string nickName;
 						std::string chatMessage;
 						int actionID;
 						std::pair<int, int> pos;
 						int menuOption;
+						int ignore;
+						std::vector < std::pair<int, int> >inBoardlocs;
 
 
 						//If the user had disconnected
-						if((*it)->getSocket()->receive(inPacket) == sf::Socket::Disconnected);
+
+						socket->setBlocking(true);
+						if (socket->receive(inPacket) == sf::Socket::Disconnected);
 						{
 							int nothing = 0;
 
-						//	removeClientWithSocket((*it)->getSocket());
+							//	removeClientWithSocket((*it)->getSocket());
 							//(*it)->getSocket()->disconnect();
 						}
 
@@ -130,7 +140,7 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 						inPacket >> ID;
 
 						//finds the client that this is applicable to
-						Client * clientHOLD = findClientWithID(ID);				
+						Client * clientHOLD = findClientWithID(ID);
 
 						//takes the action distabution ID from the message and stores it
 						inPacket >> actionID;
@@ -138,32 +148,73 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 						//swaps to the appropriate element based on in sent requet marker
 						switch (actionID)
 						{
-							//Send chat message
-						case 0:
-
-
-							break;
-
 							//shoot at board
 						case 1:
 							//take out any board pos request
 							inPacket >> pos.first;
-							inPacket >> pos.second;			
+							inPacket >> pos.second;
 							break;
 
-							//join game
+							//receve a board
 						case 2:
-							inPacket >> menuOption;
+							//Pulling the content out of the pair elements
+							for (auto it = inBoardlocs.begin(); it != inBoardlocs.end(); it++)
+							{
+								inPacket >> (*it).first;
+								inPacket >> (*it).second;
+
+								//pulling out the size element
+								inPacket >> ignore;
+							}
+
+							clientHOLD->setPlayersBoard(clientHOLD->setUpBoard(inBoardlocs));
+							clientHOLD->setBoardSet(true);
+
+							break;
+
+							//Join a game 
+						case 3:
 							if (prepareGame(clientHOLD) == 2)
 							{
 								//With two players ready the game starts
 								startGame(m_PlayerOne, m_PlayerTwo);
 							}
-							
 							break;
-							//client disconnect game 
-						case 3:
-							
+							//Ping
+						case 4:
+							if (currentPing < m_listOfClients.size())
+							{
+								//marks down the exact time that the pong was receved 
+								std::string s = "/CHAT";
+								outPacket << s;
+								m_listOfClients[currentPing]->getSocket()->send(outPacket);
+
+								m_listOfClients[currentPing]->setLastPongVal(RecevedTime);
+
+								pingSent = false;
+								currentPing++;
+							}
+							break;
+						case 5:
+
+							//localy store the chat message 
+							inPacket >> chatMessage;
+							std::cout << chatMessage << std::endl;
+							outPacket << chatMessage;
+
+							//run through all connected clients forwarding the packet
+							for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
+							{
+								//Send the message out to all clients
+								(*it)->getSocket()->send(outPacket);
+							}
+
+							break;
+							//NickName
+						case 6:
+
+							inPacket >> nickName;
+							clientHOLD->setNickName(nickName);
 							break;
 							//Request current game Phase
 						case 7:
@@ -175,46 +226,16 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 								clientHOLD->getSocket()->send(outPacket);
 							}
 							break;
-					
-						case 5:
 
-							//localy store the chat message 
-							inPacket >> chatMessage;
-
-							//run through all connected clients forwarding the packet
-							for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
-							{
-								//Send the message out to all clients
-								(*it)->getSocket()->send(inPacket);
-							}
-			
-							break;
-							//NickName
-						case 6:
-							
-							inPacket >> nickName;
-
-							clientHOLD->setNickName(nickName);
-							break;
-							//Ping
-						case 4 :
-
-							//marks down the exact time that the pong was receved 
-
-							m_listOfClients[currentPing]->setLastPongVal(RecevedTime);
-							currentPing++;
-							break;
 						}
 						//infroms the input handler that the action still needs to be carried out
-
 					}
-					
 				}
 			}
 		}
 		else
 		{
-			if (m_listOfClients.size() > 0)
+			if ((m_listOfClients.size() > 0) && (pingSent == false))
 			{
 				//If we have run through all the clients 
 				if (currentPing >= m_listOfClients.size())
@@ -229,10 +250,10 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 				m_listOfClients[currentPing]->setLastPingVal(sentTime);
 				m_listOfClients[currentPing]->getSocket()->send(pingPack);
 
-
+				pingSent = true;
 			}
 			printNumOfConnectedClients();
-			
+
 		}
 	}
 }
@@ -242,14 +263,19 @@ void Listener::listen(sf::SocketSelector& selector, std::vector<Client*>& socket
 void Listener::printNumOfConnectedClients()
 {
 
-		// V Remove for final V
-		system("CLS");
-		std::cout << "Server is running" << std::endl << "currently [" << m_listOfClients.size() << "] connected clients" << std::endl;
-		int numPrinted = 1;
+	// V Remove for final V
+	system("CLS");
+	std::cout << "Server is running" << std::endl << "currently [" << m_listOfClients.size() << "] connected clients" << std::endl;
+	int numPrinted = 1;
+
+	if (m_Game)
+	{
+		std::cout << "Current game: BattleShips" << std::endl << "Current Players:" << m_PlayerOne->getClientID() << " VS " << m_PlayerTwo->getClientID() << std::endl;
+	}
 
 	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
 	{
-		if((*it)->getNickName() == "NULL")
+		if ((*it)->getNickName() == "NULL")
 		{
 			std::cout << (*it)->getClientID() << std::endl;
 		}
@@ -263,8 +289,8 @@ void Listener::printNumOfConnectedClients()
 			(*it)->setDuration(std::chrono::duration_cast<std::chrono::milliseconds>(((*it)->getLastPing() - (*it)->getLastPong())).count());
 		}
 		//Making the ping val readable
-		std::cout << (*it)->getDuration()<< std::endl;
-			
+		std::cout << ((*it)->getDuration() / m_listOfClients.size()) << "ms" << std::endl;
+
 		numPrinted++;
 	}
 
@@ -283,7 +309,7 @@ void Listener::removeClientWithSocket(sf::TcpSocket* _id)
 			if (m_listOfClients[i]->getSocket() == _id)
 			{
 				m_listOfClients.erase(m_listOfClients.begin() + i);
-				loopVal= loopVal - 1;
+				loopVal = loopVal - 1;
 			}
 		}
 	}
@@ -306,17 +332,17 @@ int Listener::genID()
 {
 	//Create a generic ID for the user
 	//loop through all of the users
-	int currentHigh=1; 
-		
+	int currentHigh = 1;
+
 	//In order to ensure that users are not give matching values we always give them the highest
 	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
 	{
-		if((*it)->getClientID()> currentHigh);
+		if ((*it)->getClientID()> currentHigh);
 		{
-			currentHigh = (*it)->getClientID()+1;
+			currentHigh = (*it)->getClientID() + 1;
 		}
 	}
-	
+
 	return currentHigh;
 }
 
@@ -333,6 +359,13 @@ int Listener::prepareGame(Client * _player)
 	else if (!m_PlayerTwo)
 	{
 		m_PlayerTwo = _player;
+		//ensure that the same player has not entered the game twice
+		if (m_PlayerOne == m_PlayerTwo)
+		{
+			m_PlayerTwo = nullptr;
+			return 1;
+		}
+
 		return 2;
 	}
 	//Otherwise return false

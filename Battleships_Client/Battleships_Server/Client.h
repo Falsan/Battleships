@@ -14,6 +14,10 @@ class Client
 public:
 	Client() = default;
 	~Client() = default;
+
+	std::vector <Cell*> setUpBoard(std::vector<std::pair<int, int>>);
+
+
 	int getClientID() { return clientID; }
 	int getTimeOuts() { return timeOuts; }
 	bool getconnected() { return connected; }
@@ -27,6 +31,7 @@ public:
 	std::string getNickName() { return nickName; }
 	BattleShipsGame * getGame() { return currentGame; }
 	int getDuration() { return duration; }
+	Client* getOppenent() { return opponent; };
 
 
 	void setClientID(int _in) { clientID = _in; }
@@ -39,9 +44,10 @@ public:
 	void setPlayersBoard(std::vector <Cell*> _in) { m_PlayersBoard = _in; }
 	void setTakeTurn(bool _in) { takeTurn = _in; }
 	void setTurnAction(PlayerTurn * _in) { turnAction = _in; }
-	void setNickName(std::string _in){	nickName = _in; }
+	void setNickName(std::string _in) { nickName = _in; }
 	void setGame(BattleShipsGame * _in) { currentGame = _in; }
 	void setDuration(int _in) { duration = _in; }
+	void setOponent(Client * _in) { opponent = _in; }
 
 private:
 	// the Id used to identify the user
@@ -58,6 +64,8 @@ private:
 	std::vector <Cell*> m_PlayersBoard;
 	bool takeTurn = false;
 	std::string nickName = "NULL";
+
+	Client * opponent;
 
 	BattleShipsGame * currentGame;
 
