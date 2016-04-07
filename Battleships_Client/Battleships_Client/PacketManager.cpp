@@ -65,14 +65,14 @@ int PacketManager::recieveCurrentGameState(sf::TcpSocket& socket)
 int PacketManager::recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* selector)
 {
 	sf::Packet serverIDPacket;
-	int serverIDRecieved;
-	if (selector->wait(sf::milliseconds(10)) && selector->isReady(socket))
-	{
+	int serverIDRecieved =0;
+//	while (!selector->isReady(socket)) {}
+	
 		if (socket.receive(serverIDPacket) == sf::Socket::Done)
 		{
 			serverIDPacket >> serverIDRecieved;
 		}
-	}
+	
 
 
 
@@ -80,6 +80,7 @@ int PacketManager::recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* se
 
 	return serverIDRecieved;
 }
+
 
 void PacketManager::heartBeat(sf::TcpSocket& socket, sf::SocketSelector* selector, int serverID)
 {
@@ -109,3 +110,63 @@ void PacketManager::heartBeat(sf::TcpSocket& socket, sf::SocketSelector* selecto
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+////PUT SERVER ID IN HERE 
+//std::string PacketManager::recievePacket(sf::TcpSocket& socket, sf::SocketSelector* selector, int serverID)
+//{
+//
+//
+//	serverID = recieveServerID(socket, selector);
+//
+//	while (true)
+//	{
+//		if (selector->wait(sf::milliseconds(10)) && selector->isReady(socket))
+//		{
+//			if (socket.receive(incomingPacket) == sf::Socket::Done)
+//			{
+//				incomingPacket >> incomingData;
+//
+//				pongPacket.clear();
+//
+//				if (incomingData == "PING")
+//				{
+//					std::string s = "PONG";
+//
+//					pongPacket << serverID;
+//					pongPacket << s;
+//					socket.send(pongPacket);
+//				}
+//				else if (incomingData == "/CHAT")
+//				{
+//					int i = 3;
+//					std::string s = "I HAVE RECEVED A MESSAGE";
+//
+//					pongPacket << serverID;
+//					pongPacket << i;
+//					pongPacket << s;
+//					socket.send(pongPacket);
+//				}
+//				else if (incomingData == "I HAVE RECEVED A MESSAGE")
+//				{
+//					std::cout << incomingData;
+//				}
+//			}
+//		}
+//	}
+//
+//	//std::cout << incomingData;
+//
+//	return incomingData;
+//}
+//
+
