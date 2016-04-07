@@ -6,10 +6,19 @@
 Game::Game(sf::TcpSocket& thisClient)
 {
 	//all initial creation for the game goes here
+	windowLength = 800;
+	windowWidth = 600;
 	inputHandler = new InputManager;
 	packetHandler = new PacketManager;
 	phase = PLAYERIDENT;
 	window = new sf::RenderWindow(sf::VideoMode(windowLength, windowWidth), windowName);
+	
+	font.loadFromFile("arial.ttf");
+	text.setFont(font);
+	text.setString("HelloWorld");
+	text.setCharacterSize(24);
+	text.setColor(sf::Color::Red);
+	text.setStyle(sf::Text::Regular);
 	
 }
 
@@ -24,7 +33,7 @@ Game::~Game()
 void Game::setup(sf::TcpSocket& thisClient)
 {
 	//threads launch here
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Battleships");
+	//sf::RenderWindow window(sf::VideoMode(800, 600), "Battleships");
 	//any leftover variables are set up
 	
 	//begins update loop
@@ -33,13 +42,13 @@ void Game::setup(sf::TcpSocket& thisClient)
 void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 {
 	std::thread renderThread(&Game::render, this);
-	std::cout << packetHandler->recievePacket(thisClient, selector);
+	packetHandler->heartBeat(thisClient, selector, serverID);
 	
 	//std::thread serverThread(&Game::gamePacketHandle, &thisClient);
 	
 	//update the game logic from the last server data
 	//phase = packetHandler->recieveCurrentGameState(thisClient);
-	resolution(thisClient, selector);
+	//resolution(thisClient, selector);
 
 	//put that to the screen using the UI manager
 	clearScreen();
@@ -140,6 +149,7 @@ void Game::render()
 
 		// draw everything here...
 		// window.draw(...);
+		window->draw(text);
 
 		// end the current frame
 		window->display();

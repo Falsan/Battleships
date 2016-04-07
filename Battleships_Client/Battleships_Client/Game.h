@@ -50,4 +50,7 @@ private:
 	int windowWidth;
 	std::string windowName;
 	sf::RenderWindow* window;
+
+	sf::Font font;
+	sf::Text text;
 };
