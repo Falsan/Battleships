@@ -21,16 +21,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Row.cpp">
-      <Filter>Source Files\Source</Filter>
-    </ClCompile>
     <ClCompile Include="OutPut.cpp">
-      <Filter>Source Files\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="GameManager.cpp">
-      <Filter>Source Files\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Cell.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
     <ClCompile Include="Board.cpp">
@@ -39,57 +30,30 @@
     <ClCompile Include="Source.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
-    <ClCompile Include="GameData.cpp">
-      <Filter>Source Files\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Listern.cpp">
-      <Filter>Source Files\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="InputAction.cpp">
-      <Filter>Source Files\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="HeartBeat.cpp">
-      <Filter>Source Files\Source</Filter>
-    </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
-    <ClCompile Include="InputHandeler.cpp">
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="BattleShipsGame.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ChatServer.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Row.h">
-      <Filter>Source Files\Headder</Filter>
-    </ClInclude>
     <ClInclude Include="OutPut.h">
-      <Filter>Source Files\Headder</Filter>
-    </ClInclude>
-    <ClInclude Include="GameManager.h">
-      <Filter>Source Files\Headder</Filter>
-    </ClInclude>
-    <ClInclude Include="Cell.h">
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
     <ClInclude Include="Board.h">
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
-    <ClInclude Include="GameData.h">
-      <Filter>Source Files\Headder</Filter>
-    </ClInclude>
-    <ClInclude Include="Listern.h">
-      <Filter>Source Files\Headder</Filter>
-    </ClInclude>
-    <ClInclude Include="InputAction.h">
-      <Filter>Source Files\Headder</Filter>
-    </ClInclude>
     <ClInclude Include="Client.h">
-      <Filter>Source Files\Headder</Filter>
-    </ClInclude>
-    <ClInclude Include="HeartBeat.h">
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
@@ -98,10 +62,13 @@
     <ClInclude Include="GamePhase.h">
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerTurn.h">
+    <ClInclude Include="GameManager.h">
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
-    <ClInclude Include="InputHandeler.h">
+    <ClInclude Include="BattleShipsGame.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="ChatServer.h">
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
   </ItemGroup>

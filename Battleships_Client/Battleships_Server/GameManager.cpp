@@ -1,35 +1,51 @@
 #include "GameManager.h"
-#include "Listern.h"
+#include "ChatServer.h"
 
 
-GameManager::GameManager(gameData * _GD)
+GameManager::GameManager()
 {
-	m_inputManager = new inputHandeler(&getActionList(), &getClientList());
 
-	std::thread Listern(&GameManager::listener, this);
-	Listern.join();
+	listener();
+	//std::thread Listern(&GameManager::listener, this);
+
+	std::thread Server(&ChatServer::runServer, m_listern);
+	std::thread Draw(&GameManager::draw, this);
+
+	while (true)
+	{
+
+	}
+
+	
 }
 
 GameManager::~GameManager()
 {
-	delete m_inputManager;
+
 }
 
 //thread for listerning out for a signal from the clients
 bool GameManager::listener()
-{
-	m_listern = new Listener(getClientList(), getActionList(), getSelector());
-	std::thread Draw(&GameManager::draw, this);
-	m_listern->runServer();
-	
+{	
+	m_listern = new ChatServer(getClientList(), getSelector());
+	m_listOfChatRooms.push_back(m_listern);
+
 	return true;
 }
 
-bool GameManager::draw()
+void GameManager::draw()
 {
 	while (true)
 	{
-		m_listern->update();
+		if (m_listOfChatRooms.size() > 0)
+		{
+			int roomCount = 1;
+			for (auto it = m_listOfChatRooms.begin(); it != m_listOfChatRooms.end(); it++)
+			{
+				std::cout << "Room " << roomCount << ":" << std::endl;
+				(*it)->update();
+			}
+		}
 	}
 }
 

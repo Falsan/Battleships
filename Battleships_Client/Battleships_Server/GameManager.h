@@ -4,48 +4,33 @@
 #include "Board.h"
 #include "Cell.h"
 #include <memory>
-#include "GameData.h"
+
 #include <thread>
-#include "Listern.h"
-#include "InputAction.h"
-#include "InputHandeler.h"
+#include "ChatServer.h"
+
 
 class GameManager {
 
 public:
-	GameManager(gameData * _GD);
+	GameManager();
 	~GameManager();
 
-	Listener * m_listern;
-
+	ChatServer * m_listern;
 	bool listener();
-
-	inputHandeler * m_inputManager;
-
-	bool draw();
-
-	Board * getBoard() { return m_gameBoard; };
-
-	std::vector<inputAction*> getActionList() { return m_actionList; };
+	void draw();
 	std::vector<Client*> getClientList() { return m_clientList; };
 	sf::SocketSelector getSelector() { return m_selector; }
-
-	void setActionList(inputAction* _in) { m_actionList.push_back(_in); };
 	void setClientList(Client* _in) { m_clientList.push_back(_in); }
 	void setSelector(sf::SocketSelector _in) { m_selector = _in; }
 
+	std::vector<ChatServer*> m_listOfChatRooms;
+
 private:
-	Board * m_gameBoard;
 
-	std::vector<inputAction*> m_actionList;
 	std::vector<Client*> m_clientList;
-
 	std::vector<sf::TcpSocket*> * m_sockets;
-
 	sf::SocketSelector m_selector;
-
 	sf::TcpListener * m_listener;
-
 };
 
 #endif

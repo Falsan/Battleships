@@ -6,33 +6,35 @@
 #include "Client.h"
 
 
+
+
 class Client;
-class BattleShipsGame
+class GameBase
 {
 public:
-	BattleShipsGame(Client* _playerOne, Client * _playerTwo);
-	~BattleShipsGame() = default;
+	GameBase(Client* _playerOne, Client * _playerTwo);
+	~GameBase() = default;
 
 	Client * getPlayerOne() { return PlayerOne; };
 	Client * getPlayerTwo() { return PlayerTwo; };
-	std::vector<Cell*> getGameBoard() { return gameBoard; };
-	bool getCurrentTurn() { return currentTurn; }
+	bool getCurrentTurn() { return currentPlayerTurn; }
 	int getCurrentPhase() { return currentPhase; }
 
 	void setPlayerOne(Client * _in) { PlayerOne = _in; };
 	void setPlayerTwo(Client * _in) { PlayerTwo = _in; };
-	void setGameBoard(std::vector<Cell*> _inBoard) { gameBoard = _inBoard; };
-	void setCurrentTurn(bool _in) { currentTurn = _in; }
+	void setCurrentTurn(bool _in) { currentPlayerTurn = _in; }
 	void setCurrentPhase(int _in) { currentPhase = _in; }
 
-	void update();
+	virtual void update() = 0;
 
+	virtual void input(int _in) = 0;
+	virtual int outPut() = 0;
 
 
 private:
-	std::vector<Cell*> gameBoard;
+
 	Client * PlayerOne;
 	Client * PlayerTwo;
 	int currentPhase = GAMEPHASE::SETUP; 
-	bool currentTurn = true;
+	int currentPlayerTurn = 0;
 };
