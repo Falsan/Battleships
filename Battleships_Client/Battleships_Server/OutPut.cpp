@@ -1,11 +1,11 @@
 #include "OutPut.h"
 
-void output::printBoard(std::vector<Cell*> _inVec, gameData * _GD)
+void output::printBoard(std::vector<Cell*> _inVec)
 {
 	std::cout << "0\t 1\t 2\t 3\t 4\t 5\t 6\t 7\t 8\t 9\t" << std::endl;
-	for (int i = 0; i < _GD->GetBoardDi(); i++)
+	for (int i = 0; i < 10; i++)
 	{
-		for (int j = 0; j < _GD->GetBoardDi(); j++)
+		for (int j = 0; j <10; j++)
 		{
 			int HOLD = i + j;
 			printElement(HOLD);

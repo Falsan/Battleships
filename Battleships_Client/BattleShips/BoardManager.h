@@ -13,7 +13,7 @@ public:
 	bool testShip(int x, int y);
 	//std::vector<std::pair<int, int>> getOrientation(Ship* ship);
 	void putShipOnBoard();
-	static int shootBoard(std::pair<int, int>, std::vector <Cell*>);
+	static bool shootBoard(std::pair<int, int>, std::vector <Cell*>);
 
 protected:
 

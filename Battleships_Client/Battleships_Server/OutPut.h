@@ -1,7 +1,6 @@
 #include <vector>
 #include "Cell.h"
 #include <iostream>
-#include "GameData.h"
 
 
 class output
@@ -9,7 +8,7 @@ class output
 private:
 
 public:
-	static void printBoard(std::vector<Cell*>, gameData * _GD);
+	static void printBoard(std::vector<Cell*>);
 	static void printElement(int);
 
 	template<typename T>

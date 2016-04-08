@@ -57,11 +57,15 @@ void BoardManager::putShipOnBoard()
 
 }
 
-int BoardManager::shootBoard(std::pair<int, int> _shot, std::vector <Cell*> _board)
+bool BoardManager::shootBoard(std::pair<int, int> _shot, std::vector <Cell*> _board)
 {
 	int loc = (1 * _shot.first) + _shot.second;
-
-	return _board[loc]->getType();
-
-
+	if (_board[loc]->getType() == 0)
+	{
+		return true;
+	}
+	else if (_board[loc]->getType() == 1)
+	{
+		return false;
+	}
 }
