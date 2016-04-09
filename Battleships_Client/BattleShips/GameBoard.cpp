@@ -23,12 +23,18 @@ Cell* Board::getCell(int x, int y)
 	return m_board[(index * x) + y]; //sets the vector to essentially have two dimensions
 }
 
+Cell* Board::getCell(int loc)
+{
+	return m_board[loc];
+}
+
+
 void Board::setCell(int type, int x, int y)
 {
 	getCell(x, y)->setType(type);
 }
-
-void Board::makeShip(int size, int orientation, std::pair<int, int> origin)
+void Board::setCell(int loc, int _in)
 {
-	ships.push_back(new Ship(size, orientation, origin));
+	m_board[loc]->setType(_in);
 }
+
