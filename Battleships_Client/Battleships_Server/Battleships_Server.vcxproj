@@ -69,7 +69,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)\SFML-2.3.2\include;$(includePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\SFML-2.3.2\include;$(includePath);$(SolutionDir)\BattleShips</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

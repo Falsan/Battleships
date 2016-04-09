@@ -29,6 +29,9 @@ protected:
 private:
 
 	std::string userCommand;
+	int coordinate;
+	int orientation;
+	std::string chatMessage;
 	sf::TcpSocket currentClient;
 	InputManager* inputHandler;
 	PacketManager* packetHandler;
