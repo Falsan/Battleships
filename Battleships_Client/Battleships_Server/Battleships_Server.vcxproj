@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="BattleShipsGame.h" />
     <ClInclude Include="Board.h" />
+    <ClInclude Include="CellTypesLoc.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameManager.h" />

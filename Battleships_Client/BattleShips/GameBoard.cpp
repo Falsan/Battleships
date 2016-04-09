@@ -2,7 +2,7 @@
 
 Board::Board()
 {
-	for (auto it = board.begin(); it != board.end(); it++)
+	for (auto it = m_board.begin(); it != m_board.end(); it++)
 	{
 		(*it) = new Cell;
 	}
@@ -10,7 +10,7 @@ Board::Board()
 
 Board::~Board()
 {
-	for (auto it = board.begin(); it != board.end(); it++)
+	for (auto it = m_board.begin(); it != m_board.end(); it++)
 	{
 		delete *it;
 	}
@@ -18,9 +18,9 @@ Board::~Board()
 
 Cell* Board::getCell(int x, int y)
 {
-	int index = 1;
+	int index = 10;
 
-	return board[(index * x) + y]; //sets the vector to essentially have two dimensions
+	return m_board[(index * x) + y]; //sets the vector to essentially have two dimensions
 }
 
 void Board::setCell(int type, int x, int y)

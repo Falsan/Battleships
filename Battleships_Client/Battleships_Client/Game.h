@@ -49,8 +49,8 @@ private:
 	int windowLength;
 	int windowWidth;
 	std::string windowName;
-	sf::RenderWindow* window;
+	//sf::RenderWindow* window;
 
-	sf::Font font;
-	sf::Text text;
+	//sf::Font font;
+	//sf::Text text;
 };

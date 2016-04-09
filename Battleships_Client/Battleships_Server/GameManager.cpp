@@ -1,7 +1,8 @@
 #include "GameManager.h"
 #include "ChatServer.h"
-
-
+#include <chrono>
+#include <thread>
+using namespace std::chrono_literals;
 GameManager::GameManager()
 {
 
@@ -46,6 +47,7 @@ void GameManager::draw()
 				(*it)->update();
 			}
 		}
+		std::this_thread::sleep_for(1s);
 	}
 }
 

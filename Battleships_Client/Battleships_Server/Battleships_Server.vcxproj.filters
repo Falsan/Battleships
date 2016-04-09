@@ -71,5 +71,8 @@
     <ClInclude Include="ChatServer.h">
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
+    <ClInclude Include="CellTypesLoc.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

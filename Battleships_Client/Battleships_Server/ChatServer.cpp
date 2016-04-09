@@ -6,6 +6,7 @@
 #include "BoardManager.h"
 #include <mutex>
 #include <iomanip>      
+#include "CellTypes.h"
 
 void ChatServer::addToChatLog(std::string _in)
 { 
@@ -14,6 +15,7 @@ void ChatServer::addToChatLog(std::string _in)
 
 void ChatServer::alterChatLog(bool _in,std::string _inString)
 {
+	int chatSize = 10;
 	std::mutex mtx;
 
 	mtx.lock();
@@ -23,13 +25,14 @@ void ChatServer::alterChatLog(bool _in,std::string _inString)
 		m_chatLog.push_back(_inString);
 
 		//If we have reached capacity on our chat log removes the first elemnt 
-		if (m_chatLog.size() > 10)
+		if (m_chatLog.size() > chatSize)
 		{
 			m_chatLog.erase(m_chatLog.begin());
 		}
 	}
 	else
 	{
+		std::cout << "++++++ Chat log current size [" << chatSize << "] ++++++" << std::endl;
 		for (auto it = m_chatLog.begin(); it != m_chatLog.end(); it++)
 		{
 			std::cout << (*it) << std::endl;
@@ -40,6 +43,40 @@ void ChatServer::alterChatLog(bool _in,std::string _inString)
 
 
 }
+
+void ChatServer::alterClientList(bool _in, Client* _inClient)
+{
+	int chatSize = 10;
+	std::mutex mtx;
+
+	mtx.lock();
+
+	if (_in)
+	{
+		m_listOfClients.push_back(_inClient);
+	}
+	else
+	{
+		int count = 0;
+		bool found = false;
+		for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
+		{
+			if ((*it)->getClientID() == _inClient->getClientID())
+			{
+				m_listOfClients.erase(m_listOfClients.begin() + count);
+				(*it)->getSocket()->disconnect();
+				break;
+			}
+			
+			count++;
+		}
+	}
+
+	mtx.unlock();
+
+
+}
+
 
 ChatServer::ChatServer(std::vector<Client*> _listOfClients, sf::SocketSelector& _selector)
 {
@@ -83,7 +120,7 @@ void ChatServer::bindServerPort(sf::SocketSelector& selector, sf::TcpListener& l
 
 void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sockets, sf::TcpListener& listener)
 {
-	sf::Packet inPacket;
+	sf::Packet  inPacket;
 	
 	//listen for conneections
 	while (true)
@@ -104,7 +141,8 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 				if (listener.accept(*m_client->getSocket()) != sf::Socket::Done)
 				{
 					//throw error
-					std::cout << "Error, listener could not accept the client";
+					addToChatLog("Error, listener could not accept the client");
+					
 					//delete the created client setup since it is no longer needed
 					delete m_client;
 				}
@@ -121,6 +159,18 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 				for (auto it = sockets.begin(); it != sockets.end(); it++)
 				{
 					auto socket = (*it)->getSocket();
+
+						
+						if (socket->receive(inPacket) == sf::Socket::Disconnected);
+						{
+
+							int nothing = 0;
+
+							//	removeClientWithSocket((*it)->getSocket());
+							
+						}
+						
+
 					
 					//check to see if it's got something to say
 					if (selector.isReady(*socket))
@@ -130,15 +180,9 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 						int actionID;
 								
 						//If the user had disconnected
-
+						
 						socket->setBlocking(true);
-						if (socket->receive(inPacket) == sf::Socket::Disconnected);
-						{
-							int nothing = 0;
 
-							//	removeClientWithSocket((*it)->getSocket());
-							//(*it)->getSocket()->disconnect();
-						}
 
 						//The fist part of the message will always be the ID											
 						inPacket >> ID;
@@ -154,7 +198,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 						{
 							//shoot at board
 						case 1:
-							//If this platyer is currently in session
+							//If this player is currently in session
 							if (clientHOLD->getGame())
 							{
 								handelShot(clientHOLD, inPacket);
@@ -200,7 +244,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 							break;
 
 						}
-						//infroms the input handler that the action still needs to be carried out
+					
 					}
 				}
 			}
@@ -209,6 +253,8 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 		{
 			if ((m_listOfClients.size() > 0) && (pingSent == false))
 			{
+				//current client has responded so is not timing out
+				setTimeOut(0);
 				//If we have run through all the clients 
 				if (currentPing >= m_listOfClients.size())
 				{
@@ -224,6 +270,18 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 
 				pingSent = true;
 			}
+			else if ((m_listOfClients.size() > 0) && (pingSent == true))
+			{
+				//If the client has not responed to the inital ping increase the time out values 
+				setTimeOut(getTimeOut() +1);
+				//if we have reached the limit of the time out values
+				if (getTimeOut() >= timeOutlimit)
+				{
+					alterClientList(0, m_listOfClients[currentPing]);
+				}
+
+
+			}
 		}
 	}
 }
@@ -238,7 +296,7 @@ void ChatServer::handelClientConnect(Client* _inClient)
 
 	//add client to the selector
 	m_selector.add(*_inClient->getSocket());
-
+	addToChatLog("Player has entered the room");
 	//Inform the client of there server side ID
 	sf::Packet p;
 	p << _inClient->getClientID();
@@ -249,25 +307,29 @@ void ChatServer::handelClientConnect(Client* _inClient)
 
 void ChatServer::handelShot(Client * _inClient, sf::Packet _inPacket)
 {
-	std::pair<int, int> pos;
-	//take out any board pos request
-	_inPacket >> pos.first;
-	_inPacket >> pos.second;
-
-
-	_inClient->getOppenent()->getPlayersBoard();
-
-
-
-
+	
+	_inClient->getGame()->update(_inPacket, _inClient);
 
 }
+
+
 
 
 void ChatServer::setNickName(Client * _inClient, sf::Packet _inPacket)
 {
 	std::string nickName;
 	_inPacket >> nickName;
+
+	std::string chat = "Player ";
+	if (_inClient->getNickName() != "NULL")
+	{
+		chat.append(_inClient->getNickName());
+	}
+	chat.append("has set there name to: ");
+	chat.append(nickName);
+
+	addToChatLog(chat);
+
 	_inClient->setNickName(nickName);
 }
 
@@ -321,35 +383,52 @@ void ChatServer::printNumOfConnectedClients()
 
 		// V Remove for final V
 		system("CLS");
-		std::cout << "Server is running" << std::endl << "currently [" << m_listOfClients.size() << "] connected clients" << std::endl;
+		std::cout << "Server is running" << std::endl << "Room currently [" << m_listOfClients.size() << "] connected clients" << std::endl;
 		int numPrinted = 1;
+
+		std::cout << "++++++ Currently running games ++++++" << std::endl;
 
 		if (m_Game)
 		{
 			std::cout << "Current game: BattleShips" << std::endl << "Current Players:" << m_PlayerOne->getClientID() << " VS " << m_PlayerTwo->getClientID() << std::endl;
 		}
-
-		for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
+		else
 		{
-			if ((*it)->getNickName() == "NULL")
-			{
-				std::cout << (*it)->getClientID() << std::endl;
-			}
-			else
-			{
-				std::cout << (*it)->getNickName() << std::endl;
-			}
+			std::cout << "No games currently running" << std::endl;
+		}
 
-			if (std::chrono::duration_cast<std::chrono::milliseconds>(((*it)->getLastPing() - (*it)->getLastPong())).count() > 0)
+		std::cout << "++++++	Current client ping	 ++++++" << std::endl;
+
+		if (m_listOfClients.size() > 0)
+		{
+			for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
 			{
+				if ((*it)->getNickName() == "NULL")
+				{
+					std::cout << (*it)->getClientID() << " > ";
+				}
+				else
+				{
+					std::cout << (*it)->getClientID() << (*it)->getNickName() << " > ";
+				}
+
+				//	if (std::chrono::duration_cast<std::chrono::milliseconds>(((*it)->getLastPing() - (*it)->getLastPong())).count() > 0)
+				//	{
 				(*it)->setDuration(std::chrono::duration_cast<std::chrono::milliseconds>(((*it)->getLastPing() - (*it)->getLastPong())).count());
-			}
-			//Making the ping val readable
-			std::cout << ((*it)->getDuration() / m_listOfClients.size()) << "ms" << std::endl;
+				//}
+				//Making the ping val readable
+				std::cout << ((*it)->getDuration() / m_listOfClients.size()) << "ms" << std::endl;
 
-			numPrinted++;
+				numPrinted++;
+			}
+		}
+		else
+		{
+			std::cout << "No clients currently connected" << std::endl;
 		}
 	
+		
+		
 }
 
 //serches and removes the passed client

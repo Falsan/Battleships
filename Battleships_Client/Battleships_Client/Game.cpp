@@ -11,14 +11,14 @@ Game::Game(sf::TcpSocket& thisClient)
 	inputHandler = new InputManager;
 	packetHandler = new PacketManager;
 	phase = PLAYERIDENT;
-	window = new sf::RenderWindow(sf::VideoMode(windowLength, windowWidth), windowName);
+//	window = new sf::RenderWindow(sf::VideoMode(windowLength, windowWidth), windowName);
 	
-	font.loadFromFile("arial.ttf");
-	text.setFont(font);
-	text.setString("HelloWorld");
-	text.setCharacterSize(24);
-	text.setColor(sf::Color::Red);
-	text.setStyle(sf::Text::Regular);
+//	font.loadFromFile("arial.ttf");
+	//text.setFont(font);
+	//text.setString("HelloWorld");
+	//text.setCharacterSize(24);
+	//text.setColor(sf::Color::Red);
+	//text.setStyle(sf::Text::Regular);
 	
 }
 
@@ -26,7 +26,7 @@ Game::~Game()
 {
 	delete inputHandler;
 	delete packetHandler;
-	delete window;
+	//delete window;
 	//all deletion goes here
 }
 
@@ -131,30 +131,30 @@ void Game::render()
 {
 	//render everything to screen
 	// run the program as long as the window is open
-	while (window->isOpen())
-	{
-		// check all the window's events that were triggered since the last iteration of the loop
-		sf::Event event;
-		while (window->pollEvent(event))
-		{
-			// "close requested" event: we close the window
-			if (event.type == sf::Event::Closed)
-			{
-				window->close();
-			}
-		}
+	//while (window->isOpen())
+	//{
+	//	// check all the window's events that were triggered since the last iteration of the loop
+	//	sf::Event event;
+	//	while (window->pollEvent(event))
+	//	{
+	//		// "close requested" event: we close the window
+	//		if (event.type == sf::Event::Closed)
+	//		{
+	//			window->close();
+	//		}
+	//	}
 
-		// clear the window with black color
-		window->clear(sf::Color::Black);
+	//	// clear the window with black color
+	//	window->clear(sf::Color::Black);
 
-		// draw everything here...
-		// window.draw(...);
-		window->draw(text);
+	//	// draw everything here...
+	//	// window.draw(...);
+	//	//window->draw(text);
 
-		// end the current frame
-		window->display();
-	}
-	std::cout << displayedMap << std::endl;
+	//	// end the current frame
+	//	window->display();
+	//}
+	//std::cout << displayedMap << std::endl;
 }
 
 void Game::gameInputHandle()
