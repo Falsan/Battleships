@@ -9,7 +9,7 @@ void Client::setUpBoard(std::vector <std::pair<int, int>> _ShipPos)
 
 	for (auto it = _ShipPos.begin(); it != _ShipPos.end(); it++)
 	{
-		int loc = 1;
+		int loc = 10;
 		m_PlayersBoard[(loc*(*it).first) + (*it).second]->setType(CellTypes::SHIP);
 	}
 

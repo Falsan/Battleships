@@ -25,7 +25,7 @@ public:
 	void setCurrentTurn(bool _in) { currentPlayerTurn = _in; }
 	void setCurrentPhase(int _in) { currentPhase = _in; }
 
-	virtual void update() = 0;
+	virtual void update(sf::Packet _inPacket, Client * _inClient) = 0;
 
 	virtual void input(int _in) = 0;
 	virtual int outPut() = 0;

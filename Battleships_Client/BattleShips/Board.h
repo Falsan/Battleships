@@ -14,12 +14,12 @@ public:
 	Cell* getCell(int x, int y);
 	void setCell(int type, int x, int y);
 	void makeShip(int size, int orientation, std::pair<int, int> origin);
-	std::vector<Cell*> getBoard() { return board; }
+	std::vector<Cell*> getBoard() { return m_board; }
 
 protected:
 
 private:
 
-	std::vector<Cell*> board;
+	std::vector<Cell*> m_board;
 	std::vector<Ship*> ships;
 };

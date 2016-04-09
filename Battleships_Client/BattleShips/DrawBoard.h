@@ -3,13 +3,15 @@
 #include <vector>
 #include "Cell.h"
 
-class draw
+class Draw
 {
 public:
-	draw() = default;
-	~draw() = default;
+	Draw() = default;
+	~Draw() = default;
+	static void drawBoard(std::vector<Cell*> _inboard);
+
 private:
 
-	static void drawBoard(std::vector<Cell*> _inboard);
+
 
 };

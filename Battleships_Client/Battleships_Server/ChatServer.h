@@ -26,7 +26,7 @@ public:
 
 	void addToChatLog(std::string _in);
 	void alterChatLog(bool, std::string = "NULL");
-
+	void alterClientList(bool, Client*);
 
 	int prepareGame(Client *);
 	bool startGame(Client*, Client*);
@@ -45,13 +45,18 @@ public:
 	std::vector<Client*> m_listOfClients;
 	bool pingSent = false;
 
+	void setTimeOut(int _in) { timeOut = _in; };
+	int getTimeOut() { return timeOut; }
+
+
 
 protected:
 
 	//std::vector<sf::TcpSocket*> m_sockets;
 	//sf::SocketSelector  m_selector;
 private:
-
+	int timeOut=0;
+	int timeOutlimit = 5;
 	std::vector<std::string> m_chatLog;
 
 	BattleShipsGame * m_Game = nullptr;
