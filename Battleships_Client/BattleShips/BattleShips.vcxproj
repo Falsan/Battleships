@@ -24,14 +24,18 @@
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Celltypes.h" />
     <ClInclude Include="DrawBoard.h" />
+    <ClInclude Include="LoadIn.h" />
     <ClInclude Include="Ship.h" />
+    <ClInclude Include="Validation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DrawBoard.cpp" />
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GameBoardManager.cpp" />
     <ClCompile Include="GameCell.cpp" />
+    <ClCompile Include="LoadIn.cpp" />
     <ClCompile Include="Ship.cpp" />
+    <ClCompile Include="Validation.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1E76C048-B50B-4763-9795-E2C23E4BECA2}</ProjectGuid>

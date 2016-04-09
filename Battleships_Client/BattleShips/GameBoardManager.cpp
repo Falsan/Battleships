@@ -1,4 +1,9 @@
 #include "BoardManager.h"
+#include <iostream>
+#include "Validation.h"
+#include <iostream>
+#include <string>
+#include "LoadIn.h"
 
 BoardManager::BoardManager()
 {
@@ -8,6 +13,34 @@ BoardManager::BoardManager()
 BoardManager::~BoardManager()
 {
 	delete board;
+}
+
+void BoardManager::startUp()
+{
+	int responce;
+	std::string fileName;
+	std::cout << "Would you like to load a file?" << std::endl << "1. Yes" << std::endl << "2. No";
+	responce = Valid::validIn(3, 0);
+
+
+
+
+	if (responce == 1)
+	{
+		std::cout << "Please enter the name of the file you wish to load" << std::endl;
+		std::getline(std::cin, fileName);
+
+		auto loadedBoard = LoadIn::loadFile(fileName);
+		board->getBoard();
+	}
+	else if(responce == 2)
+	{
+
+		//Make and add ships to level
+
+	}
+
+
 }
 
 bool BoardManager::playerPlaceShip(Ship* _ship)
@@ -50,7 +83,7 @@ bool BoardManager::testShip(Ship* _ship)
 	//make sure none of the ship falls out of bounds
 	for (int i = 0; i < _ship->getSize(); i++)
 	{
-		switch (_ship->getOrientation)
+		switch (_ship->getOrientation())
 		{
 		case 0:
 			if (!testBound((x - i), y))
@@ -82,7 +115,7 @@ bool BoardManager::testShip(Ship* _ship)
 	//Test if any of the ships collide
 	for (int i = 0; i < _ship->getSize(); i++)
 	{
-		switch (_ship->getOrientation)
+		switch (_ship->getOrientation())
 		{
 		case 0:
 			if (board->getCell((x - i), y)->getType() == CellTypes::SHIP)
@@ -129,23 +162,6 @@ bool BoardManager::testShip(Ship* _ship)
 3 - West
 */
 
-
-
-//std::vector<std::pair<int, int>> BoardManager::getOrientation(Ship* ship)
-//{
-
-//if (ship->getOrientation() == 0)
-//{
-
-//}
-//if (board->getBoard()[ship->getPos()]->getPos() == 0)
-//{
-
-//}
-//if (ship->getSize());
-
-//}
-
 void BoardManager::putShipOnBoard(Ship * _ship)
 {
 	int x = _ship->getPos().first;
@@ -153,7 +169,7 @@ void BoardManager::putShipOnBoard(Ship * _ship)
 
 	for (int i = 0; i < _ship->getSize(); i++)
 	{
-		switch (_ship->getOrientation)
+		switch (_ship->getOrientation())
 		{
 		case 0:
 			board->getCell(x - i, y)->setType(CellTypes::SHIP);
@@ -171,15 +187,30 @@ void BoardManager::putShipOnBoard(Ship * _ship)
 	}
 }
 
-bool BoardManager::shootBoard(std::pair<int, int> _shot, std::vector <Cell*> _board)
+bool BoardManager::shootBoard(std::pair<int, int> _shot)
 {
+
 	int loc = (10 * _shot.first) + _shot.second;
-	if (_board[loc]->getType() == 0)
+
+	auto shotCell = board->getCell(loc);
+
+	//ether they shoot an un shot pos that has a ship or nothing
+	if (shotCell->getType() == CellTypes::SHIP)
 	{
+		shotCell->setType(CellTypes::HIT);
 		return true;
 	}
-	else if (_board[loc]->getType() == 1)
+	else if (shotCell->getType() == CellTypes::EMPTY)
 	{
-		return false;
+		shotCell->setType(CellTypes::MISS);
+		return true;
 	}
+	
+	//or they shoot an already shot space and must pick another.
+	return false;
+}
+
+void BoardManager::loadBoard(std::vector<int> _loadedBoard)
+{
+
 }

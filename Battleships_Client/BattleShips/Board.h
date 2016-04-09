@@ -12,8 +12,10 @@ public:
 	Board();
 	~Board();
 	Cell* getCell(int x, int y);
+	Cell* getCell(int loc);
 	void setCell(int type, int x, int y);
-	void makeShip(int size, int orientation, std::pair<int, int> origin);
+	void setCell(int loc, int _in);
+	
 	std::vector<Cell*> getBoard() { return m_board; }
 
 protected:
