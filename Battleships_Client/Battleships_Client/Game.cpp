@@ -43,12 +43,12 @@ void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 {
 	std::thread renderThread(&Game::render, this);
 	packetHandler->heartBeat(thisClient, selector, serverID);
-	
+	//std::thread heartBeat(&Game::gamePacketHandle, this);
 	//std::thread serverThread(&Game::gamePacketHandle, &thisClient);
 	
 	//update the game logic from the last server data
 	//phase = packetHandler->recieveCurrentGameState(thisClient);
-	//resolution(thisClient, selector);
+	resolution(thisClient, selector);
 
 	//put that to the screen using the UI manager
 	clearScreen();
@@ -67,7 +67,7 @@ void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 	//displayedMap = packetHandler->recieveMapUpdate(thisClient);
 
 	//listen for messages from the server
-
+	renderThread.join();
 }
 
 void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
@@ -81,19 +81,49 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 		std::cout << "Please input a user name:" << std::endl;
 		std::cin >> userCommand;
 		//recieve server ID
-		serverID = packetHandler->recieveServerID(thisClient, selector);
+		//serverID = packetHandler->recieveServerID(thisClient, selector);
 
 		commandNumber = 6;
 
 		//send name to server
 		packetHandler->sendPacket(userCommand, thisClient, selector, commandNumber, serverID);
 
-	
+		std::cout << "Please wait while we find you a game..." << std::endl;
+		commandNumber = 3;
+		//enter a loop
+		packetHandler->sendPacket(userCommand, thisClient, selector, commandNumber, serverID);
+		//wait while the server catches up and sends the correct commands
 		//std::cout << serverID;
 
 	case PhaseEnum::BOARDSETUP:
 
 		//send the player input to the server
+		std::cout << "Please Input your next command:" << std::endl;
+		std::cin >> userCommand;
+
+		if (userCommand[0] == '/')
+		{
+			if (userCommand == "/say")
+			{
+				std::cout << "Please type your message:" << std::endl;
+				std::cin >> chatMessage;
+				commandNumber = 4;
+				packetHandler->sendPacket(chatMessage, thisClient, selector, commandNumber, serverID);
+			}
+			else if (userCommand == "/place")
+			{
+				std::cout << "Please select an X co-ordinate to place your ship at:" << std::endl;
+				std::cin >> coordinate;
+				std::cout << "Please choose an orientation. 1 is up and 2 is across" << std::endl;
+				std::cin >> orientation;
+
+				//send the two ints off and tell the server to place the ship
+			}
+			else
+			{
+				std::cout << "Huh? Please enter a valid command." << std::endl;
+			}
+		}
 
 		//get the map to be displayed
 
