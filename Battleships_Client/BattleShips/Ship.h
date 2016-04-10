@@ -6,7 +6,7 @@ class Ship
 {
 public:
 
-	Ship(int size, int orientation, std::pair<int, int> origin);
+	Ship();
 	~Ship() = default;
 	int getSize() { return size; }
 	void setSize(int wantedSize) { size = wantedSize; }

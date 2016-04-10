@@ -1,6 +1,7 @@
 #include "Client.h"
 #include "Helper.h"
 
+
 Client::Client()
 {
 	selector = new sf::SocketSelector;

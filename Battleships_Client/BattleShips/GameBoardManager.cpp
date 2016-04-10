@@ -7,53 +7,195 @@
 
 BoardManager::BoardManager()
 {
-	board = new Board;
+	m_board = new Board;
+	m_enemyBoard = new Board;
 }
 
 BoardManager::~BoardManager()
 {
-	delete board;
+	delete m_board;
+	delete m_enemyBoard;
 }
 
-void BoardManager::startUp()
+//handels the creation of the board
+Board* BoardManager::startUp()
 {
+	bool repeat = false;
 	int responce;
 	std::string fileName;
-	std::cout << "Would you like to load a file?" << std::endl << "1. Yes" << std::endl << "2. No";
-	responce = Valid::validIn(3, 0);
-
-
-
-
-	if (responce == 1)
+	do
 	{
-		std::cout << "Please enter the name of the file you wish to load" << std::endl;
-		std::getline(std::cin, fileName);
+		repeat = false;
+		std::cout << "Would you like to load a file?" << std::endl << "1. Yes" << std::endl << "2. No";
+		responce = Valid::validIn(3, 0);
 
-		auto loadedBoard = LoadIn::loadFile(fileName);
-		board->getBoard();
-	}
-	else if(responce == 2)
+		if (responce == 1)
+		{
+			std::cout << "Please enter the name of the file you wish to load" << std::endl;
+			std::getline(std::cin, fileName);
+
+			auto loaded = LoadIn::loadFile(fileName);
+			//if file has loaded
+			if (loaded[0]->getType() == 9)
+			{
+				repeat = true;
+				std::cout << "Error file not found" << std::endl;
+			}
+			{
+				setBoard(loaded);
+			}
+		}
+		else if (responce == 2)
+		{
+
+			//Fills out our ship list and adds them to the board
+			createFlotila();
+			//Make and add ships to level
+
+		}
+	} while (repeat = true);
+	//send board
+	return m_board;
+}
+
+void BoardManager::setBoard(std::vector<Cell*> _inVec)
+{
+	
+	for (int i = 0 ; i < 10; i++)
 	{
+		for (int j = 0; j < 10; j++)
+		{
+			int loc = (10 * i) + j;
 
-		//Make and add ships to level
-
+			m_board->getCell(loc)->setType(_inVec[loc]->getType());
+		}
 	}
 
 
 }
+
+//Unless otherwise requested creates one of each ship and adds them to our list
+bool BoardManager::createFlotila(int AC, int BS, int SM, int DES, int PB)
+{
+	Ship* holdShip = new Ship;
+	std::vector<int> listOfVals;
+	std::pair<int, int> pos;
+	int rot;
+	char rotHold;
+
+	for (int i = 0; i < AC; i++)
+	{
+		listOfVals.push_back(5);
+	}
+	for (int i = 0; i < BS; i++)
+	{
+		listOfVals.push_back(4);
+	}
+	for (int i = 0; i < SM; i++)
+	{
+		listOfVals.push_back(3);
+	}
+	for (int i = 0; i < DES; i++)
+	{
+		listOfVals.push_back(2);
+	}
+	for (int i = 0; i < PB; i++)
+	{
+		listOfVals.push_back(1);
+
+	}
+	
+	int sumOfShips = ((AC*5) + (BS*4) + (SM*3) + (DES*2) + (PB*1));
+
+	if (sumOfShips > 100)
+	{
+		std::cout << "Error: not enough space on board for requested ships" << std::endl;
+		return false;
+	}
+ 
+	for (auto it = listOfVals.begin(); it != listOfVals.end(); it++)
+	{
+
+		do
+		{
+		std::string shipType;
+		std::cout << "Select were to place [";
+
+		switch ((*it))
+		{
+		case 1:
+			shipType = "Patrol boat (1)";
+			break;
+		case 2:
+			shipType = "Destroyer (2)";
+			break;
+		case 3:
+			shipType = "Submarine (3)";
+			break;
+		case 4:
+			shipType = "BattleShip (4)";
+			break;
+		case 5:
+			shipType = "Aircraft carrier (5)";
+			break;
+
+		}
+		std::cout << shipType << "]" << std::endl;
+
+		std::cout << "X position:";
+		std::cin >> pos.first;
+		std::cout << std::endl << "Y position:" << std::endl;
+		std::cin >> pos.second;
+		do
+		{
+			std::cout << "facing N,S,E,W?" << std::endl;
+			std::cin >> rotHold;
+
+			switch (rotHold)
+			{
+			case 'N':
+				rot = 0;
+				break;
+			case 'E':
+				rot = 1;
+				break;
+			case 'S':
+				rot = 2;
+				break;
+			case 'W':
+				rot = 3;
+				break;
+			default:
+				rot = 4;
+				break;
+			}
+
+			rotHold = 0;
+		} while (rot == 4);
+
+		holdShip->setSize((*it));
+		holdShip->setOrientation(rot);
+		holdShip->setPos(pos);		
+		} while (!playerPlaceShip(holdShip));
+		addShipToList(holdShip);
+	}
+}
+
 
 bool BoardManager::playerPlaceShip(Ship* _ship)
 {
 	if (testShip(_ship))
 	{
 		putShipOnBoard(_ship);
-		Draw::drawBoard(board->getBoard());
+		Draw::drawBoard(m_board->getBoard());
+		Draw::drawBoard(m_enemyBoard->getBoard());
 		return true;
 	}
 	else
 	{
-		Draw::drawBoard(board->getBoard());
+		std::cout << "Error placing ship please retry" << std::endl;
+		Draw::drawBoard(m_board->getBoard());
+		Draw::drawBoard(m_enemyBoard->getBoard());
 		return false;
 	}
 
@@ -118,25 +260,25 @@ bool BoardManager::testShip(Ship* _ship)
 		switch (_ship->getOrientation())
 		{
 		case 0:
-			if (board->getCell((x - i), y)->getType() == CellTypes::SHIP)
+			if (m_board->getCell((x - i), y)->getType() == CellTypes::SHIP)
 			{
 				error++;
 			}
 			break;
 		case 1:
-			if (board->getCell(x, (y + i))->getType() == CellTypes::SHIP)
+			if (m_board->getCell(x, (y + i))->getType() == CellTypes::SHIP)
 			{
 				error++;
 			}
 			break;
 		case 2:
-			if (board->getCell((x + i),y)->getType() == CellTypes::SHIP)
+			if (m_board->getCell((x + i),y)->getType() == CellTypes::SHIP)
 			{
 				error++;
 			}
 			break;
 		case 3:
-			if (board->getCell(x, (y - i))->getType() == CellTypes::SHIP)
+			if (m_board->getCell(x, (y - i))->getType() == CellTypes::SHIP)
 			{
 				error++;
 			}
@@ -172,45 +314,39 @@ void BoardManager::putShipOnBoard(Ship * _ship)
 		switch (_ship->getOrientation())
 		{
 		case 0:
-			board->getCell(x - i, y)->setType(CellTypes::SHIP);
+			m_board->getCell(x - i, y)->setType(CellTypes::SHIP);
 			break;
 		case 1:
-			board->getCell(x, y + i)->setType(CellTypes::SHIP);
+			m_board->getCell(x, y + i)->setType(CellTypes::SHIP);
 			break;
 		case 2:
-			board->getCell(x + i, y)->setType(CellTypes::SHIP);
+			m_board->getCell(x + i, y)->setType(CellTypes::SHIP);
 			break;
 		case 3:
-			board->getCell(x, y - i)->setType(CellTypes::SHIP);
+			m_board->getCell(x, y - i)->setType(CellTypes::SHIP);
 			break;
 		}
 	}
 }
 
-bool BoardManager::shootBoard(std::pair<int, int> _shot)
+bool BoardManager::handelShot(int player,int val, std::pair<int,int> inLoc)
 {
+	int Loc = ((10 * inLoc.first) + inLoc.second);
 
-	int loc = (10 * _shot.first) + _shot.second;
-
-	auto shotCell = board->getCell(loc);
-
-	//ether they shoot an un shot pos that has a ship or nothing
-	if (shotCell->getType() == CellTypes::SHIP)
+	//If the player is the one who shot
+	if(player == 0)
 	{
-		shotCell->setType(CellTypes::HIT);
+		m_enemyBoard->getBoard()[Loc]->setType(val);
 		return true;
 	}
-	else if (shotCell->getType() == CellTypes::EMPTY)
+	else if (player == 1)//if the opponent shot
 	{
-		shotCell->setType(CellTypes::MISS);
+		m_board->getBoard()[Loc]->setType(val);
 		return true;
+	}//shot was inccorect, shot an already shot spot, retry
+	else
+	{
+		return false;
 	}
-	
-	//or they shoot an already shot space and must pick another.
 	return false;
-}
-
-void BoardManager::loadBoard(std::vector<int> _loadedBoard)
-{
-
 }

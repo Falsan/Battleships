@@ -26,6 +26,7 @@ std::vector<Cell*> LoadIn::loadFile(std::string _fileName)
 	}
 	else
 	{
+		saveVector[0]->setType(9);
 		std::cout << "Error could not find save file" << std::endl;
 	}
 	return saveVector;

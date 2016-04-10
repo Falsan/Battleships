@@ -8,6 +8,8 @@
 #include <iomanip>      
 #include "CellTypes.h"
 
+
+
 void ChatServer::addToChatLog(std::string _in)
 { 
 	alterChatLog(true, _in);
@@ -339,7 +341,9 @@ void ChatServer::handelChat(sf::Packet _inPacket)
 	std::string chatMessage;
 	//localy store the chat message 
 	_inPacket >> chatMessage;
-	std::cout << chatMessage << std::endl;
+
+	addToChatLog(chatMessage);
+
 	outPacket << chatMessage;
 
 	//run through all connected clients forwarding the adjusted packet
