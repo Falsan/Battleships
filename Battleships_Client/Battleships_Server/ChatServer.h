@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "BattleShipsGame.h"
 #include <memory>
+#include "ChatLog.h"
 
 typedef std::chrono::high_resolution_clock Clock;
 
@@ -24,8 +25,8 @@ public:
 	void bindServerPort(sf::SocketSelector& selector, sf::TcpListener& listerner);
 	void listen(sf::SocketSelector& selector, std::vector<Client*>& sockets, sf::TcpListener& listener);
 
-	void addToChatLog(std::string _in);
-	void alterChatLog(bool, std::string = "NULL");
+	//void addToChatLog(std::string _in);
+	//void alterChatLog(bool, std::string = "NULL");
 	void alterClientList(bool, Client*);
 
 	int prepareGame(Client *);
@@ -57,7 +58,9 @@ protected:
 private:
 	int timeOut=0;
 	int timeOutlimit = 5;
-	std::vector<std::string> m_chatLog;
+	//std::vector<std::string> m_chatLog;
+
+	ChatLog * m_chatLog;
 
 	BattleShipsGame * m_Game = nullptr;
 

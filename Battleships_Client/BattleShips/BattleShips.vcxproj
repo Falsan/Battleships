@@ -23,12 +23,14 @@
     <ClInclude Include="BoardManager.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Celltypes.h" />
+    <ClInclude Include="ChatLog.h" />
     <ClInclude Include="DrawBoard.h" />
     <ClInclude Include="LoadIn.h" />
     <ClInclude Include="Ship.h" />
     <ClInclude Include="Validation.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ChatLog.cpp" />
     <ClCompile Include="DrawBoard.cpp" />
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GameBoardManager.cpp" />

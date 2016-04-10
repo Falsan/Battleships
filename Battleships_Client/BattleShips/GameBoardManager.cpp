@@ -26,7 +26,7 @@ Board* BoardManager::startUp()
 	do
 	{
 		repeat = false;
-		std::cout << "Would you like to load a file?" << std::endl << "1. Yes" << std::endl << "2. No";
+		std::cout << "Load ship configuration or start from scratch?" << std::endl << "1. Load" << std::endl << "2. Create flotila " << std::endl;
 		responce = Valid::validIn(3, 0);
 
 		if (responce == 1)
@@ -49,7 +49,10 @@ Board* BoardManager::startUp()
 		{
 
 			//Fills out our ship list and adds them to the board
-			createFlotila();
+			if (createFlotila())
+			{
+				break;
+			}
 			//Make and add ships to level
 
 		}
@@ -115,11 +118,11 @@ bool BoardManager::createFlotila(int AC, int BS, int SM, int DES, int PB)
  
 	for (auto it = listOfVals.begin(); it != listOfVals.end(); it++)
 	{
-
+		Draw::drawBoard(m_board->getBoard());
 		do
 		{
 		std::string shipType;
-		std::cout << "Select were to place [";
+		std::cout << std::endl << "Select were to place [";
 
 		switch ((*it))
 		{
@@ -144,12 +147,13 @@ bool BoardManager::createFlotila(int AC, int BS, int SM, int DES, int PB)
 
 		std::cout << "X position:";
 		std::cin >> pos.first;
-		std::cout << std::endl << "Y position:" << std::endl;
+		std::cout << std::endl << "Y position:";
 		std::cin >> pos.second;
 		do
 		{
 			std::cout << "facing N,S,E,W?" << std::endl;
 			std::cin >> rotHold;
+			rotHold = toupper(rotHold);
 
 			switch (rotHold)
 			{
@@ -179,6 +183,7 @@ bool BoardManager::createFlotila(int AC, int BS, int SM, int DES, int PB)
 		} while (!playerPlaceShip(holdShip));
 		addShipToList(holdShip);
 	}
+	return true;
 }
 
 
@@ -187,15 +192,15 @@ bool BoardManager::playerPlaceShip(Ship* _ship)
 	if (testShip(_ship))
 	{
 		putShipOnBoard(_ship);
-		Draw::drawBoard(m_board->getBoard());
-		Draw::drawBoard(m_enemyBoard->getBoard());
+	//	Draw::drawBoard(m_board->getBoard());
+	//	Draw::drawBoard(m_enemyBoard->getBoard());
 		return true;
 	}
 	else
 	{
 		std::cout << "Error placing ship please retry" << std::endl;
-		Draw::drawBoard(m_board->getBoard());
-		Draw::drawBoard(m_enemyBoard->getBoard());
+		//Draw::drawBoard(m_board->getBoard());
+		//Draw::drawBoard(m_enemyBoard->getBoard());
 		return false;
 	}
 
@@ -253,36 +258,39 @@ bool BoardManager::testShip(Ship* _ship)
 			break;
 		}
 	}
-
-	//Test if any of the ships collide
-	for (int i = 0; i < _ship->getSize(); i++)
+	//If the ship has not fallen out of bounds
+	if (error <= 0)
 	{
-		switch (_ship->getOrientation())
+		//Test if any of the ships collide
+		for (int i = 0; i < _ship->getSize(); i++)
 		{
-		case 0:
-			if (m_board->getCell((x - i), y)->getType() == CellTypes::SHIP)
+			switch (_ship->getOrientation())
 			{
-				error++;
+			case 0:
+				if (m_board->getCell((x - i), y)->getType() == CellTypes::SHIP)
+				{
+					error++;
+				}
+				break;
+			case 1:
+				if (m_board->getCell(x, (y + i))->getType() == CellTypes::SHIP)
+				{
+					error++;
+				}
+				break;
+			case 2:
+				if (m_board->getCell((x + i), y)->getType() == CellTypes::SHIP)
+				{
+					error++;
+				}
+				break;
+			case 3:
+				if (m_board->getCell(x, (y - i))->getType() == CellTypes::SHIP)
+				{
+					error++;
+				}
+				break;
 			}
-			break;
-		case 1:
-			if (m_board->getCell(x, (y + i))->getType() == CellTypes::SHIP)
-			{
-				error++;
-			}
-			break;
-		case 2:
-			if (m_board->getCell((x + i),y)->getType() == CellTypes::SHIP)
-			{
-				error++;
-			}
-			break;
-		case 3:
-			if (m_board->getCell(x, (y - i))->getType() == CellTypes::SHIP)
-			{
-				error++;
-			}
-			break;
 		}
 	}
 

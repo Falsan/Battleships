@@ -1,10 +1,14 @@
 #include "Game.h"
 #include "Helper.h"
 #include <future>
-#include 
+
+
 
 Game::Game(sf::TcpSocket& thisClient)
 {
+
+
+
 	//all initial creation for the game goes here
 	windowLength = 800;
 	windowWidth = 600;
@@ -24,6 +28,7 @@ Game::Game(sf::TcpSocket& thisClient)
 
 Game::~Game()
 {
+
 	delete inputHandler;
 	delete packetHandler;
 	//delete window;
@@ -41,8 +46,6 @@ void Game::setup(sf::TcpSocket& thisClient)
 
 void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 {
-
-
 
 
 	std::thread renderThread(&Game::render, this);
