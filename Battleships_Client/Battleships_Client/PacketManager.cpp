@@ -2,7 +2,7 @@
 
 PacketManager::PacketManager()
 {
-	pong = "pong";
+	//pong = "pong";
 }
 
 void PacketManager::sendPacket(std::string stringPacket, sf::TcpSocket& socket, sf::SocketSelector* selector, int commandNumber, int serverID)
@@ -10,11 +10,11 @@ void PacketManager::sendPacket(std::string stringPacket, sf::TcpSocket& socket, 
 
 	if (selector->wait(sf::milliseconds(10)) && selector->isReady(socket))
 	{
-		packetToSend << serverID;
-		packetToSend << commandNumber;
-		packetToSend << stringPacket;
+		//packetToSend << serverID;
+		//packetToSend << commandNumber;
+		//packetToSend << stringPacket;
 
-		socket.send(packetToSend);
+		//socket.send(packetToSend);
 	}
 }
 
@@ -32,9 +32,9 @@ std::string PacketManager::recievePacket(sf::TcpSocket& socket, sf::SocketSelect
 			{
 				std::string s = "PONG";
 
-				pongPacket << serverID;
-				pongPacket << s;
-				socket.send(pongPacket);
+				//pongPacket << serverID;
+				//pongPacket << s;
+				//socket.send(pongPacket);
 				return NULL;
 			}
 		}
@@ -44,23 +44,6 @@ std::string PacketManager::recievePacket(sf::TcpSocket& socket, sf::SocketSelect
 	return incomingData;
 }
 
-std::string PacketManager::recieveMapUpdate(sf::TcpSocket& socket)
-{
-	socket.receive(mapPacket);
-
-	mapPacket << incomingMap;
-
-	return incomingMap;
-}
-
-int PacketManager::recieveCurrentGameState(sf::TcpSocket& socket)
-{
-	socket.receive(gameStatePacket);
-
-	gameStatePacket << gameState;
-
-	return gameState;
-}
 
 int PacketManager::recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* selector)
 {
@@ -82,15 +65,16 @@ int PacketManager::recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* se
 }
 
 
-void PacketManager::heartBeat(sf::TcpSocket& socket, sf::SocketSelector* selector, int serverID)
+void PacketManager::heartBeat(std::string userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int commandNumber, int serverID)
 {
 
 	while (serverID == 0)
 	{
 		serverID = recieveServerID(socket, selector);
 	}
-	while (true)
-	{
+	//while (true)
+	//{
+
 		if (selector->wait(sf::milliseconds(10)) && selector->isReady(socket))
 		{
 			if (socket.receive(incomingPacket) == sf::Socket::Done)
@@ -99,15 +83,30 @@ void PacketManager::heartBeat(sf::TcpSocket& socket, sf::SocketSelector* selecto
 
 				if (incomingData == "PING")
 				{
-					std::string s = "PONG";
+					if (outgoingData == "")
+					{
+						std::string s = "PONG";
 
-					pongPacket << serverID;
-					pongPacket << s;
-					socket.send(pongPacket);
+						outgoingPacket << serverID;
+						outgoingPacket << commandNumber;
+						outgoingPacket << s;
+						socket.send(outgoingPacket);
+					}
+					else
+					{
+						outgoingPacket << serverID;
+						outgoingPacket << commandNumber;
+						outgoingPacket << outgoingData;
+						socket.send(outgoingPacket);
+					}
 				}
+				//else //else the server is clearly sending a command and that command should be dealt with
+				//{
+
+				//}
 			}
 		}
-	}
+	//}
 
 }
 

@@ -1,11 +1,13 @@
 #include "Game.h"
 #include "Helper.h"
 #include <future>
-#include 
+//#include 
 
 Game::Game(sf::TcpSocket& thisClient)
 {
 	//all initial creation for the game goes here
+	userCommand = " ";
+	commandNumber = NULL;
 	windowLength = 800;
 	windowWidth = 600;
 	inputHandler = new InputManager;
@@ -41,37 +43,25 @@ void Game::setup(sf::TcpSocket& thisClient)
 
 void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 {
-
-
-
-
+	//if needed, pass the input to the packet manager to be sent to the server
 	std::thread renderThread(&Game::render, this);
-	packetHandler->heartBeat(thisClient, selector, serverID);
-	//std::thread heartBeat(&Game::gamePacketHandle, this);
-	//std::thread serverThread(&Game::gamePacketHandle, &thisClient);
+	std::thread inputThread(&Game::gameInputHandle, this);
+	packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID);
 	
 	//update the game logic from the last server data
 	//phase = packetHandler->recieveCurrentGameState(thisClient);
 	resolution(thisClient, selector);
 
 	//put that to the screen using the UI manager
-	clearScreen();
+	//clearScreen();
 	//render();
 	//request any input from the input manager
-	std::cout << "Connection stable";
+	//std::cout << "Connection stable";
 	
-
-	//if needed, pass the input to the packet manager to be sent to the server
-
-	//if (userCommand[0] == '/')
-	//{
-	//	packetHandler->sendPacket(userCommand, thisClient);
-	//}
-
-	//displayedMap = packetHandler->recieveMapUpdate(thisClient);
 
 	//listen for messages from the server
 	renderThread.join();
+	inputThread.join();
 }
 
 void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
@@ -83,36 +73,37 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 		
 		//ask the player their name
 		std::cout << "Please input a user name:" << std::endl;
-		std::cin >> userCommand;
+		
+		//std::cin >> userCommand;
 		//recieve server ID
 		//serverID = packetHandler->recieveServerID(thisClient, selector);
 
-		commandNumber = 6;
+		//commandNumber = 6;
 
 		//send name to server
-		packetHandler->sendPacket(userCommand, thisClient, selector, commandNumber, serverID);
+		break;
+
+	case PhaseEnum::WAIT:
 
 		std::cout << "Please wait while we find you a game..." << std::endl;
 		commandNumber = 3;
-		//enter a loop
-		packetHandler->sendPacket(userCommand, thisClient, selector, commandNumber, serverID);
-		//wait while the server catches up and sends the correct commands
-		//std::cout << serverID;
+		userCommand = " ";
+		break;
 
 	case PhaseEnum::BOARDSETUP:
 
 		//send the player input to the server
 		std::cout << "Please Input your next command:" << std::endl;
-		std::cin >> userCommand;
+		//std::cin >> userCommand;
 
 		if (userCommand[0] == '/')
 		{
 			if (userCommand == "/say")
 			{
 				std::cout << "Please type your message:" << std::endl;
-				std::cin >> chatMessage;
+				std::cin >> userCommand;
 				commandNumber = 4;
-				packetHandler->sendPacket(chatMessage, thisClient, selector, commandNumber, serverID);
+				//packetHandler->sendPacket(chatMessage, thisClient, selector, commandNumber, serverID);
 			}
 			else if (userCommand == "/place")
 			{
@@ -128,6 +119,7 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 				std::cout << "Huh? Please enter a valid command." << std::endl;
 			}
 		}
+		break;
 
 		//get the map to be displayed
 
@@ -144,6 +136,7 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 		//ask the server if a win has been made
 
 		//if there is a win, say that 
+		break;
 
 	case PhaseEnum::WIN:
 
@@ -154,6 +147,7 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 		//display the last map
 
 		//send a quit command to the server after a minute
+		break;
 
 	default:
 		std::cout << "Error";

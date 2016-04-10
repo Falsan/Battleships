@@ -45,7 +45,8 @@ private:
 		BOARDSETUP = 0,
 		BOARDPLAY = 1,
 		WIN = 2,
-		PLAYERIDENT = 3
+		PLAYERIDENT = 3,
+		WAIT = 4
 	};
 
 	int commandNumber;
