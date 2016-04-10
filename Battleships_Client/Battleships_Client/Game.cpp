@@ -96,29 +96,7 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 		std::cout << "Please Input your next command:" << std::endl;
 		//std::cin >> userCommand;
 
-		if (userCommand[0] == '/')
-		{
-			if (userCommand == "/say")
-			{
-				std::cout << "Please type your message:" << std::endl;
-				std::cin >> userCommand;
-				commandNumber = 4;
-				//packetHandler->sendPacket(chatMessage, thisClient, selector, commandNumber, serverID);
-			}
-			else if (userCommand == "/place")
-			{
-				std::cout << "Please select an X co-ordinate to place your ship at:" << std::endl;
-				std::cin >> coordinate;
-				std::cout << "Please choose an orientation. 1 is up and 2 is across" << std::endl;
-				std::cin >> orientation;
-
-				//send the two ints off and tell the server to place the ship
-			}
-			else
-			{
-				std::cout << "Huh? Please enter a valid command." << std::endl;
-			}
-		}
+		
 		break;
 
 		//get the map to be displayed
@@ -187,7 +165,7 @@ void Game::render()
 
 void Game::gameInputHandle()
 {
-	userCommand = inputHandler->pollInput();
+	userCommand = inputHandler->pollInput(commandNumber);
 }
 
 void Game::gamePacketHandle(sf::TcpSocket& thisClient)
