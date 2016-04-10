@@ -5,18 +5,23 @@ void Draw::drawBoard(std::vector<Cell*> _board)
 {
 	char out;
 	int counter = 0;
+
+
+	std::cout << "0 1 2 3 4 5 6 7 8 9" << std::endl;
+
+
 	for (auto it = _board.begin(); it != _board.end(); it++)
 	{
 		switch ((*it)->getType())
 		{
 		case 0:
-			out = 'E';
+			out = '~';
 			break;
 		case 1:
-			out = 'S';
+			out = '#';
 			break;
 		case 3:
-			out = 'M';
+			out = 'X';
 			break;
 		case 4:
 			out = 'H';
