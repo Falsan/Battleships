@@ -83,7 +83,9 @@ void PacketManager::heartBeat(std::string userInput, sf::TcpSocket& socket, sf::
 
 				if (incomingData == "PING")
 				{
-					if (outgoingData == "")
+					outgoingData = userInput;
+
+					if (outgoingData == " ")
 					{
 						std::string s = "PONG";
 

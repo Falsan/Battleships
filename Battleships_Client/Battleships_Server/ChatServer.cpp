@@ -66,7 +66,8 @@ void ChatServer::alterClientList(bool _in, Client* _inClient)
 			if ((*it)->getClientID() == _inClient->getClientID())
 			{
 				m_listOfClients.erase(m_listOfClients.begin() + count);
-				(*it)->getSocket()->disconnect();
+				(*it)->getSocket()->disconnect(); //breaks here
+				//(*it)->socket->disconnect();
 				break;
 			}
 			
@@ -279,7 +280,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 				//if we have reached the limit of the time out values
 				if (getTimeOut() >= timeOutlimit)
 				{
-					alterClientList(0, m_listOfClients[currentPing]);
+					//alterClientList(0, m_listOfClients[currentPing]); 
 				}
 
 
