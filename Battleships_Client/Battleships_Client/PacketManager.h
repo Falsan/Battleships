@@ -11,25 +11,22 @@ public:
 	void sendPacket(std::string stringPacket, sf::TcpSocket& socket, sf::SocketSelector* selector, int, int);
 
 	std::string recievePacket(sf::TcpSocket& socket, sf::SocketSelector* selector, int serverID=0);
-	std::string recieveMapUpdate(sf::TcpSocket& socket);
-	int recieveCurrentGameState(sf::TcpSocket& socket);
+	//std::string recieveMapUpdate(sf::TcpSocket& socket);
+	//int recieveCurrentGameState(sf::TcpSocket& socket);
 	int recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* selector);
-	void heartBeat(sf::TcpSocket& socket, sf::SocketSelector* selector, int serverID);
-
-
+	void heartBeat(std::string userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int commandNumber, int serverID);
 
 protected:
 
 private:
-	sf::Packet packetToSend;
+	sf::Packet outgoingPacket;
 	sf::Packet incomingPacket;
-	sf::Packet pongPacket;
-	sf::Packet mapPacket;
-	sf::Packet gameStatePacket;
+
 	int gameState;
-	std::string incomingMap;
+	//std::string incomingMap;
 	std::string incomingData;
-	std::string pong;
+	std::string outgoingData;
+	//std::string pong;
 
 };
 
