@@ -4,6 +4,7 @@
 #include "InputManager.h"
 #include "ServerPort.h"
 #include "PacketManager.h"
+#include "ChatLog.h"
 #include <thread>
 #include <SFML\Network.hpp>
 
@@ -30,8 +31,8 @@ protected:
 
 private:
 
-
-
+	BoardManager * m_BoardManager;
+	ChatLog* m_chatLog;
 
 	std::string userCommand;
 	int coordinate;

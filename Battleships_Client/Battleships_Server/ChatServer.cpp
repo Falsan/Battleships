@@ -46,39 +46,39 @@
 //
 //}
 
-void ChatServer::alterClientList(bool _in, Client* _inClient)
-{
-	int chatSize = 10;
-	std::mutex mtx;
-
-	mtx.lock();
-
-	if (_in)
-	{
-		m_listOfClients.push_back(_inClient);
-	}
-	else
-	{
-		int count = 0;
-		bool found = false;
-		for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
-		{
-			if ((*it)->getClientID() == _inClient->getClientID())
-			{
-				m_listOfClients.erase(m_listOfClients.begin() + count);
-				(*it)->getSocket()->disconnect(); //breaks here
-				//(*it)->socket->disconnect();
-				break;
-			}
-			
-			count++;
-		}
-	}
-
-	mtx.unlock();
-
-
-}
+//void ChatServer::alterClientList(bool _in, Client* _inClient)
+//{
+//	int chatSize = 10;
+//	std::mutex mtx;
+//
+//	mtx.lock();
+//
+//	if (_in)
+//	{
+//		m_listOfClients.push_back(_inClient);
+//	}
+//	else
+//	{
+//		int count = 0;
+//		bool found = false;
+//		for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
+//		{
+//			if ((*it)->getClientID() == _inClient->getClientID())
+//			{
+//				m_listOfClients.erase(m_listOfClients.begin() + count);
+//				(*it)->getSocket()->disconnect(); //breaks here
+//				//(*it)->socket->disconnect();
+//				break;
+//			}
+//			
+//			count++;
+//		}
+//	}
+//
+//	mtx.unlock();
+//
+//
+//}
 
 
 ChatServer::ChatServer(std::vector<Client*> _listOfClients, sf::SocketSelector& _selector)
@@ -87,7 +87,7 @@ ChatServer::ChatServer(std::vector<Client*> _listOfClients, sf::SocketSelector& 
 	m_selector = _selector;
 	m_chatLog = new ChatLog;
 
-
+	m_Game = new BattleShipsGame;
 
 	//Launches a thread with the removal function
 	//runServer();
@@ -102,7 +102,7 @@ void ChatServer::update()
 	if (m_chatLog)
 	{
 		printNumOfConnectedClients();
-		m_chatLog->alterChatLog(false, "NULL");
+		m_chatLog->printLog();
 	}
 }
 
@@ -186,7 +186,8 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 						//Who is talking, and what do they want to say?
 						int ID;
 						int actionID;
-								
+						std::string confirm = "A";
+						sf::Packet HOLD;
 						//If the user had disconnected
 						
 						socket->setBlocking(true);
@@ -210,14 +211,17 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 							if (clientHOLD->getGame())
 							{
 								handelShot(clientHOLD, inPacket);
+								messageAllClients();
 							}
 							break;
 							//receve a board
 						case 2:
-							if (m_Game)
-							{
-								handelRecevedBoard(inPacket, clientHOLD);
-							}
+						
+							
+							handelRecevedBoard(inPacket, clientHOLD);
+								
+							
+							messageAllClients();
 							break;
 							//Join a game 
 						case 3:
@@ -226,6 +230,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 								//With two players ready the game starts
 								startGame(m_PlayerOne, m_PlayerTwo);
 							}
+							messageAllClients();
 							break;
 							//Ping
 						case 4:
@@ -234,12 +239,16 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 							{
 								handelPing(RecevedTime);
 							}
+							//messageAllClients();
 							break;
 						case 5:
 							handelChat(inPacket);
+
 							break;
 						case 6:
 							setNickName(clientHOLD,inPacket);
+
+							messageAllClients();
 							break;
 						case 7:
 							//If the current game has started
@@ -249,6 +258,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 							//	outPacket << m_Game->getCurrentPhase();
 							//	clientHOLD->getSocket()->send(outPacket);
 							}
+							messageAllClients();
 							break;
 
 						}
@@ -312,6 +322,19 @@ void ChatServer::handelClientConnect(Client* _inClient)
 	_inClient->getSocket()->send(p);
 }
 
+void ChatServer::messageAllClients()
+{
+	sf::Packet out;
+	std::string output = "s";
+
+	out << output;
+
+
+	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
+	{
+		(*it)->getSocket()->send(out);
+	}
+}
 
 void ChatServer::handelShot(Client * _inClient, sf::Packet _inPacket)
 {

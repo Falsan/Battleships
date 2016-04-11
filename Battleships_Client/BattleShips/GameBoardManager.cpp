@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "LoadIn.h"
+#include "Celltypes.h"
 
 BoardManager::BoardManager()
 {
@@ -15,6 +16,24 @@ BoardManager::~BoardManager()
 {
 	delete m_board;
 	delete m_enemyBoard;
+}
+
+std::string BoardManager::boardToSend(std::vector<Cell*> _inVec)
+{
+	std::vector<char> sendVector;
+	std::string HoldString;
+	int counter = 0;
+	//runthrough our local board vecotor collecting the locations of ships in the vector 
+	for (auto it = _inVec.begin(); it != _inVec.end(); it++)
+	{
+		if (m_board->getBoard()[counter]->getType() == CellTypes::SHIP)
+		{
+			HoldString.push_back(counter);
+		}
+		counter++;
+	}
+
+	return HoldString;
 }
 
 //handels the creation of the board
@@ -32,18 +51,12 @@ Board* BoardManager::startUp()
 		if (responce == 1)
 		{
 			std::cout << "Please enter the name of the file you wish to load" << std::endl;
-			std::getline(std::cin, fileName);
+			std::cin >> fileName;
 
-			auto loaded = LoadIn::loadFile(fileName);
-			//if file has loaded
-			if (loaded[0]->getType() == 9)
-			{
-				repeat = true;
-				std::cout << "Error file not found" << std::endl;
-			}
-			{
-				setBoard(loaded);
-			}
+			LoadIn::loadFile(fileName,m_board->getBoard());
+			
+			Draw::drawBoard(m_board->getBoard());
+
 		}
 		else if (responce == 2)
 		{

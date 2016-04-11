@@ -14,12 +14,12 @@ public:
 	//std::string recieveMapUpdate(sf::TcpSocket& socket);
 	//int recieveCurrentGameState(sf::TcpSocket& socket);
 	int recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* selector);
-	void heartBeat(std::string userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int commandNumber, int serverID);
+	void heartBeat(std::string & userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int &commandNumber, int &serverID);
 
 protected:
 
 private:
-	sf::Packet outgoingPacket;
+
 	sf::Packet incomingPacket;
 
 	int gameState;

@@ -9,6 +9,11 @@ void ChatLog::addToChatLog(std::string _in)
 	alterChatLog(true, _in);
 }
 
+void ChatLog::printLog()
+{
+	alterChatLog(false, "NULL");
+}
+
 void ChatLog::alterChatLog(bool _in, std::string _inString)
 {
 	int chatSize = 10;
@@ -28,12 +33,15 @@ void ChatLog::alterChatLog(bool _in, std::string _inString)
 	}
 	else
 	{
-		std::cout << "++++++ Chat log current size [" << chatSize << "] ++++++" << std::endl;
+		std::cout << "++++++ Chat log current size [" << m_chatLog.size() <<"/"<< chatSize << "] ++++++" << std::endl;
 		for (auto it = m_chatLog.begin(); it != m_chatLog.end(); it++)
 		{
 			std::cout << (*it) << std::endl;
 		}
+		std::cout << "+++++++++++++++Chat Log++++++++++++++++++++" << std::endl;
+
 	}
+
 
 	mtx.unlock();
 
