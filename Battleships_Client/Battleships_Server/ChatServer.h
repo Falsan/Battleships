@@ -27,7 +27,9 @@ public:
 
 	//void addToChatLog(std::string _in);
 	//void alterChatLog(bool, std::string = "NULL");
-	void alterClientList(bool, Client*);
+	//void alterClientList(bool, Client*);
+
+	void messageAllClients();
 
 	int prepareGame(Client *);
 	bool startGame(Client*, Client*);

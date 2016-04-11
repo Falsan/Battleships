@@ -25,7 +25,7 @@ public:
 	Ship* getShipFromList(int _in) { return m_listOfShips[_in]; }
 	void setBoard(std::vector<Cell*>);
 
-
+	std::string boardToSend(std::vector<Cell*> _inVec);
 
 protected:
 

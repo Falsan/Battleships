@@ -4,9 +4,9 @@
 
 
 
-std::vector<Cell*> LoadIn::loadFile(std::string _fileName)
+std::vector<Cell*> LoadIn::loadFile(std::string _fileName, std::vector<Cell*> saveVector)
 {
-	std::vector<Cell*> saveVector;
+	
 	_fileName.append(".txt");
 	int HOLD;
 	std::ifstream outFile(_fileName);

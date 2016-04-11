@@ -8,8 +8,6 @@
 Game::Game(sf::TcpSocket& thisClient)
 {
 
-
-
 	//all initial creation for the game goes here
 	userCommand = " ";
 	commandNumber = NULL;
@@ -18,6 +16,8 @@ Game::Game(sf::TcpSocket& thisClient)
 	inputHandler = new InputManager;
 	packetHandler = new PacketManager;
 	phase = PLAYERIDENT;
+	m_BoardManager = new BoardManager;
+	m_chatLog = new ChatLog;
 //	window = new sf::RenderWindow(sf::VideoMode(windowLength, windowWidth), windowName);
 	
 //	font.loadFromFile("arial.ttf");
@@ -34,6 +34,8 @@ Game::~Game()
 
 	delete inputHandler;
 	delete packetHandler;
+	delete m_BoardManager;
+	delete m_chatLog;
 	//delete window;
 	//all deletion goes here
 }
@@ -54,17 +56,19 @@ void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 
 	std::thread renderThread(&Game::render, this);
 	std::thread inputThread(&Game::gameInputHandle, this);
-	packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID);
+	//inputThread.join();
 	
 	//update the game logic from the last server data
 	//phase = packetHandler->recieveCurrentGameState(thisClient);
-	if (commandNumber == 6)
+	while (true)
 	{
-		phase = WAIT;
+
+		packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID);
+
+		resolution(thisClient, selector);
+
+
 	}
-
-	resolution(thisClient, selector);
-
 	//put that to the screen using the UI manager
 	//clearScreen();
 	//render();
@@ -73,8 +77,8 @@ void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 	
 
 	//listen for messages from the server
-	renderThread.join();
-	inputThread.join();
+	//renderThread.join();
+	//inputThread.join();
 }
 
 void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
@@ -85,14 +89,14 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 	case PhaseEnum::PLAYERIDENT:
 		
 		//ask the player their name
-		std::cout << "Please input a user name:" << std::endl;
+		m_chatLog->addToChatLog("Please input a name:");
 		
 		
 		break;
 
 	case PhaseEnum::WAIT:
 
-		std::cout << "Please wait while we find you a game..." << std::endl;
+		m_chatLog->addToChatLog("Please wait while we find you a game...");
 		commandNumber = 3;
 		userCommand = " ";
 		break;
@@ -100,24 +104,14 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 	case PhaseEnum::BOARDSETUP:
 
 		//send the player input to the server
-		std::cout << "Please place your ships, largest ship will be placed first:" << std::endl;
+		m_chatLog->addToChatLog("Please place your ships:");
 		
-		if (commandNumber == 45)
-		{
-			//place a ship on the board
-
-			//check to see how many ships are on the board
-
-			//if the number of ships is 5...
-
-			//set the command number to send the board to the server
-		}
 		break;
 
 
 	case PhaseEnum::BOARDPLAY:
 		
-		std::cout << "Please elect a position to fire" << std::endl;
+		m_chatLog->addToChatLog("Please select a position to fire");
 		//send the player input to server
 
 		//get the map to be displayed
@@ -139,7 +133,7 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 		break;
 
 	default:
-		std::cout << "Error";
+		m_chatLog->addToChatLog("Error");
 		break;
 	}
 }
@@ -172,11 +166,16 @@ void Game::render()
 	//	window->display();
 	//}
 	//std::cout << displayedMap << std::endl;
+
 }
 
 void Game::gameInputHandle()
 {
-	userCommand = inputHandler->pollInput(commandNumber);
+	while (true)
+	{
+		userCommand = inputHandler->pollInput(commandNumber, m_BoardManager, m_chatLog);
+	}
+	
 }
 
 void Game::gamePacketHandle(sf::TcpSocket& thisClient)

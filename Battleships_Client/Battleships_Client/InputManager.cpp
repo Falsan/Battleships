@@ -1,6 +1,6 @@
 #include "InputManager.h"
 
-std::string InputManager::pollInput(int &commandNumber)
+std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardManager, ChatLog* _Chatlog)
 {
 	command = "none";
 	while (command == "none")
@@ -13,7 +13,7 @@ std::string InputManager::pollInput(int &commandNumber)
 		{
 			if (command == "/say")
 			{
-				std::cout << "Please type your message:" << std::endl;
+				_Chatlog->addToChatLog("Please type your message:");
 				std::cin >> command;
 				commandNumber = 5;
 				return command;
@@ -21,7 +21,10 @@ std::string InputManager::pollInput(int &commandNumber)
 			}
 			else if (command == "/place")
 			{
-				std::string orientation;
+				_BoardManager->startUp();
+				commandNumber = 2;
+				return _BoardManager->boardToSend(_BoardManager->getBoardObject()->getBoard());
+				/*std::string orientation;
 				std::string position;
 				std::cout << "Please select an X co-ordinate to place your ship at:" << std::endl;
 				std::cin >> position;
@@ -30,25 +33,33 @@ std::string InputManager::pollInput(int &commandNumber)
 
 				command = position + orientation;
 				commandNumber = 45;
-				return command;
+				return command;*/
 				//send the two ints off and tell the server to place the ship
 			}
 			else if (command == "/name")
 			{
-				std::cout << "Please enter a name";
+				_Chatlog->addToChatLog("Please enter a name");
 				std::cin >> command;
 				commandNumber = 6;
 				return command;
 			}
 			else if (command == "/shoot")
 			{
-				std::cout << "Please enter an X and Y co-ordinate to shoot at" << std::endl;
+				_Chatlog->addToChatLog("Please enter an X and Y co-ordinate to shoot at");
 				std::cin >> command;
 				commandNumber = 1;
+				return command;
+			}
+			else if (command == "/join")
+			{
+				_Chatlog->addToChatLog("Please wait while we connect to the game");
+				commandNumber = 3;
+				command = "Join";
+				return command;
 			}
 			else
 			{
-				std::cout << "Huh? Please enter a valid command." << std::endl;
+				_Chatlog->addToChatLog("Huh? Please enter a valid command.");
 				command = " ";
 				return command;
 			}

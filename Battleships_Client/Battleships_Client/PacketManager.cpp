@@ -65,8 +65,9 @@ int PacketManager::recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* se
 }
 
 
-void PacketManager::heartBeat(std::string userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int commandNumber, int serverID)
+void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int &commandNumber, int &serverID)
 {
+	sf::Packet outgoingPacket;
 
 	while (serverID == 0)
 	{
@@ -81,13 +82,15 @@ void PacketManager::heartBeat(std::string userInput, sf::TcpSocket& socket, sf::
 			{
 				incomingPacket >> incomingData;
 
-				if (incomingData == "PING")
-				{
+				//if (incomingData == "PING")
+				//{
 					outgoingData = userInput;
 
 					if (outgoingData == " ")
 					{
 						std::string s = "PONG";
+
+						commandNumber = 4;
 
 						outgoingPacket << serverID;
 						outgoingPacket << commandNumber;
@@ -100,16 +103,15 @@ void PacketManager::heartBeat(std::string userInput, sf::TcpSocket& socket, sf::
 						outgoingPacket << commandNumber;
 						outgoingPacket << outgoingData;
 						socket.send(outgoingPacket);
+						outgoingData = " ";
+						commandNumber = 4;
 					}
-				}
-				//else //else the server is clearly sending a command and that command should be dealt with
-				//{
-
-				//}
+		
+					userInput = " ";
 			}
 		}
 	//}
-
+		
 }
 
 

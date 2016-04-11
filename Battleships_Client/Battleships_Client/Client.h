@@ -42,8 +42,6 @@ public:
 protected:
 
 private:
-	
-	BoardManager * m_BoardManager;
 
 	//std::ifstream m_dataFile;
 

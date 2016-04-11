@@ -7,14 +7,14 @@ Client::Client()
 	selector = new sf::SocketSelector;
 	audioManager = new AudioManager;
 	clientServerPort = new ServerPort;
-	m_BoardManager = new BoardManager;
+	//m_BoardManager = new BoardManager;
 }
 
 Client::~Client()
 {
 	delete selector;
 	delete audioManager;
-	delete m_BoardManager;
+	//delete m_BoardManager;
 }
 
 void Client::runClient()
@@ -93,11 +93,6 @@ void Client::clientMenu()
 	//change the state to the appropriate input
 	if (userCommand == "play")
 	{
-		//THIS MAKES THIS PLAYERS BOARD PLEASE PACAGE IT AND SEND THE SHIP COORDS TO THE SERVER AFTER A CONNECTION HAS BEEN ESTABLISHED
-		//SAVE IT AS A LOCAL COPY FOR LATER 
-		m_BoardManager->startUp();
-
-
 
 		clientState = CLIENT_READY;
 	}

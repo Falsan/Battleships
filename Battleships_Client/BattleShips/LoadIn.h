@@ -8,7 +8,7 @@ public:
 	LoadIn()= default;
 	~LoadIn()=default;
 
-	static std::vector<Cell*> loadFile(std::string);
+	static std::vector<Cell*> loadFile(std::string, std::vector<Cell*> saveVector);
 	static bool saveFile(std::vector<Cell*>, std::string);
 
 };
