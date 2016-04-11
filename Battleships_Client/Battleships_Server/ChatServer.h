@@ -15,7 +15,7 @@ class ChatServer
 {
 public:
 	ChatServer(std::vector<Client*> _listOfClients, sf::SocketSelector& _selector);
-	~ChatServer() = default;
+	~ChatServer();
 
 	const int SERVER_PORT = 53000;
 

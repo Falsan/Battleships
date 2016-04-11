@@ -91,7 +91,7 @@ void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf
 						std::string s = "PONG";
 
 						commandNumber = 4;
-
+						
 						outgoingPacket << serverID;
 						outgoingPacket << commandNumber;
 						outgoingPacket << s;

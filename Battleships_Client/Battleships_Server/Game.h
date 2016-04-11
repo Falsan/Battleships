@@ -12,16 +12,16 @@ class Client;
 class GameBase
 {
 public:
-	GameBase(Client* _playerOne, Client * _playerTwo);
+	GameBase(Client* _playerOne/*, Client * _playerTwo*/);
 	~GameBase() = default;
 
 	Client * getPlayerOne() { return PlayerOne; };
-	Client * getPlayerTwo() { return PlayerTwo; };
+	//Client * getPlayerTwo() { return PlayerTwo; };
 	bool getCurrentTurn() { return currentPlayerTurn; }
 	int getCurrentPhase() { return currentPhase; }
 
 	void setPlayerOne(Client * _in) { PlayerOne = _in; };
-	void setPlayerTwo(Client * _in) { PlayerTwo = _in; };
+	//void setPlayerTwo(Client * _in) { PlayerTwo = _in; };
 	void setCurrentTurn(bool _in) { currentPlayerTurn = _in; }
 	void setCurrentPhase(int _in) { currentPhase = _in; }
 
@@ -34,7 +34,7 @@ public:
 private:
 
 	Client * PlayerOne;
-	Client * PlayerTwo;
+	//Client * PlayerTwo;
 	int currentPhase = GAMEPHASE::SETUP; 
 	int currentPlayerTurn = 0;
 };

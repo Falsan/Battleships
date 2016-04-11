@@ -3,7 +3,7 @@
 
 
 
-BattleShipsGame::BattleShipsGame(Client* _playerOne, Client * _playerTwo):GameBase(_playerOne, _playerTwo)
+BattleShipsGame::BattleShipsGame(Client* _playerOne/*, Client * _playerTwo*/):GameBase(_playerOne/*, _playerTwo*/)
 {
 
 }
