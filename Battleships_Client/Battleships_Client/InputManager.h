@@ -8,7 +8,7 @@ public:
 	InputManager(){};
 	~InputManager(){};
 
-	std::string pollInput(int commandNumber);
+	std::string pollInput(int &commandNumber);
 
 protected:
 
