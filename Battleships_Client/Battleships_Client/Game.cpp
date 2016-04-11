@@ -92,20 +92,24 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 	case PhaseEnum::BOARDSETUP:
 
 		//send the player input to the server
-		std::cout << "Please Input your next command:" << std::endl;
-		//std::cin >> userCommand;
-
+		std::cout << "Please place your ships, largest ship will be placed first:" << std::endl;
 		
+		if (commandNumber == 45)
+		{
+			//place a ship on the board
+
+			//check to see how many ships are on the board
+
+			//if the number of ships is 5...
+
+			//set the command number to send the board to the server
+		}
 		break;
 
-		//get the map to be displayed
-
-		//check to see if done
-
-		//if done, send a command to the server saying so
 
 	case PhaseEnum::BOARDPLAY:
-
+		
+		std::cout << "Please elect a position to fire" << std::endl;
 		//send the player input to server
 
 		//get the map to be displayed
