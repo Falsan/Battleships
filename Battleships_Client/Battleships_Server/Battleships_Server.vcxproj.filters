@@ -24,9 +24,6 @@
     <ClCompile Include="OutPut.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Board.cpp">
-      <Filter>Source Files\Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
@@ -48,9 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OutPut.h">
-      <Filter>Source Files\Headder</Filter>
-    </ClInclude>
-    <ClInclude Include="Board.h">
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
     <ClInclude Include="Client.h">

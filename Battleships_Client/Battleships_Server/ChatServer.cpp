@@ -3,48 +3,48 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
-#include "BoardManager.h"
+
 #include <mutex>
 #include <iomanip>      
 #include "CellTypes.h"
 
 
 
-void ChatServer::addToChatLog(std::string _in)
-{ 
-	alterChatLog(true, _in);
-}
+//void ChatServer::addToChatLog(std::string _in)
+//{ 
+//	alterChatLog(true, _in);
+//}
 
-void ChatServer::alterChatLog(bool _in,std::string _inString)
-{
-	int chatSize = 10;
-	std::mutex mtx;
-
-	mtx.lock();
-	if (_in)
-	{
-		//drops the first item on the the vector list of our chat log
-		m_chatLog.push_back(_inString);
-
-		//If we have reached capacity on our chat log removes the first elemnt 
-		if (m_chatLog.size() > chatSize)
-		{
-			m_chatLog.erase(m_chatLog.begin());
-		}
-	}
-	else
-	{
-		std::cout << "++++++ Chat log current size [" << chatSize << "] ++++++" << std::endl;
-		for (auto it = m_chatLog.begin(); it != m_chatLog.end(); it++)
-		{
-			std::cout << (*it) << std::endl;
-		}
-	}
-
-	mtx.unlock();
-
-
-}
+//void ChatServer::alterChatLog(bool _in,std::string _inString)
+//{
+//	int chatSize = 10;
+//	std::mutex mtx;
+//
+//	mtx.lock();
+//	if (_in)
+//	{
+//		//drops the first item on the the vector list of our chat log
+//		m_chatLog.push_back(_inString);
+//
+//		//If we have reached capacity on our chat log removes the first elemnt 
+//		if (m_chatLog.size() > chatSize)
+//		{
+//			m_chatLog.erase(m_chatLog.begin());
+//		}
+//	}
+//	else
+//	{
+//		std::cout << "++++++ Chat log current size [" << chatSize << "] ++++++" << std::endl;
+//		for (auto it = m_chatLog.begin(); it != m_chatLog.end(); it++)
+//		{
+//			std::cout << (*it) << std::endl;
+//		}
+//	}
+//
+//	mtx.unlock();
+//
+//
+//}
 
 void ChatServer::alterClientList(bool _in, Client* _inClient)
 {
@@ -85,20 +85,25 @@ ChatServer::ChatServer(std::vector<Client*> _listOfClients, sf::SocketSelector& 
 {
 	m_listOfClients = _listOfClients;
 	m_selector = _selector;
-	
+	m_chatLog = new ChatLog;
+
+
+
 	//Launches a thread with the removal function
 	//runServer();
 
+
+	//Draw::drawBoard();
 
 }
 
 void ChatServer::update()
 {
-
+	if (m_chatLog)
+	{
 		printNumOfConnectedClients();
-		alterChatLog(false);
-
-
+		m_chatLog->alterChatLog(false, "NULL");
+	}
 }
 
 
@@ -144,7 +149,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 				if (listener.accept(*m_client->getSocket()) != sf::Socket::Done)
 				{
 					//throw error
-					addToChatLog("Error, listener could not accept the client");
+					m_chatLog->addToChatLog("Error, listener could not accept the client");
 					
 					//delete the created client setup since it is no longer needed
 					delete m_client;
@@ -299,7 +304,7 @@ void ChatServer::handelClientConnect(Client* _inClient)
 
 	//add client to the selector
 	m_selector.add(*_inClient->getSocket());
-	addToChatLog("Player has entered the room");
+	m_chatLog->addToChatLog("Player has entered the room");
 	//Inform the client of there server side ID
 	sf::Packet p;
 	p << _inClient->getClientID();
@@ -331,7 +336,7 @@ void ChatServer::setNickName(Client * _inClient, sf::Packet _inPacket)
 	chat.append("has set there name to: ");
 	chat.append(nickName);
 
-	addToChatLog(chat);
+	m_chatLog->addToChatLog(chat);
 
 	_inClient->setNickName(nickName);
 }
@@ -343,7 +348,7 @@ void ChatServer::handelChat(sf::Packet _inPacket)
 	//localy store the chat message 
 	_inPacket >> chatMessage;
 
-	addToChatLog(chatMessage);
+	m_chatLog->addToChatLog(chatMessage);
 
 	outPacket << chatMessage;
 

@@ -3,8 +3,13 @@
 #include <future>
 //#include 
 
+
+
 Game::Game(sf::TcpSocket& thisClient)
 {
+
+
+
 	//all initial creation for the game goes here
 	userCommand = " ";
 	commandNumber = NULL;
@@ -26,6 +31,7 @@ Game::Game(sf::TcpSocket& thisClient)
 
 Game::~Game()
 {
+
 	delete inputHandler;
 	delete packetHandler;
 	//delete window;
@@ -44,6 +50,8 @@ void Game::setup(sf::TcpSocket& thisClient)
 void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 {
 	//if needed, pass the input to the packet manager to be sent to the server
+
+
 	std::thread renderThread(&Game::render, this);
 	std::thread inputThread(&Game::gameInputHandle, this);
 	packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID);

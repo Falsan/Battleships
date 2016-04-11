@@ -2,9 +2,12 @@
 
 Board::Board()
 {
-	for (auto it = m_board.begin(); it != m_board.end(); it++)
+	for (int i = 0; i < 10; i++)
 	{
-		(*it) = new Cell;
+		for (int j = 0; j < 10; j++)
+		{
+			m_board.push_back(new Cell);
+		}
 	}
 }
 

@@ -76,7 +76,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>D:\LLPCW2\08-04-16\Battleships\Battleships_Client\BattleShips;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\LLPCW2\08-04-162\V2\Battleships\Battleships_Client\BattleShips;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -124,7 +124,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BattleShipsGame.cpp" />
-    <ClCompile Include="Board.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameManager.cpp" />
@@ -134,7 +133,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BattleShipsGame.h" />
-    <ClInclude Include="Board.h" />
     <ClInclude Include="CellTypesLoc.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Game.h" />

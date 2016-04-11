@@ -5,6 +5,7 @@
 #include <SFML\Audio.hpp>
 #include <SFML\Graphics.hpp>
 #include <SFML\Window.hpp>
+#include "BoardManager.h"
 
 #include "Game.h"
 #include "AudioManager.h"
@@ -41,6 +42,8 @@ public:
 protected:
 
 private:
+	
+	BoardManager * m_BoardManager;
 
 	//std::ifstream m_dataFile;
 

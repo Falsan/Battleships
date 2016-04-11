@@ -7,6 +7,8 @@
 #include <thread>
 #include <SFML\Network.hpp>
 
+
+
 class InputManager;
 class PacketManager;
 
@@ -27,6 +29,9 @@ protected:
 	
 
 private:
+
+
+
 
 	std::string userCommand;
 	int coordinate;
