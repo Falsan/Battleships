@@ -1,6 +1,6 @@
 #include "InputManager.h"
 
-std::string InputManager::pollInput(int commandNumber)
+std::string InputManager::pollInput(int &commandNumber)
 {
 	command = "none";
 	while (command == "none")
@@ -8,7 +8,6 @@ std::string InputManager::pollInput(int commandNumber)
 		//listen for input
 		std::cin >> command;
 		//if input, perform some sort of behaviour
-
 		
 		if (command[0] == '/')
 		{

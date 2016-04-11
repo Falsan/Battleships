@@ -50,6 +50,11 @@ void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 	
 	//update the game logic from the last server data
 	//phase = packetHandler->recieveCurrentGameState(thisClient);
+	if (commandNumber == 6)
+	{
+		phase = WAIT;
+	}
+
 	resolution(thisClient, selector);
 
 	//put that to the screen using the UI manager
@@ -74,13 +79,7 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 		//ask the player their name
 		std::cout << "Please input a user name:" << std::endl;
 		
-		//std::cin >> userCommand;
-		//recieve server ID
-		//serverID = packetHandler->recieveServerID(thisClient, selector);
-
-		//commandNumber = 6;
-
-		//send name to server
+		
 		break;
 
 	case PhaseEnum::WAIT:
