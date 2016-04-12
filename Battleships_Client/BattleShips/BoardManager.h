@@ -27,6 +27,9 @@ public:
 
 	std::string boardToSend(std::vector<Cell*> _inVec);
 
+	std::vector<int> getCompBoard() { return m_compiledBoard; };
+
+	std::vector<int> m_compiledBoard;
 protected:
 
 private:
@@ -38,6 +41,7 @@ private:
 	void addShipToList(Ship*_in) { m_listOfShips.push_back(_in); }
 
 bool createFlotila(int AC = 1,int BS = 1,int SM = 1,int DES = 1, int PB = 1);
+
 
 	std::vector<Ship*> m_listOfShips;
 	Board* m_board;

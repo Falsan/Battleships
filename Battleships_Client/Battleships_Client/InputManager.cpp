@@ -2,7 +2,7 @@
 
 std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardManager, ChatLog* _Chatlog)
 {
-	command = "none";
+	std::string command = "none";
 	while (command == "none")
 	{
 		//listen for input
@@ -24,6 +24,8 @@ std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardMan
 				_BoardManager->startUp();
 				commandNumber = 2;
 				return _BoardManager->boardToSend(_BoardManager->getBoardObject()->getBoard());
+				
+				
 				/*std::string orientation;
 				std::string position;
 				std::cout << "Please select an X co-ordinate to place your ship at:" << std::endl;

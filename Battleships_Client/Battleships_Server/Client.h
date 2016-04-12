@@ -15,8 +15,7 @@ public:
 	Client() = default;
 	~Client() = default;
 
-	void setUpBoard(std::vector<std::pair<int, int>>);
-
+	void setUpBoard(std::vector <int> _ShipPos);
 
 	int getClientID() { return clientID; }
 	int getTimeOuts() { return timeOuts; }

@@ -65,9 +65,10 @@ int PacketManager::recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* se
 }
 
 
-void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int &commandNumber, int &serverID)
+void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int &commandNumber, int &serverID, BoardManager * _BoardManager)
 {
 	sf::Packet outgoingPacket;
+	
 
 	while (serverID == 0)
 	{
@@ -96,6 +97,21 @@ void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf
 						outgoingPacket << commandNumber;
 						outgoingPacket << s;
 						socket.send(outgoingPacket);
+					}
+					else if (outgoingData == "BoardCompiled")
+					{
+						outgoingPacket << serverID;
+						outgoingPacket << commandNumber;
+						
+						
+						for (int it = 0; it < _BoardManager->m_compiledBoard.size(); it++)
+						{
+							
+							outgoingPacket << _BoardManager->m_compiledBoard[it];
+						}
+
+						socket.send(outgoingPacket);
+
 					}
 					else
 					{
