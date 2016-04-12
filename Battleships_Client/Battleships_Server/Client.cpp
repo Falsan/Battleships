@@ -1,16 +1,36 @@
 #include "Client.h"
 #include "Celltypes.h"
+#include "DrawBoard.h"
+
+ServerClient::ServerClient()
+{
+	for (int i = 0; i < 100; i++)
+	{
+		m_PlayersBoard.push_back(new Cell);
+	}
+}
 
 //Receving a board from the player 
-void Client::setUpBoard(std::vector <int> _ShipPos)
+void ServerClient::setUpBoard(std::vector <int> _ShipPos)
 {
-
+	
 	//place all the locations that we have receved on to the board
-
-	for (auto it = _ShipPos.begin(); it != _ShipPos.end(); it++)
+	int counter = 0;
+	int shipCounter = 0;
+	for (auto it = m_PlayersBoard.begin(); it != m_PlayersBoard.end(); it++)
 	{
-		int loc = 10;
-//		m_PlayersBoard[(loc*(*it).first) + (*it).second]->setType(CellTypes::SHIP);
+
+		if (shipCounter < 15)
+		{
+			if (counter == _ShipPos[shipCounter])
+			{
+				(*it)->setType(CellTypes::SHIP);
+				shipCounter++;
+			}
+		}
+
+		counter++;
 	}
 
+	Draw::drawBoard(m_PlayersBoard);
 }

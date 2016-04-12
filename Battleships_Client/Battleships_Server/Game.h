@@ -8,24 +8,24 @@
 
 
 
-class Client;
+class ServerClient;
 class GameBase
 {
 public:
-	GameBase(Client* _playerOne/*, Client * _playerTwo*/);
+	GameBase(ServerClient* _playerOne/*, Client * _playerTwo*/);
 	~GameBase() = default;
 
-	Client * getPlayerOne() { return PlayerOne; };
-	Client * getPlayerTwo() { return PlayerTwo; };
+	ServerClient * getPlayerOne() { return PlayerOne; };
+	ServerClient * getPlayerTwo() { return PlayerTwo; };
 	bool getCurrentTurn() { return currentPlayerTurn; }
 	int getCurrentPhase() { return currentPhase; }
 
-	void setPlayerOne(Client * _in) { PlayerOne = _in; };
-	void setPlayerTwo(Client * _in) { PlayerTwo = _in; };
+	void setPlayerOne(ServerClient * _in) { PlayerOne = _in; };
+	void setPlayerTwo(ServerClient * _in) { PlayerTwo = _in; };
 	void setCurrentTurn(bool _in) { currentPlayerTurn = _in; }
 	void setCurrentPhase(int _in) { currentPhase = _in; }
 
-	virtual void update(sf::Packet _inPacket, Client * _inClient) = 0;
+	virtual void update(sf::Packet _inPacket, ServerClient * _inClient) = 0;
 
 	virtual void input(int _in) = 0;
 	virtual int outPut() = 0;
@@ -33,8 +33,8 @@ public:
 
 private:
 
-	Client * PlayerOne;
-	Client * PlayerTwo;
+	ServerClient * PlayerOne;
+	ServerClient * PlayerTwo;
 	int currentPhase = GAMEPHASE::SETUP; 
 	int currentPlayerTurn = 0;
 };

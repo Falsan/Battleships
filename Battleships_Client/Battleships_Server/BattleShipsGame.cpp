@@ -3,12 +3,12 @@
 
 
 
-BattleShipsGame::BattleShipsGame(Client* _playerOne/*, Client * _playerTwo*/):GameBase(_playerOne/*, _playerTwo*/)
+BattleShipsGame::BattleShipsGame(ServerClient* _playerOne/*, Client * _playerTwo*/):GameBase(_playerOne/*, _playerTwo*/)
 {
 
 }
 
-void BattleShipsGame::update(sf::Packet _inPacket, Client * _inClient)
+void BattleShipsGame::update(sf::Packet _inPacket, ServerClient * _inClient)
 {
 	sf::Packet outPacketPlayer;
 	sf::Packet outPacketOponent;
