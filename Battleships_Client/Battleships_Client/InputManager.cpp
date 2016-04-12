@@ -1,6 +1,6 @@
 #include "InputManager.h"
 
-std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardManager, ChatLog* _Chatlog)
+std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardManager, ChatLog* _Chatlog, std::pair<int, int> &shot)
 {
 	std::string command = "none";
 	while (command == "none")
@@ -48,8 +48,9 @@ std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardMan
 			else if (command == "/shoot")
 			{
 				_Chatlog->addToChatLog("Please enter an X and Y co-ordinate to shoot at");
-				std::cin >> command;
+				shot = playerShot();
 				commandNumber = 1;
+				command = "Shoot";
 				return command;
 			}
 			else if (command == "/join")
@@ -69,4 +70,19 @@ std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardMan
 
 	}
 
+}
+
+std::pair<int, int> InputManager::playerShot()
+{
+	int x;
+	int y;
+	std::cin >> x;
+	std::cin >> y;
+
+	std::pair<int, int> shotCoord;
+
+	shotCoord.first = x;
+	shotCoord.second = y;
+
+	return shotCoord;
 }

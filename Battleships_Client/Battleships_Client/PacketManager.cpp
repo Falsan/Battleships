@@ -65,7 +65,7 @@ int PacketManager::recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* se
 }
 
 
-void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int &commandNumber, int &serverID, BoardManager * _BoardManager)
+void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int &commandNumber, int &serverID, BoardManager * _BoardManager, std::pair<int, int> shot)
 {
 	sf::Packet outgoingPacket;
 	
@@ -112,6 +112,15 @@ void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf
 
 						socket.send(outgoingPacket);
 
+					}
+					else if(outgoingData == "Shoot")
+					{
+						outgoingPacket << serverID;
+						outgoingPacket << commandNumber;
+						outgoingPacket << shot.first;
+						outgoingPacket << shot.second;
+						outgoingData = " ";
+						socket.send(outgoingPacket);
 					}
 					else
 					{

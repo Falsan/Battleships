@@ -14,7 +14,7 @@ public:
 	//std::string recieveMapUpdate(sf::TcpSocket& socket);
 	//int recieveCurrentGameState(sf::TcpSocket& socket);
 	int recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* selector);
-	void heartBeat(std::string & userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int &commandNumber, int &serverID, BoardManager * _BoardManager);
+	void heartBeat(std::string & userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int &commandNumber, int &serverID, BoardManager * _BoardManager, std::pair<int, int> shot);
 
 protected:
 
