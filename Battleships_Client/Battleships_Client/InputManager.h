@@ -14,5 +14,6 @@ public:
 protected:
 
 private:
-	std::string command;
+	std::vector<int*> board;
+	
 };

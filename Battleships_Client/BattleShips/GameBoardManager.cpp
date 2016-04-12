@@ -20,20 +20,22 @@ BoardManager::~BoardManager()
 
 std::string BoardManager::boardToSend(std::vector<Cell*> _inVec)
 {
-	std::vector<char> sendVector;
-	std::string HoldString;
+	//std::vector<int> sendVector;
 	int counter = 0;
 	//runthrough our local board vecotor collecting the locations of ships in the vector 
 	for (auto it = _inVec.begin(); it != _inVec.end(); it++)
 	{
 		if (m_board->getBoard()[counter]->getType() == CellTypes::SHIP)
 		{
-			HoldString.push_back(counter);
+			m_compiledBoard.push_back(counter);
 		}
 		counter++;
 	}
 
-	return HoldString;
+	//m_compiledBoard = sendVector;
+
+	return "BoardCompiled";
+
 }
 
 //handels the creation of the board

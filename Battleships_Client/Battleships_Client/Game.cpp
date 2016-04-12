@@ -63,7 +63,7 @@ void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 	while (true)
 	{
 
-		packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID);
+		packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID, m_BoardManager);
 
 		resolution(thisClient, selector);
 

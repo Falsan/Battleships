@@ -32,7 +32,7 @@ public:
 	void messageAllClients();
 
 	int prepareGame(Client *);
-	bool startGame(Client*, Client*);
+	bool startGame(Client*/*, Client**/);
 	void setNickName(Client *, sf::Packet _inPacket);
 	void handelChat(sf::Packet _inPacket);
 	void handelPing(Clock::time_point _RecevedTime);

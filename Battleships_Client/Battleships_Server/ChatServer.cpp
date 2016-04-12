@@ -87,7 +87,7 @@ ChatServer::ChatServer(std::vector<Client*> _listOfClients, sf::SocketSelector& 
 	m_selector = _selector;
 	m_chatLog = new ChatLog;
 
-	m_Game = new BattleShipsGame;
+	//m_Game = new BattleShipsGame(nullptr); 
 
 	//Launches a thread with the removal function
 	//runServer();
@@ -134,7 +134,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 	while (true)
 	{
 		//Has a communication come in?
-		if (selector.wait(sf::milliseconds(50)))
+		if (selector.wait(sf::milliseconds(500)))
 		{
 			//stores the time that the connection was receved
 			auto RecevedTime = Clock::now();
@@ -228,7 +228,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 							if (prepareGame(clientHOLD) == 2)
 							{
 								//With two players ready the game starts
-								startGame(m_PlayerOne, m_PlayerTwo);
+								startGame(m_PlayerOne/*, m_PlayerTwo*/);
 							}
 							messageAllClients();
 							break;
@@ -385,16 +385,19 @@ void ChatServer::handelChat(sf::Packet _inPacket)
 
 void ChatServer::handelRecevedBoard(sf::Packet _inPacket,Client* _inClient)
 {
-	std::vector < std::pair<int, int> >inBoardlocs;
+	std::vector<int> inBoardlocs;
 	int ignore;
+	int HOLD;
+	//remove the identity
+
 	//Pulling the content out of the pair elements
-	for (auto it = inBoardlocs.begin(); it != inBoardlocs.end(); it++)
+	for (int it = 0; it < 15; it++)
 	{
-		_inPacket >> (*it).first;
-		_inPacket >> (*it).second;
+		_inPacket >> HOLD;
+		inBoardlocs.push_back(HOLD);
 
 		//pulling out the size element
-		_inPacket >> ignore;
+		
 	}
 
 	_inClient->setUpBoard(inBoardlocs);
@@ -423,7 +426,7 @@ void ChatServer::printNumOfConnectedClients()
 
 		if (m_Game)
 		{
-			std::cout << "Current game: BattleShips" << std::endl << "Current Players:" << m_PlayerOne->getClientID() << " VS " << m_PlayerTwo->getClientID() << std::endl;
+			std::cout << "Current game: BattleShips" << std::endl << "Current Players:" << m_PlayerOne->getClientID() << " VS " << /*m_PlayerTwo->getClientID()*/ "AI" << std::endl;
 		}
 		else
 		{
@@ -519,7 +522,7 @@ int ChatServer::prepareGame(Client * _player)
 	{
 		//asign the player to the slot
 		m_PlayerOne = _player;
-		return 1;
+		return 2;
 	}
 	//Otherwise test if player two is avalable
 	else if (!m_PlayerTwo)
@@ -539,16 +542,16 @@ int ChatServer::prepareGame(Client * _player)
 }
 
 //Create a new game with the players who are now ready
-bool ChatServer::startGame(Client* _P1, Client* _P2)
+bool ChatServer::startGame(Client* _P1/*, Client* _P2*/)
 {
 	//create a new game 
-	m_Game = new BattleShipsGame(_P1, _P2);
+	m_Game = new BattleShipsGame(_P1/*, _P2*/);
 	//Inform the players that this is there game
 	_P1->setGame(m_Game);
-	_P2->setGame(m_Game);
+	//_P2->setGame(m_Game);
 
-	_P1->setOponent(_P2);
-	_P2->setOponent(_P1);
+	//_P1->setOponent(_P2);
+	//_P2->setOponent(_P1);
 
 	//place the game on a new thread
 	//std::thread(&m_Game, BattleShipsGame(_P1, _P2));
