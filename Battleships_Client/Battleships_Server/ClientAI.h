@@ -6,11 +6,19 @@
 class AIClient : public ServerClient
 {
 public:
-	AIClient(Board* _inBoard,int difficulty);
+	AIClient(std::vector<Cell*>,int difficulty);
 	~AIClient();
 
-	int AIShoot();
+	void setAIBoard(std::vector<Cell*> _in) { m_AIBoard = _in; }
+	std::vector<Cell*> getAIBoard() { return m_AIBoard; }
 
+	bool AIShoot();
 
+	void AILoadLevel();
+
+protected:
+
+private:
+	std::vector <Cell*> m_AIBoard;
 
 };

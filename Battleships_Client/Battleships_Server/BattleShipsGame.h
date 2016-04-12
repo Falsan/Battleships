@@ -2,10 +2,11 @@
 #include "Game.h"
 #include "Client.h"
 
+
 class BattleShipsGame : public GameBase
 {
 public:
-	BattleShipsGame(ServerClient* _playerOne/*, Client * _playerTwo*/);
+	BattleShipsGame(ServerClient* _playerOne, ServerClient * _playerTwo);
 	~BattleShipsGame() = default;
 
 	virtual void update(sf::Packet _inPacket, ServerClient * _inClient) override;
