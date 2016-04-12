@@ -63,7 +63,7 @@ void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 	while (true)
 	{
 
-		packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID, m_BoardManager);
+		packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID, m_BoardManager, shot);
 
 		resolution(thisClient, selector);
 
@@ -173,7 +173,7 @@ void Game::gameInputHandle()
 {
 	while (true)
 	{
-		userCommand = inputHandler->pollInput(commandNumber, m_BoardManager, m_chatLog);
+		userCommand = inputHandler->pollInput(commandNumber, m_BoardManager, m_chatLog, shot);
 	}
 	
 }
