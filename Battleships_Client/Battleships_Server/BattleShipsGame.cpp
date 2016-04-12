@@ -24,41 +24,41 @@ void BattleShipsGame::update(sf::Packet _inPacket, ServerClient * _inClient)
 
 
 	//get the type of cell that the player has shot
-	int shot = _inClient->getOppenent()->getPlayersBoard()[shotPos]->getType();
-	switch (shot + 2)
-	{
-	case 2:
-		//Tell the player that they have missed
-		out = "Shot missed";
-		//inform the oponent that it is now there turn
-		outOponent = "TURN";
-		//set the value stroed in that cell to miss
-		_inClient->getOppenent()->getPlayersBoard()[shotPos]->setType(CELLTYPES::EMPTY);
+	//int shot = _inClient->getOppenent()->getPlayersBoard()[shotPos]->getType();
+	//switch (shot + 2)
+	//{
+	//case 2:
+	//	//Tell the player that they have missed
+	//	out = "Shot missed";
+	//	//inform the oponent that it is now there turn
+	//	outOponent = "TURN";
+	//	//set the value stroed in that cell to miss
+	//	//_inClient->getOppenent()->getPlayersBoard()[shotPos]->setType(CELLTYPES::EMPTY);
+	//
+	//	break;
+	//case 3:
+	//	//Tell the player that they have hit
+	//	out = "HIT";
+	//	//tell the oponent that it is still no there turn
+	//	outOponent = "NULL";
+	//	//set the value in the cell to a hit ship
+	////	_inClient->getOppenent()->getPlayersBoard()[shotPos]->setType(CELLTYPES::HITSHIP);
+	//	break;
+	//	//these value can only be reached if a player attempts to shoot the same cell multiple times
+	//case 4:
+	//case 5:
+	//case 6:
+	//	out = "You already shot there";
+	//	outOponent = "NULL";
 
-		break;
-	case 3:
-		//Tell the player that they have hit
-		out = "HIT";
-		//tell the oponent that it is still no there turn
-		outOponent = "NULL";
-		//set the value in the cell to a hit ship
-		_inClient->getOppenent()->getPlayersBoard()[shotPos]->setType(CELLTYPES::HITSHIP);
-		break;
-		//these value can only be reached if a player attempts to shoot the same cell multiple times
-	case 4:
-	case 5:
-	case 6:
-		out = "You already shot there";
-		outOponent = "NULL";
+	//	break;
+	//}
 
-		break;
-	}
-
-	//Send out our results
-	outPacketPlayer << out;
-	outPacketOponent << outOponent;
-	_inClient->getSocket()->send(outPacketPlayer);
-	_inClient->getOppenent()->getSocket()->send(outPacketOponent);
+	////Send out our results
+	//outPacketPlayer << out;
+	//outPacketOponent << outOponent;
+	//_inClient->getSocket()->send(outPacketPlayer);
+	//_inClient->getOppenent()->getSocket()->send(outPacketOponent);
 }
 /*
 0 = empty

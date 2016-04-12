@@ -125,6 +125,8 @@
   <ItemGroup>
     <ClCompile Include="BattleShipsGame.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="ClientAI.cpp" />
+    <ClCompile Include="ClientBase.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="ChatServer.cpp" />
@@ -135,6 +137,8 @@
     <ClInclude Include="BattleShipsGame.h" />
     <ClInclude Include="CellTypesLoc.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="ClientAI.h" />
+    <ClInclude Include="ClientBase.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GamePhase.h" />

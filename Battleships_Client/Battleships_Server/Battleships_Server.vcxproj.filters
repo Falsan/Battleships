@@ -42,6 +42,12 @@
     <ClCompile Include="ChatServer.cpp">
       <Filter>Source Files\Source</Filter>
     </ClCompile>
+    <ClCompile Include="ClientAI.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientBase.cpp">
+      <Filter>Source Files\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OutPut.h">
@@ -66,6 +72,12 @@
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
     <ClInclude Include="CellTypesLoc.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientAI.h">
+      <Filter>Source Files\Headder</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientBase.h">
       <Filter>Source Files\Headder</Filter>
     </ClInclude>
   </ItemGroup>
