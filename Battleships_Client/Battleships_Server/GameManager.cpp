@@ -43,7 +43,7 @@ void GameManager::draw()
 			int roomCount = 1;
 			for (auto it = m_listOfChatRooms.begin(); it != m_listOfChatRooms.end(); it++)
 			{
-				std::cout << "Room " << roomCount << ":" << std::endl;
+				//std::cout << "Room " << roomCount << ":" << std::endl;
 				(*it)->update();
 			}
 		}

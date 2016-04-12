@@ -9,11 +9,11 @@
 
 class BattleShipsGame;
 
-class Client
+class ServerClient
 {
 public:
-	Client() = default;
-	~Client() = default;
+	ServerClient();
+	~ServerClient() = default;
 
 	void setUpBoard(std::vector <int> _ShipPos);
 
@@ -28,7 +28,7 @@ public:
 	std::string getNickName() { return nickName; }
 	BattleShipsGame * getGame() { return currentGame; }
 	int getDuration() { return duration; }
-	Client* getOppenent() { return opponent; };
+	ServerClient* getOppenent() { return opponent; };
 
 
 	void setClientID(int _in) { clientID = _in; }
@@ -42,7 +42,7 @@ public:
 	void setNickName(std::string _in) { nickName = _in; }
 	void setGame(BattleShipsGame * _in) { currentGame = _in; }
 	void setDuration(int _in) { duration = _in; }
-	void setOponent(Client * _in) { opponent = _in; }
+	void setOponent(ServerClient * _in) { opponent = _in; }
 
 private:
 	// the Id used to identify the user
@@ -60,11 +60,8 @@ private:
 	bool takeTurn = false;
 	std::string nickName = "NULL";
 
-	Client * opponent;
+	ServerClient * opponent;
 
 	BattleShipsGame * currentGame;
-
-
-
 
 };

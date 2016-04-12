@@ -14,16 +14,16 @@ typedef std::chrono::high_resolution_clock Clock;
 class ChatServer
 {
 public:
-	ChatServer(std::vector<Client*> _listOfClients, sf::SocketSelector& _selector);
+	ChatServer(std::vector<ServerClient*> _listOfClients, sf::SocketSelector& _selector);
 	~ChatServer() = default;
 
 	const int SERVER_PORT = 53000;
 
 	void removeClientWithSocket(sf::TcpSocket* _id);
-	Client * findClientWithID(int _ID);
+	ServerClient * findClientWithID(int _ID);
 	void runServer();
 	void bindServerPort(sf::SocketSelector& selector, sf::TcpListener& listerner);
-	void listen(sf::SocketSelector& selector, std::vector<Client*>& sockets, sf::TcpListener& listener);
+	void listen(sf::SocketSelector& selector, std::vector<ServerClient*>& sockets, sf::TcpListener& listener);
 
 	//void addToChatLog(std::string _in);
 	//void alterChatLog(bool, std::string = "NULL");
@@ -31,21 +31,21 @@ public:
 
 	void messageAllClients();
 
-	int prepareGame(Client *);
-	bool startGame(Client*/*, Client**/);
-	void setNickName(Client *, sf::Packet _inPacket);
+	int prepareGame(ServerClient *);
+	bool startGame(ServerClient*/*, Client**/);
+	void setNickName(ServerClient *, sf::Packet _inPacket);
 	void handelChat(sf::Packet _inPacket);
 	void handelPing(Clock::time_point _RecevedTime);
-	void handelRecevedBoard(sf::Packet _inPacket, Client*);
-	void handelShot(Client * _inClient,sf::Packet _inPacket);
-	void handelClientConnect(Client* _inClient);
+	void handelRecevedBoard(sf::Packet _inPacket, ServerClient*);
+	void handelShot(ServerClient * _inClient,sf::Packet _inPacket);
+	void handelClientConnect(ServerClient* _inClient);
 
 	void update();
 
 	int genID();
 	void printNumOfConnectedClients();
 	int currentPing = 0;
-	std::vector<Client*> m_listOfClients;
+	std::vector<ServerClient*> m_listOfClients;
 	bool pingSent = false;
 
 	void setTimeOut(int _in) { timeOut = _in; };
@@ -66,8 +66,8 @@ private:
 
 	BattleShipsGame * m_Game = nullptr;
 
-	Client * m_PlayerOne = nullptr;
-	Client * m_PlayerTwo = nullptr;
+	ServerClient * m_PlayerOne = nullptr;
+	ServerClient * m_PlayerTwo = nullptr;
 
 	//sf::TcpListener m_listerner;
 	sf::SocketSelector m_selector;

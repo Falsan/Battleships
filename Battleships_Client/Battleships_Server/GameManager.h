@@ -18,16 +18,16 @@ public:
 	ChatServer * m_listern;
 	bool listener();
 	void draw();
-	std::vector<Client*> getClientList() { return m_clientList; };
+	std::vector<ServerClient*> getClientList() { return m_clientList; };
 	sf::SocketSelector getSelector() { return m_selector; }
-	void setClientList(Client* _in) { m_clientList.push_back(_in); }
+	void setClientList(ServerClient* _in) { m_clientList.push_back(_in); }
 	void setSelector(sf::SocketSelector _in) { m_selector = _in; }
 
 	std::vector<ChatServer*> m_listOfChatRooms;
 
 private:
 
-	std::vector<Client*> m_clientList;
+	std::vector<ServerClient*> m_clientList;
 	std::vector<sf::TcpSocket*> * m_sockets;
 	sf::SocketSelector m_selector;
 	sf::TcpListener * m_listener;

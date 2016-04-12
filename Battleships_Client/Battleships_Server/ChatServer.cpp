@@ -81,7 +81,7 @@
 //}
 
 
-ChatServer::ChatServer(std::vector<Client*> _listOfClients, sf::SocketSelector& _selector)
+ChatServer::ChatServer(std::vector<ServerClient*> _listOfClients, sf::SocketSelector& _selector)
 {
 	m_listOfClients = _listOfClients;
 	m_selector = _selector;
@@ -101,8 +101,8 @@ void ChatServer::update()
 {
 	if (m_chatLog)
 	{
-		printNumOfConnectedClients();
-		m_chatLog->printLog();
+		//printNumOfConnectedClients();
+	//	m_chatLog->printLog();
 	}
 }
 
@@ -126,7 +126,7 @@ void ChatServer::bindServerPort(sf::SocketSelector& selector, sf::TcpListener& l
 	selector.add(listerner);
 }
 
-void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sockets, sf::TcpListener& listener)
+void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>& sockets, sf::TcpListener& listener)
 {
 	sf::Packet  inPacket;
 	
@@ -142,7 +142,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 			//is someone trying to connect?
 			if (selector.isReady(listener))
 			{
-				Client * m_client = new Client();
+				ServerClient * m_client = new ServerClient();
 				sf::TcpSocket* TCPSocket = new sf::TcpSocket;
 				m_client->setSocket(TCPSocket);
 				
@@ -197,7 +197,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 						inPacket >> ID;
 
 						//finds the client that this is applicable to
-						Client * clientHOLD = findClientWithID(ID);
+						ServerClient * clientHOLD = findClientWithID(ID);
 
 						//The second part of the message will always be the ID of what the user wants to say
 						inPacket >> actionID;
@@ -304,7 +304,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<Client*>& sock
 	}
 }
 
-void ChatServer::handelClientConnect(Client* _inClient)
+void ChatServer::handelClientConnect(ServerClient* _inClient)
 {
 	//pullout the current number of connected users
 	_inClient->setClientID(genID());
@@ -336,7 +336,7 @@ void ChatServer::messageAllClients()
 	}
 }
 
-void ChatServer::handelShot(Client * _inClient, sf::Packet _inPacket)
+void ChatServer::handelShot(ServerClient * _inClient, sf::Packet _inPacket)
 {
 	
 	_inClient->getGame()->update(_inPacket, _inClient);
@@ -346,7 +346,7 @@ void ChatServer::handelShot(Client * _inClient, sf::Packet _inPacket)
 
 
 
-void ChatServer::setNickName(Client * _inClient, sf::Packet _inPacket)
+void ChatServer::setNickName(ServerClient* _inClient, sf::Packet _inPacket)
 {
 	std::string nickName;
 	_inPacket >> nickName;
@@ -383,7 +383,7 @@ void ChatServer::handelChat(sf::Packet _inPacket)
 	}
 }
 
-void ChatServer::handelRecevedBoard(sf::Packet _inPacket,Client* _inClient)
+void ChatServer::handelRecevedBoard(sf::Packet _inPacket, ServerClient* _inClient)
 {
 	std::vector<int> inBoardlocs;
 	int ignore;
@@ -484,7 +484,7 @@ void ChatServer::removeClientWithSocket(sf::TcpSocket* _id)
 	}
 }
 
-Client * ChatServer::findClientWithID(int _ID)
+ServerClient * ChatServer::findClientWithID(int _ID)
 {
 	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
 	{
@@ -515,7 +515,7 @@ int ChatServer::genID()
 	return currentHigh;
 }
 
-int ChatServer::prepareGame(Client * _player)
+int ChatServer::prepareGame(ServerClient * _player)
 {
 	//If playerOne is not a null pointer I.E. not currently containing a player
 	if (!m_PlayerOne)
@@ -542,7 +542,7 @@ int ChatServer::prepareGame(Client * _player)
 }
 
 //Create a new game with the players who are now ready
-bool ChatServer::startGame(Client* _P1/*, Client* _P2*/)
+bool ChatServer::startGame(ServerClient* _P1/*, Client* _P2*/)
 {
 	//create a new game 
 	m_Game = new BattleShipsGame(_P1/*, _P2*/);
