@@ -8,6 +8,7 @@
 #include "BattleShipsGame.h"
 #include <memory>
 #include "ChatLog.h"
+#include "ClientAI.h"
 
 typedef std::chrono::high_resolution_clock Clock;
 
@@ -51,7 +52,7 @@ public:
 	void setTimeOut(int _in) { timeOut = _in; };
 	int getTimeOut() { return timeOut; }
 
-
+	AIClient * m_AI;
 
 protected:
 
@@ -63,6 +64,7 @@ private:
 	//std::vector<std::string> m_chatLog;
 
 	ChatLog * m_chatLog;
+
 
 	BattleShipsGame * m_Game = nullptr;
 

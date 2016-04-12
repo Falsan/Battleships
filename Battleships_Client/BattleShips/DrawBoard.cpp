@@ -43,6 +43,7 @@ void Draw::drawBoard(std::vector<Cell*> _board)
 
 
 	}
+	std::cout << std::endl;
 }
 
 /*

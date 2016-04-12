@@ -12,7 +12,7 @@ class ServerClient;
 class GameBase
 {
 public:
-	GameBase(ServerClient* _playerOne/*, Client * _playerTwo*/);
+	GameBase(ServerClient* _playerOne, ServerClient * _playerTwo);
 	~GameBase() = default;
 
 	ServerClient * getPlayerOne() { return PlayerOne; };

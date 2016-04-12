@@ -3,6 +3,7 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
+#include "ClientAI.h"
 
 #include <mutex>
 #include <iomanip>      
@@ -101,8 +102,8 @@ void ChatServer::update()
 {
 	if (m_chatLog)
 	{
-		//printNumOfConnectedClients();
-	//	m_chatLog->printLog();
+		printNumOfConnectedClients();
+		m_chatLog->printLog();
 	}
 }
 
@@ -415,8 +416,6 @@ void ChatServer::handelPing(Clock::time_point _RecevedTime)
 
 void ChatServer::printNumOfConnectedClients()
 {
-
-
 		// V Remove for final V
 		system("CLS");
 		std::cout << "Server is running" << std::endl << "Room currently [" << m_listOfClients.size() << "] connected clients" << std::endl;
@@ -426,6 +425,8 @@ void ChatServer::printNumOfConnectedClients()
 
 		if (m_Game)
 		{
+			Draw::drawBoard(m_Game->getPlayerOne()->getPlayersBoard());
+			Draw::drawBoard(m_AI->getAIBoard());
 			std::cout << "Current game: BattleShips" << std::endl << "Current Players:" << m_PlayerOne->getClientID() << " VS " << /*m_PlayerTwo->getClientID()*/ "AI" << std::endl;
 		}
 		else
@@ -544,8 +545,11 @@ int ChatServer::prepareGame(ServerClient * _player)
 //Create a new game with the players who are now ready
 bool ChatServer::startGame(ServerClient* _P1/*, Client* _P2*/)
 {
+
+	m_AI = new AIClient(_P1->getPlayersBoard(),1);
+	m_AI->AILoadLevel();
 	//create a new game 
-	m_Game = new BattleShipsGame(_P1/*, _P2*/);
+	m_Game = new BattleShipsGame(_P1,m_AI);
 	//Inform the players that this is there game
 	_P1->setGame(m_Game);
 	//_P2->setGame(m_Game);

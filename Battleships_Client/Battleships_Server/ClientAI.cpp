@@ -4,13 +4,24 @@
 #include "Celltypes.h"
 #include "Board.h"
 #include "Cell.h"
+#include "LoadIn.h"
 
 
-AIClient::AIClient(Board* _PlayersBoard,int difficulty)
+AIClient::AIClient(std::vector<Cell*> _PlayersBoard,int difficulty)
 {
 	isAI = true;
 	srand(time(NULL));
 	
+
+	for (int i = 0; i < 100; i++)
+	{
+		m_AIBoard.push_back(new Cell);
+	}
+
+
+
+
+
 
 	//for every cell on the board
 	for (int x = 0; x < 10; x++)
@@ -34,7 +45,7 @@ AIClient::AIClient(Board* _PlayersBoard,int difficulty)
 							//while not ourselves
 							if (i + j != 0)
 							{
-								if (_PlayersBoard->getBoard()[arroundVal]->getType() == CellTypes::SHIP)
+								if (_PlayersBoard[arroundVal]->getType() == CellTypes::SHIP)
 								{
 									arroundVal + difficulty;
 								}
@@ -42,7 +53,7 @@ AIClient::AIClient(Board* _PlayersBoard,int difficulty)
 							}
 							else
 							{
-								if (_PlayersBoard->getBoard()[arroundVal]->getType() == CellTypes::SHIP)
+								if (_PlayersBoard[arroundVal]->getType() == CellTypes::SHIP)
 								{
 									arroundVal + difficulty* 10;
 								}
@@ -51,10 +62,9 @@ AIClient::AIClient(Board* _PlayersBoard,int difficulty)
 					}
 				}
 			}
-			_PlayersBoard->getBoard()[TestCell]->setShotChance(arroundVal);
+			_PlayersBoard[TestCell]->setShotChance(arroundVal);
 		}
 	}
-	
 }
 
 AIClient::~AIClient()
@@ -62,7 +72,7 @@ AIClient::~AIClient()
 
 }
 
-int AIClient::AIShoot()
+bool AIClient::AIShoot()
 {
 	int posable = 0;
 	Cell * CellHOLD = nullptr;
@@ -78,7 +88,7 @@ int AIClient::AIShoot()
 		{
 			if (((*it)->getType() != CellTypes::MISS) || ((*it)->getType() != CellTypes::HIT))
 			{
-				if ((*it)->getShotChance > rand() % 100 + 1)
+				if ((*it)->getShotChance() > rand() % 100 + 1)
 				{
 					CellHOLD = (*it);
 					// if we have found a cell to shoot
@@ -104,15 +114,22 @@ int AIClient::AIShoot()
 	if (getOppenent()->getPlayersBoard()[cellCounter]->getType() == CellTypes::SHIP)
 	{
 		getOppenent()->getPlayersBoard()[cellCounter]->setType(CellTypes::HIT);
+		return true;
 	}
 	else if(getOppenent()->getPlayersBoard()[cellCounter]->getType() == CellTypes::EMPTY)
 	{
 		getOppenent()->getPlayersBoard()[cellCounter]->setType(CellTypes::MISS);
+		return false;
 	}
 	else
 	{
-
+		return true;
 	}
 
-	return cellCounter;
+}
+
+void AIClient::AILoadLevel()
+{
+	m_AIBoard = LoadIn::loadFile("Level1", m_AIBoard);
+	
 }
