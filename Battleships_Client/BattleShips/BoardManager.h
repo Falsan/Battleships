@@ -40,7 +40,7 @@ private:
 	void setListOfShips(std::vector<Ship*> _in) { m_listOfShips = _in; }
 	void addShipToList(Ship*_in) { m_listOfShips.push_back(_in); }
 
-bool createFlotila(int AC = 1,int BS = 1,int SM = 1,int DES = 1, int PB = 1);
+	bool createFlotila(int AC = 1,int BS = 1,int SM = 1,int DES = 1, int PB = 1);
 
 
 	std::vector<Ship*> m_listOfShips;

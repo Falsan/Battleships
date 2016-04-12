@@ -41,6 +41,7 @@ std::string BoardManager::boardToSend(std::vector<Cell*> _inVec)
 //handels the creation of the board
 Board* BoardManager::startUp()
 {
+	//LoadIn* fileLoad = new LoadIn;
 	bool repeat = false;
 	int responce;
 	std::string fileName;
@@ -55,9 +56,11 @@ Board* BoardManager::startUp()
 			std::cout << "Please enter the name of the file you wish to load" << std::endl;
 			std::cin >> fileName;
 
-			LoadIn::loadFile(fileName,m_board->getBoard());
+			m_board->getBoard() = LoadIn::loadFile(fileName,m_board->getBoard());
 			
 			Draw::drawBoard(m_board->getBoard());
+			//delete fileLoad;
+			return m_board;
 
 		}
 		else if (responce == 2)
@@ -73,6 +76,7 @@ Board* BoardManager::startUp()
 		}
 	} while (repeat = true);
 	//send board
+	//delete fileLoad;
 	return m_board;
 }
 

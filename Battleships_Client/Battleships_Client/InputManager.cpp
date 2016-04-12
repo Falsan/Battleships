@@ -1,4 +1,5 @@
 #include "InputManager.h"
+#include "LoadIn.h"
 
 std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardManager, ChatLog* _Chatlog, std::pair<int, int> &shot)
 {
@@ -58,6 +59,17 @@ std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardMan
 				_Chatlog->addToChatLog("Please wait while we connect to the game");
 				commandNumber = 3;
 				command = "Join";
+				return command;
+			}
+			else if (command == "/save")
+			{
+				std::string fileName;
+				_Chatlog->addToChatLog("Please input a name for the file");
+				std::cin >> fileName;
+				LoadIn::saveFile(_BoardManager->getBoardObject()->getBoard(), fileName);
+				//_BoardManager->getBoard() = LoadIn::loadFile(fileName, m_board->getBoard());
+				commandNumber = 4;
+				command = " ";
 				return command;
 			}
 			else
