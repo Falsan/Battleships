@@ -13,7 +13,7 @@ class BattleShipsGame;
 class ServerClient : public ClientBase
 {
 public:
-	ServerClient();
+	ServerClient(std::vector<Cell*>, int difficulty, bool dudBoard);
 	~ServerClient() = default;
 
 
@@ -46,6 +46,19 @@ public:
 	void setDuration(int _in) { duration = _in; }
 	void setOponent(ServerClient * _in) { opponent = _in; }
 
+
+	
+	void setAIBoard(std::vector<Cell*> _in) { m_AIBoard = _in; }
+	std::vector<Cell*> getAIBoard() { return m_AIBoard; }
+
+	bool AIShoot();
+
+	void AILoadLevel();
+
+	std::vector <Cell*> m_AIBoard;
+
+
+
 private:
 	// the Id used to identify the user
 	int clientID;
@@ -67,3 +80,6 @@ private:
 	BattleShipsGame * currentGame;
 
 };
+
+
+

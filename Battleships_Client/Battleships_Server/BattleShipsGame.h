@@ -9,7 +9,7 @@ public:
 	BattleShipsGame(ServerClient* _playerOne, ServerClient * _playerTwo);
 	~BattleShipsGame() = default;
 
-	virtual void update(sf::Packet _inPacket, ServerClient * _inClient) override;
+	virtual bool update(sf::Packet _inPacket, ServerClient * _inClient) override;
 
 	virtual void input(int _in) override;
 	virtual int outPut() override;

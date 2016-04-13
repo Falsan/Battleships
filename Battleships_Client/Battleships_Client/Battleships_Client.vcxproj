@@ -72,7 +72,6 @@
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Helper.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="PacketManager.h" />
     <ClInclude Include="ServerPort.h" />
@@ -81,7 +80,6 @@
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Helper.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="PacketManager.cpp" />
   </ItemGroup>
