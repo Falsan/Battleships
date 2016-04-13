@@ -20,11 +20,11 @@ ChatServer::ChatServer(std::vector<ServerClient*> _listOfClients, sf::SocketSele
 
 void ChatServer::update()
 {
-	if (m_chatLog)
+	/*if (m_chatLog)
 	{
 		printNumOfConnectedClients();
 		m_chatLog->printLog();
-	}
+	}*/
 }
 
 
@@ -63,7 +63,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>
 			//is someone trying to connect?
 			if (selector.isReady(listener))
 			{
-				ServerClient * m_client = new ServerClient(HoldBoard,1,true);
+				ServerClient * m_client = new ServerClient();
 				sf::TcpSocket* TCPSocket = new sf::TcpSocket;
 				m_client->setSocket(TCPSocket);
 				
@@ -131,7 +131,17 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>
 							//If this player is currently in session
 							if (clientHOLD->getGame())
 							{
-								
+								std::string name;
+								if (clientHOLD->getNickName() != "NULL")
+								{
+									name = clientHOLD->getNickName();
+								}
+								else
+								{
+									name = clientHOLD->getClientID();
+								}
+								name.append("takes a shot.");
+								m_chatLog->addToChatLog(name);
 								messageAllClients(handelShot(clientHOLD, inPacket));
 							}
 							break;
@@ -237,8 +247,16 @@ void ChatServer::messageAllClients(std::string _in)
 	sf::Packet out;
 	std::string output = _in;
 
-	out << output;
-
+	if (output == "ShotFalse")
+	{
+		std::string ident = "/";
+		out << ident;
+		out << m_AI->lastHit;
+	}
+	else
+	{
+		out << output;
+	}
 
 	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
 	{
@@ -254,9 +272,11 @@ std::string ChatServer::handelShot(ServerClient * _inClient, sf::Packet _inPacke
 	}
 	else
 	{
-		return "ShootFalse";
+		m_AI->AIShoot(m_AI->getOppenent());
+		return "ShotFalse";
 	}
 }
+
 
 
 
@@ -460,8 +480,9 @@ int ChatServer::prepareGame(ServerClient * _player)
 bool ChatServer::startGame(ServerClient* _P1/*, Client* _P2*/)
 {
 
-	m_AI = new ServerClient(_P1->getPlayersBoard(),1,false);
+	m_AI = new ServerClient();
 	m_AI->AILoadLevel();
+	m_AI->setOponent(_P1);
 
 	_P1->setOponent(m_AI);
 
@@ -469,6 +490,9 @@ bool ChatServer::startGame(ServerClient* _P1/*, Client* _P2*/)
 	m_Game = new BattleShipsGame(_P1,m_AI);
 	//Inform the players that this is there game
 	_P1->setGame(m_Game);
+
+	_P1->setAINodes(1);
+
 	//_P2->setGame(m_Game);
 
 	//_P1->setOponent(_P2);

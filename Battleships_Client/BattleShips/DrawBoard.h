@@ -9,7 +9,7 @@ public:
 	Draw() = default;
 	~Draw() = default;
 	static void drawBoard(std::vector<Cell*> _inboard);
-
+	static void drawDebugBoard(std::vector<Cell*> _inboard);
 private:
 
 

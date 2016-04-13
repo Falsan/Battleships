@@ -9,7 +9,7 @@ public:
 	InputManager(){};
 	~InputManager(){};
 
-	std::string pollInput(int &commandNumber, BoardManager * _BoardManager, ChatLog * _ChatLog, std::pair<int, int> &shot);
+	std::string pollInput(int &commandNumber, BoardManager * _BoardManager, BoardManager * _AIBoard, ChatLog * _ChatLog, std::pair<int, int> &shot);
 	std::pair<int, int> playerShot();
 
 protected:
