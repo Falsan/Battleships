@@ -65,7 +65,7 @@ int PacketManager::recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* se
 }
 
 
-void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int &commandNumber, int &serverID, BoardManager * _BoardManager, BoardManager * _AIBoard , std::pair<int, int> shot)
+void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int &commandNumber, int &serverID, BoardManager * _BoardManager, BoardManager * _AIBoard , std::pair<int, int> shot, int winCon)
 {
 	sf::Packet outgoingPacket;
 	
@@ -95,6 +95,16 @@ void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf
 					std::cout << "Miss, the ai will now shoot" << std::endl;
 					Draw::drawBoard(_BoardManager->getBoardObject()->getBoard());
 					Draw::drawBoard(_AIBoard->getBoardObject()->getBoard());
+				}
+				else if (incomingData == "AIWin")
+				{
+					std::cout << "Lose game";
+					winCon = 1;
+				}
+				else if (incomingData == "PlayerWin")
+				{
+					std::cout << "Win game";
+					winCon = 2;
 				}
 				else if (incomingData[0] == '/')
 				{
