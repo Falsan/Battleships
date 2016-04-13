@@ -8,7 +8,7 @@
 #include "BattleShipsGame.h"
 #include <memory>
 #include "ChatLog.h"
-#include "ClientAI.h"
+
 
 typedef std::chrono::high_resolution_clock Clock;
 
@@ -30,7 +30,7 @@ public:
 	//void alterChatLog(bool, std::string = "NULL");
 	//void alterClientList(bool, Client*);
 
-	void messageAllClients();
+	void messageAllClients(std::string = "s");
 
 	int prepareGame(ServerClient *);
 	bool startGame(ServerClient*/*, Client**/);
@@ -38,7 +38,7 @@ public:
 	void handelChat(sf::Packet _inPacket);
 	void handelPing(Clock::time_point _RecevedTime);
 	void handelRecevedBoard(sf::Packet _inPacket, ServerClient*);
-	void handelShot(ServerClient * _inClient,sf::Packet _inPacket);
+	std::string handelShot(ServerClient * _inClient,sf::Packet _inPacket);
 	void handelClientConnect(ServerClient* _inClient);
 
 	void update();
@@ -52,7 +52,7 @@ public:
 	void setTimeOut(int _in) { timeOut = _in; };
 	int getTimeOut() { return timeOut; }
 
-	AIClient * m_AI;
+	ServerClient * m_AI;
 
 protected:
 

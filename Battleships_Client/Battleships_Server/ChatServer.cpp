@@ -3,7 +3,6 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
-#include "ClientAI.h"
 
 #include <mutex>
 #include <iomanip>      
@@ -11,91 +10,12 @@
 
 
 
-//void ChatServer::addToChatLog(std::string _in)
-//{ 
-//	alterChatLog(true, _in);
-//}
-
-//void ChatServer::alterChatLog(bool _in,std::string _inString)
-//{
-//	int chatSize = 10;
-//	std::mutex mtx;
-//
-//	mtx.lock();
-//	if (_in)
-//	{
-//		//drops the first item on the the vector list of our chat log
-//		m_chatLog.push_back(_inString);
-//
-//		//If we have reached capacity on our chat log removes the first elemnt 
-//		if (m_chatLog.size() > chatSize)
-//		{
-//			m_chatLog.erase(m_chatLog.begin());
-//		}
-//	}
-//	else
-//	{
-//		std::cout << "++++++ Chat log current size [" << chatSize << "] ++++++" << std::endl;
-//		for (auto it = m_chatLog.begin(); it != m_chatLog.end(); it++)
-//		{
-//			std::cout << (*it) << std::endl;
-//		}
-//	}
-//
-//	mtx.unlock();
-//
-//
-//}
-
-//void ChatServer::alterClientList(bool _in, Client* _inClient)
-//{
-//	int chatSize = 10;
-//	std::mutex mtx;
-//
-//	mtx.lock();
-//
-//	if (_in)
-//	{
-//		m_listOfClients.push_back(_inClient);
-//	}
-//	else
-//	{
-//		int count = 0;
-//		bool found = false;
-//		for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
-//		{
-//			if ((*it)->getClientID() == _inClient->getClientID())
-//			{
-//				m_listOfClients.erase(m_listOfClients.begin() + count);
-//				(*it)->getSocket()->disconnect(); //breaks here
-//				//(*it)->socket->disconnect();
-//				break;
-//			}
-//			
-//			count++;
-//		}
-//	}
-//
-//	mtx.unlock();
-//
-//
-//}
-
 
 ChatServer::ChatServer(std::vector<ServerClient*> _listOfClients, sf::SocketSelector& _selector)
 {
 	m_listOfClients = _listOfClients;
 	m_selector = _selector;
 	m_chatLog = new ChatLog;
-
-	//m_Game = new BattleShipsGame(nullptr); 
-
-	//Launches a thread with the removal function
-	//runServer();
-
-
-	//Draw::drawBoard();
-
 }
 
 void ChatServer::update()
@@ -130,7 +50,7 @@ void ChatServer::bindServerPort(sf::SocketSelector& selector, sf::TcpListener& l
 void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>& sockets, sf::TcpListener& listener)
 {
 	sf::Packet  inPacket;
-	
+	std::vector<Cell*> HoldBoard;
 	//listen for conneections
 	while (true)
 	{
@@ -143,7 +63,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>
 			//is someone trying to connect?
 			if (selector.isReady(listener))
 			{
-				ServerClient * m_client = new ServerClient();
+				ServerClient * m_client = new ServerClient(HoldBoard,1,true);
 				sf::TcpSocket* TCPSocket = new sf::TcpSocket;
 				m_client->setSocket(TCPSocket);
 				
@@ -211,8 +131,8 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>
 							//If this player is currently in session
 							if (clientHOLD->getGame())
 							{
-								handelShot(clientHOLD, inPacket);
-								messageAllClients();
+								
+								messageAllClients(handelShot(clientHOLD, inPacket));
 							}
 							break;
 							//receve a board
@@ -251,17 +171,6 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>
 
 							messageAllClients();
 							break;
-						case 7:
-							//If the current game has started
-							if (clientHOLD->getGame())
-							{
-								//Send the current phase that the game is in
-							//	outPacket << m_Game->getCurrentPhase();
-							//	clientHOLD->getSocket()->send(outPacket);
-							}
-							messageAllClients();
-							break;
-
 						}
 					
 					}
@@ -323,10 +232,10 @@ void ChatServer::handelClientConnect(ServerClient* _inClient)
 	_inClient->getSocket()->send(p);
 }
 
-void ChatServer::messageAllClients()
+void ChatServer::messageAllClients(std::string _in)
 {
 	sf::Packet out;
-	std::string output = "s";
+	std::string output = _in;
 
 	out << output;
 
@@ -337,11 +246,16 @@ void ChatServer::messageAllClients()
 	}
 }
 
-void ChatServer::handelShot(ServerClient * _inClient, sf::Packet _inPacket)
+std::string ChatServer::handelShot(ServerClient * _inClient, sf::Packet _inPacket)
 {
-	
-	_inClient->getGame()->update(_inPacket, _inClient);
-
+	if (_inClient->getGame()->update(_inPacket, _inClient))
+	{
+		return "ShotTrue";
+	}
+	else
+	{
+		return "ShootFalse";
+	}
 }
 
 
@@ -546,8 +460,11 @@ int ChatServer::prepareGame(ServerClient * _player)
 bool ChatServer::startGame(ServerClient* _P1/*, Client* _P2*/)
 {
 
-	m_AI = new AIClient(_P1->getPlayersBoard(),1);
+	m_AI = new ServerClient(_P1->getPlayersBoard(),1,false);
 	m_AI->AILoadLevel();
+
+	_P1->setOponent(m_AI);
+
 	//create a new game 
 	m_Game = new BattleShipsGame(_P1,m_AI);
 	//Inform the players that this is there game

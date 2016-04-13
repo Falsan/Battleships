@@ -1,5 +1,6 @@
 #include "BattleShipsGame.h"
-#include "CellTypesLoc.h"
+//#include "CellTypesLoc.h"
+#include "Celltypes.h"
 
 
 
@@ -8,57 +9,62 @@ BattleShipsGame::BattleShipsGame(ServerClient* _playerOne, ServerClient * _playe
 
 }
 
-void BattleShipsGame::update(sf::Packet _inPacket, ServerClient * _inClient)
+bool BattleShipsGame::update(sf::Packet _inPacket, ServerClient * _inClient)
 {
-	sf::Packet outPacketPlayer;
-	sf::Packet outPacketOponent;
-	std::string out;
-	std::string outOponent;
-	std::pair<int, int> pos;
-	//take out any board pos request
-	_inPacket >> pos.first;
-	_inPacket >> pos.second;
-	int loc = 10;
-	int shotPos = (loc*pos.first) + pos.second;
+	
+	int x;
+	int y;
+
+	_inPacket >> x;
+	_inPacket >> y;
+
+	int loc = (x * 10) + y;
 
 
 
-	//get the type of cell that the player has shot
-	//int shot = _inClient->getOppenent()->getPlayersBoard()[shotPos]->getType();
-	//switch (shot + 2)
-	//{
-	//case 2:
-	//	//Tell the player that they have missed
-	//	out = "Shot missed";
-	//	//inform the oponent that it is now there turn
-	//	outOponent = "TURN";
-	//	//set the value stroed in that cell to miss
-	//	//_inClient->getOppenent()->getPlayersBoard()[shotPos]->setType(CELLTYPES::EMPTY);
-	//
-	//	break;
-	//case 3:
-	//	//Tell the player that they have hit
-	//	out = "HIT";
-	//	//tell the oponent that it is still no there turn
-	//	outOponent = "NULL";
-	//	//set the value in the cell to a hit ship
-	////	_inClient->getOppenent()->getPlayersBoard()[shotPos]->setType(CELLTYPES::HITSHIP);
-	//	break;
-	//	//these value can only be reached if a player attempts to shoot the same cell multiple times
-	//case 4:
-	//case 5:
-	//case 6:
-	//	out = "You already shot there";
-	//	outOponent = "NULL";
+	if (!_inClient->isAI)
+	{
+		int TestCell = _inClient->getOppenent()->getAIBoard()[loc]->getType();
 
-	//	break;
-	//}
-
-	////Send out our results
-	//outPacketPlayer << out;
-	//outPacketOponent << outOponent;
-	//_inClient->getSocket()->send(outPacketPlayer);
-	//_inClient->getOppenent()->getSocket()->send(outPacketOponent);
+		switch (TestCell)
+		{
+		case::CellTypes::EMPTY:
+			_inClient->getOppenent()->getAIBoard()[loc]->setType(CellTypes::MISS);
+			return false;
+			break;
+		case::CellTypes::HIT:
+			return true;
+			break;
+		case::CellTypes::SHIP:
+			_inClient->getOppenent()->getAIBoard()[loc]->setType(CellTypes::HIT);
+			return true;
+			break;
+		case::CellTypes::MISS:
+			return true;
+			break;
+		}
+	}
+	else
+	{
+		int TestCell = _inClient->getOppenent()->getPlayersBoard()[loc]->getType();
+		switch (TestCell)
+		{
+		case::CellTypes::EMPTY:
+			_inClient->getOppenent()->getPlayersBoard()[loc]->setType(CellTypes::MISS);
+			return false;
+			break;
+		case::CellTypes::HIT:
+			return true;
+			break;
+		case::CellTypes::SHIP:
+			_inClient->getOppenent()->getPlayersBoard()[loc]->setType(CellTypes::HIT);
+			return true;
+			break;
+		case::CellTypes::MISS:
+			return true;
+			break;
+		}
+	}
 }
 /*
 0 = empty

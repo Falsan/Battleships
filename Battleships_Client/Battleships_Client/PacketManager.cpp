@@ -83,8 +83,15 @@ void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf
 			{
 				incomingPacket >> incomingData;
 
-				//if (incomingData == "PING")
-				//{
+				if (incomingData == "ShotTrue")
+				{
+					std::cout << "Hit, please shoot again" << std::endl;
+				}
+				else if (incomingData == "ShotFalse")
+				{
+					std::cout << "Miss, the ai will now shoot" << std::endl;
+				}
+
 					outgoingData = userInput;
 
 					if (outgoingData == " ")
