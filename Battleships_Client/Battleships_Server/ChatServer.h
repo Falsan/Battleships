@@ -54,7 +54,7 @@ public:
 
 	ServerClient * m_AI;
 
-
+	int winTest();
 
 protected:
 

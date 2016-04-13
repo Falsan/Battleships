@@ -55,14 +55,15 @@ void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 {
 	//if needed, pass the input to the packet manager to be sent to the server
 
+	winCon = 0;
 
 	std::thread renderThread(&Game::render, this);
 	std::thread inputThread(&Game::gameInputHandle, this);
 	
-	while (true)
+	while (winCon == 0)
 	{
 
-		packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID, m_BoardManager, AIBoard, shot);
+		packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID, m_BoardManager, AIBoard, shot, winCon);
 
 		resolution(thisClient, selector);
 

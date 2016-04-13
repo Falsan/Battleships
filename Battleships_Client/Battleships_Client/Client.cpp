@@ -46,11 +46,12 @@ void Client::runClient()
 				currentGame = new Game(socket);
 				currentGame->setup(socket);
 
-				while (clientState == CLIENT_PLAY_GAME)
-				{
-					currentGame->update(socket, selector);
-				}
+				
+				currentGame->update(socket, selector);
+				
 				delete currentGame;	//once the game is done, delete that new instance
+
+				clientState = CLIENT_MENU;
 			}
 
 

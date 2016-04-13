@@ -242,6 +242,41 @@ void ChatServer::handelClientConnect(ServerClient* _inClient)
 	_inClient->getSocket()->send(p);
 }
 
+int ChatServer::winTest()
+{
+	int AIcounter = 0;
+
+	for (auto it = m_AI->getAIBoard().begin(); it != m_AI->getAIBoard().end(); it++)
+	{
+		if ((*it)->getType() == CellTypes::SHIP)
+		{
+			AIcounter++;
+		}
+	}
+
+	if (AIcounter == 0)
+	{
+		return 1;
+	}
+
+	int playerCounter = 0;
+
+	for (auto it = (m_AI->getOppenent())->getPlayersBoard().begin(); it != (m_AI->getOppenent())->getPlayersBoard().end(); it++)
+	{
+		if ((*it)->getType() == CellTypes::SHIP)
+		{
+			playerCounter++;
+		}
+	}
+	
+	if (playerCounter == 0)
+	{
+		return 2;
+	}
+
+	return 0;
+}
+
 void ChatServer::messageAllClients(std::string _in)
 {
 	sf::Packet out;
@@ -274,6 +309,19 @@ std::string ChatServer::handelShot(ServerClient * _inClient, sf::Packet _inPacke
 	{
 		m_AI->AIShoot(m_AI->getOppenent());
 		return "ShotFalse";
+	}
+
+	int winCon;
+
+	winCon = winTest();
+
+	if (winCon == 1)
+	{
+		return "AIWin";
+	}
+	else if (winCon == 2)
+	{
+		return "PlayerWin";
 	}
 }
 

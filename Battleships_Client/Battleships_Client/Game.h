@@ -61,6 +61,7 @@ private:
 	int windowWidth;
 	std::string windowName;
 	std::pair<int, int> shot;
+	int winCon;
 	//sf::RenderWindow* window;
 
 	//sf::Font font;
