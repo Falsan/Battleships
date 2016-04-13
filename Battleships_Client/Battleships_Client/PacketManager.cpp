@@ -65,7 +65,7 @@ int PacketManager::recieveServerID(sf::TcpSocket& socket, sf::SocketSelector* se
 }
 
 
-void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int &commandNumber, int &serverID, BoardManager * _BoardManager, std::pair<int, int> shot)
+void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf::SocketSelector* selector, int &commandNumber, int &serverID, BoardManager * _BoardManager, BoardManager * _AIBoard , std::pair<int, int> shot)
 {
 	sf::Packet outgoingPacket;
 	
@@ -86,13 +86,46 @@ void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf
 				if (incomingData == "ShotTrue")
 				{
 					std::cout << "Hit, please shoot again" << std::endl;
+					_AIBoard->getBoardObject()->getCell(shot.first, shot.second)->setType(CellTypes::HIT);
+					Draw::drawBoard(_BoardManager->getBoardObject()->getBoard());
+					Draw::drawBoard(_AIBoard->getBoardObject()->getBoard());
 				}
 				else if (incomingData == "ShotFalse")
 				{
 					std::cout << "Miss, the ai will now shoot" << std::endl;
+					Draw::drawBoard(_BoardManager->getBoardObject()->getBoard());
+					Draw::drawBoard(_AIBoard->getBoardObject()->getBoard());
+				}
+				else if (incomingData[0] == '/')
+				{
+					//char HOLDXC;
+					//char HOLDYC;
+					int HOLD;
+					int HOLD2;
+					int HOLD1;
+					incomingPacket >> HOLD;
+					HOLD1 = HOLD / 10;
+					HOLD2 = (HOLD1 * 10) - HOLD;
+
+					HOLD2 = abs(HOLD2);
+
+				
+					if (_BoardManager->getBoardObject()->getCell(HOLD1, HOLD2)->getType() == CellTypes::SHIP)
+					{
+						_BoardManager->getBoardObject()->getCell(HOLD1, HOLD2)->setType(CellTypes::HIT);
+					}
+					else
+					{
+						_BoardManager->getBoardObject()->getCell(HOLD1, HOLD2)->setType(CellTypes::MISS);
+					}
+					Draw::drawBoard(_BoardManager->getBoardObject()->getBoard());
+					Draw::drawBoard(_AIBoard->getBoardObject()->getBoard());
+					
 				}
 
 					outgoingData = userInput;
+
+
 
 					if (outgoingData == " ")
 					{
@@ -122,6 +155,8 @@ void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf
 					}
 					else if(outgoingData == "Shoot")
 					{
+						_AIBoard->getBoardObject()->getCell(shot.first, shot.second)->setType(CellTypes::MISS);
+
 						outgoingPacket << serverID;
 						outgoingPacket << commandNumber;
 						outgoingPacket << shot.first;

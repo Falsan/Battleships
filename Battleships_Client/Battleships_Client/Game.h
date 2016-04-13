@@ -32,6 +32,7 @@ protected:
 private:
 
 	BoardManager * m_BoardManager;
+	BoardManager * AIBoard;
 	ChatLog* m_chatLog;
 
 	std::string userCommand;

@@ -54,6 +54,8 @@ public:
 
 	ServerClient * m_AI;
 
+
+
 protected:
 
 	//std::vector<sf::TcpSocket*> m_sockets;

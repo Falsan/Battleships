@@ -17,6 +17,7 @@ Game::Game(sf::TcpSocket& thisClient)
 	packetHandler = new PacketManager;
 	phase = PLAYERIDENT;
 	m_BoardManager = new BoardManager;
+	AIBoard = new BoardManager;
 	m_chatLog = new ChatLog;
 //	window = new sf::RenderWindow(sf::VideoMode(windowLength, windowWidth), windowName);
 	
@@ -36,6 +37,7 @@ Game::~Game()
 	delete packetHandler;
 	delete m_BoardManager;
 	delete m_chatLog;
+	delete AIBoard;
 	//delete window;
 	//all deletion goes here
 }
@@ -56,29 +58,18 @@ void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 
 	std::thread renderThread(&Game::render, this);
 	std::thread inputThread(&Game::gameInputHandle, this);
-	//inputThread.join();
 	
-	//update the game logic from the last server data
-	//phase = packetHandler->recieveCurrentGameState(thisClient);
 	while (true)
 	{
 
-		packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID, m_BoardManager, shot);
+		packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID, m_BoardManager, AIBoard, shot);
 
 		resolution(thisClient, selector);
 
+		render();
 
 	}
-	//put that to the screen using the UI manager
-	//clearScreen();
-	//render();
-	//request any input from the input manager
-	//std::cout << "Connection stable";
 	
-
-	//listen for messages from the server
-	//renderThread.join();
-	//inputThread.join();
 }
 
 void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
@@ -140,40 +131,14 @@ void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 
 void Game::render()
 {
-	//render everything to screen
-	// run the program as long as the window is open
-	//while (window->isOpen())
-	//{
-	//	// check all the window's events that were triggered since the last iteration of the loop
-	//	sf::Event event;
-	//	while (window->pollEvent(event))
-	//	{
-	//		// "close requested" event: we close the window
-	//		if (event.type == sf::Event::Closed)
-	//		{
-	//			window->close();
-	//		}
-	//	}
-
-	//	// clear the window with black color
-	//	window->clear(sf::Color::Black);
-
-	//	// draw everything here...
-	//	// window.draw(...);
-	//	//window->draw(text);
-
-	//	// end the current frame
-	//	window->display();
-	//}
-	//std::cout << displayedMap << std::endl;
-
+	
 }
 
 void Game::gameInputHandle()
 {
 	while (true)
 	{
-		userCommand = inputHandler->pollInput(commandNumber, m_BoardManager, m_chatLog, shot);
+		userCommand = inputHandler->pollInput(commandNumber, m_BoardManager, AIBoard, m_chatLog, shot);
 	}
 	
 }
@@ -227,3 +192,30 @@ void Game::gamePacketHandle(sf::TcpSocket& thisClient)
 		message >> m;
 		socket.send(message);
 	}*/
+
+	//render everything to screen
+	// run the program as long as the window is open
+	//while (window->isOpen())
+	//{
+	//	// check all the window's events that were triggered since the last iteration of the loop
+	//	sf::Event event;
+	//	while (window->pollEvent(event))
+	//	{
+	//		// "close requested" event: we close the window
+	//		if (event.type == sf::Event::Closed)
+	//		{
+	//			window->close();
+	//		}
+	//	}
+
+	//	// clear the window with black color
+	//	window->clear(sf::Color::Black);
+
+	//	// draw everything here...
+	//	// window.draw(...);
+	//	//window->draw(text);
+
+	//	// end the current frame
+	//	window->display();
+	//}
+	//std::cout << displayedMap << std::endl;

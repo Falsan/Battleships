@@ -1,7 +1,7 @@
 #include "InputManager.h"
 #include "LoadIn.h"
 
-std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardManager, ChatLog* _Chatlog, std::pair<int, int> &shot)
+std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardManager, BoardManager * _AIBoard, ChatLog* _Chatlog, std::pair<int, int> &shot)
 {
 	std::string command = "none";
 	while (command == "none")
@@ -24,6 +24,8 @@ std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardMan
 			{
 				_BoardManager->startUp();
 				commandNumber = 2;
+				Board* board = new Board;
+				_AIBoard->setBoard(board->getBoard());
 				return _BoardManager->boardToSend(_BoardManager->getBoardObject()->getBoard());
 				
 				
