@@ -45,8 +45,6 @@ private:
 
 	//std::ifstream m_dataFile;
 
-	AudioManager* audioManager;
-
 	bool serverConnected;
 
 	std::string userCommand;

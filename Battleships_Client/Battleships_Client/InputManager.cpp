@@ -1,5 +1,6 @@
 #include "InputManager.h"
 #include "LoadIn.h"
+#include "Helper.h"
 
 std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardManager, BoardManager * _AIBoard, ChatLog* _Chatlog, std::pair<int, int> &shot)
 {
@@ -15,6 +16,7 @@ std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardMan
 			if (command == "/say")
 			{
 				_Chatlog->addToChatLog("Please type your message:");
+				_Chatlog->printLog();
 				std::cin >> command;
 				commandNumber = 5;
 				return command;
@@ -44,6 +46,8 @@ std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardMan
 			else if (command == "/name")
 			{
 				_Chatlog->addToChatLog("Please enter a name");
+				clearScreen();
+				_Chatlog->printLog();
 				std::cin >> command;
 				commandNumber = 6;
 				return command;
@@ -51,6 +55,8 @@ std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardMan
 			else if (command == "/shoot")
 			{
 				_Chatlog->addToChatLog("Please enter an X and Y co-ordinate to shoot at");
+				clearScreen();
+				_Chatlog->printLog();
 				shot = playerShot();
 				commandNumber = 1;
 				command = "Shoot";
@@ -59,6 +65,8 @@ std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardMan
 			else if (command == "/join")
 			{
 				_Chatlog->addToChatLog("Please wait while we connect to the game");
+				clearScreen();
+				_Chatlog->printLog();
 				commandNumber = 3;
 				command = "Join";
 				return command;
@@ -67,6 +75,8 @@ std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardMan
 			{
 				std::string fileName;
 				_Chatlog->addToChatLog("Please input a name for the file");
+				clearScreen();
+				_Chatlog->printLog();
 				std::cin >> fileName;
 				LoadIn::saveFile(_BoardManager->getBoardObject()->getBoard(), fileName);
 				//_BoardManager->getBoard() = LoadIn::loadFile(fileName, m_board->getBoard());
@@ -74,9 +84,23 @@ std::string InputManager::pollInput(int &commandNumber, BoardManager * _BoardMan
 				command = " ";
 				return command;
 			}
+			else if (command == "/help")
+			{
+				_Chatlog->addToChatLog("/name puts in a name");
+				_Chatlog->addToChatLog("/shoot prompts for two numbers and then shoots that square");
+				_Chatlog->addToChatLog("/join joins the game after placing ships");
+				_Chatlog->addToChatLog("/place starts creating your board");
+				_Chatlog->addToChatLog("/say sends a chat message to the server");
+				_Chatlog->addToChatLog("/save saves your board");
+				commandNumber = 4;
+				command = " ";
+				return command;
+			}
 			else
 			{
 				_Chatlog->addToChatLog("Huh? Please enter a valid command.");
+				clearScreen();
+				_Chatlog->printLog();
 				command = " ";
 				return command;
 			}

@@ -5,7 +5,7 @@
 Client::Client()
 {
 	selector = new sf::SocketSelector;
-	audioManager = new AudioManager;
+	
 	clientServerPort = new ServerPort;
 	//m_BoardManager = new BoardManager;
 }
@@ -13,15 +13,13 @@ Client::Client()
 Client::~Client()
 {
 	delete selector;
-	delete audioManager;
 	//delete m_BoardManager;
 }
 
 void Client::runClient()
 {
 	clientState = CLIENT_MENU;
-	audioManager->loadSoundFromFile();
-	audioManager->loadSound();
+	
 	//start the main game loop
 
 	while (clientState != CLIENT_QUIT)
@@ -41,10 +39,10 @@ void Client::runClient()
 			}
 			else	//if they can connect to the server, make a new instance of the game and call the 'play game' function
 			{
-				audioManager->connectionSound->play();
+				
 				clientState = CLIENT_PLAY_GAME;
 				currentGame = new Game(socket);
-				currentGame->setup(socket);
+				//currentGame->setup(socket);
 
 				
 				currentGame->update(socket, selector);
@@ -83,7 +81,9 @@ bool Client::connectToServer()
 void Client::clientMenu()
 {
 	//ask if the player wants to input something
-	std::cout << "Please input a command" << std::endl;
+	std::cout << "Yar Har! Welcome ye to battleships" << std::endl << std::endl;
+	std::cout << "Type 'play' to play, type 'quit' to quit" << std::endl;
+	std::cout << "Anythin' else and ye be a landlubber" << std::endl;
 
 	//if they do, check the input
 	std::cin >> userCommand;

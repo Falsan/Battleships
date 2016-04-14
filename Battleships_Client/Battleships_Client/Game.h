@@ -7,9 +7,10 @@
 #include "ChatLog.h"
 #include <thread>
 #include <SFML\Network.hpp>
+#include "AudioManager.h"
 
 
-
+class AudioManager;
 class InputManager;
 class PacketManager;
 
@@ -20,11 +21,8 @@ public:
 	~Game();
 
 	void update(sf::TcpSocket&, sf::SocketSelector*);
-	void render();
-	void setup(sf::TcpSocket&);
+	//void render();
 	void gameInputHandle();
-	void gamePacketHandle(sf::TcpSocket&);
-	void resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector);
 
 protected:
 	
@@ -42,28 +40,21 @@ private:
 	sf::TcpSocket currentClient;
 	InputManager* inputHandler;
 	PacketManager* packetHandler;
-	int phase;
+	//int phase;
 	int serverID;
 	
 	std::string displayedMap;
 
-	enum PhaseEnum
-	{
-		BOARDSETUP = 0,
-		BOARDPLAY = 1,
-		WIN = 2,
-		PLAYERIDENT = 3,
-		WAIT = 4
-	};
-
 	int commandNumber;
-	int windowLength;
-	int windowWidth;
-	std::string windowName;
+	//int windowLength;
+	//int windowWidth;
+	//std::string windowName;
 	std::pair<int, int> shot;
 	int winCon;
 	//sf::RenderWindow* window;
 
 	//sf::Font font;
 	//sf::Text text;
+
+	AudioManager* audioManager;
 };

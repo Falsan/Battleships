@@ -86,25 +86,25 @@ void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf
 
 				if (incomingData == "ShotTrue")
 				{
-					std::cout << "Hit, please shoot again" << std::endl;
+					std::cout << "Argh! Ya hit. Fire again!" << std::endl;
 					_AIBoard->getBoardObject()->getCell(shot.first, shot.second)->setType(CellTypes::HIT);
 					Draw::drawBoard(_BoardManager->getBoardObject()->getBoard());
 					Draw::drawBoard(_AIBoard->getBoardObject()->getBoard());
 				}
 				else if (incomingData == "ShotFalse")
 				{
-					std::cout << "Miss, the ai will now shoot" << std::endl;
+					std::cout << "Miss, now me hearties get a go!" << std::endl;
 					Draw::drawBoard(_BoardManager->getBoardObject()->getBoard());
 					Draw::drawBoard(_AIBoard->getBoardObject()->getBoard());
 				}
 				else if (incomingData == "AIWin")
 				{
-					std::cout << "Lose game";
+					std::cout << "Ya lose!";
 					winCon = 1;
 				}
 				else if (incomingData == "PlayerWin")
 				{
-					std::cout << "Win game";
+					std::cout << "Arg! Me loot! Ya win.";
 					winCon = 2;
 				}
 				else if (incomingData[0] == '/')

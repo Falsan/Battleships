@@ -21,6 +21,17 @@ public:
 	sf::Sound* connectionSound;
 	std::string connectionSoundFile;
 
+	sf::SoundBuffer* chatPingSoundBuffer;
+	sf::Sound* chatPingSound;
+	std::string chatPingSoundFile;
+
+	sf::SoundBuffer* shotSoundBuffer;
+	sf::Sound* shotSound;
+	std::string shotSoundFile;
+
+	sf::Music* music;
+	std::string seaString;
+
 protected:
 
 private:
