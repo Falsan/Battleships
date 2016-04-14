@@ -380,11 +380,14 @@ void ChatServer::handelChat(sf::Packet _inPacket)
 {
 	sf::Packet outPacket;
 	std::string chatMessage;
+	std::string ident;
+	ident = "£";
 	//localy store the chat message 
 	_inPacket >> chatMessage;
 
 	m_chatLog->addToChatLog(chatMessage);
 
+	outPacket << ident;
 	outPacket << chatMessage;
 
 	//run through all connected clients forwarding the adjusted packet
