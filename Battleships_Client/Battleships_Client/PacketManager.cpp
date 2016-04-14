@@ -82,6 +82,7 @@ void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf
 			if (socket.receive(incomingPacket) == sf::Socket::Done)
 			{
 				incomingPacket >> incomingData;
+				
 
 				if (incomingData == "ShotTrue")
 				{
@@ -131,6 +132,12 @@ void PacketManager::heartBeat(std::string & userInput, sf::TcpSocket& socket, sf
 					Draw::drawBoard(_BoardManager->getBoardObject()->getBoard());
 					Draw::drawBoard(_AIBoard->getBoardObject()->getBoard());
 					
+				}
+				else if (incomingData[0] == '£')
+				{
+					incomingData.clear();
+					incomingPacket >> incomingData;
+					std::cout << incomingData;
 				}
 
 					outgoingData = userInput;
