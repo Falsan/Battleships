@@ -2,16 +2,21 @@
 #include "ChatServer.h"
 #include <chrono>
 #include <thread>
+
+//managing the creation of threads for rooms 
+
 using namespace std::chrono_literals;
 GameManager::GameManager()
 {
 
 	listener();
-	//std::thread Listern(&GameManager::listener, this);
 
 	std::thread Server(&ChatServer::runServer, m_listern);
 	std::thread Draw(&GameManager::draw, this);
+	//additional rooms can be added here 
 
+	//any future updates that require continual feeback may be placed here
+	//else replaced with a .join
 	while (true)
 	{
 
@@ -34,6 +39,7 @@ bool GameManager::listener()
 	return true;
 }
 
+//Continual drawing function that will draw indipendent of what else is going on 
 void GameManager::draw()
 {
 	while (true)
@@ -41,9 +47,9 @@ void GameManager::draw()
 		if (m_listOfChatRooms.size() > 0)
 		{
 			int roomCount = 1;
-			for (auto it = m_listOfChatRooms.begin(); it != m_listOfChatRooms.end(); it++)
+			for (auto it = m_listOfChatRooms.begin();
+			it != m_listOfChatRooms.end(); it++)
 			{
-				//std::cout << "Room " << roomCount << ":" << std::endl;
 				(*it)->update();
 			}
 		}

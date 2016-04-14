@@ -1,14 +1,13 @@
 #include "BattleShipsGame.h"
-//#include "CellTypesLoc.h"
 #include "Celltypes.h"
-
-
 
 BattleShipsGame::BattleShipsGame(ServerClient* _playerOne, ServerClient * _playerTwo):GameBase(_playerOne, _playerTwo)
 {
 
 }
 
+//The update function for the battle ships game, here shots are tested, in future this could be replaced with
+//othe update functions for devising a new game
 bool BattleShipsGame::update(sf::Packet _inPacket, ServerClient * _inClient)
 {
 	

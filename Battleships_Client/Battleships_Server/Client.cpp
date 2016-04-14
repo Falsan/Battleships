@@ -11,14 +11,21 @@ ServerClient::ServerClient()
 
 }
 
+
+//The head of the AI, using a structure simalour to a cellular 
+//autonima, it will initaly run through every cell in the grid
+//and messure the number of ships arround it, in the next cells
+//this will then provide a number that will be the number of times
+//a difficulty rating will be applied to it, this difficulty can 
+// be adjusted to make thing harder or easyer 
 void ServerClient::setAINodes(int difficulty)
 {
+	//notes that this is indeed an AI 
 	std::vector<Cell*> surroundCells;
 	isAI = true;
 	srand(time(NULL));
 	int shipCounter = 0;
-
-
+	
 
 	for (int k = 0; k < 10; ++k)
 	{
@@ -55,71 +62,10 @@ void ServerClient::setAINodes(int difficulty)
 			}
 			for (auto it = surroundCells.begin(); it != surroundCells.end(); it++)
 			{
-
 				getPlayersBoard()[(k * 10) + l]->setShotChance(getPlayersBoard()[(k * 10) + l]->getShotChance() + difficulty);
-
 			}
-
 			surroundCells.clear();
-
 		}
-
-
-
-
-
-
-		//
-		////for every cell on the board
-		//for (int x = 0; x < 10; x++)
-		//{
-		//	for (int y = 0; y < 10; y++)
-		//	{
-		//		float arroundVal = 0;
-		//		int TestCell = (x * 10) + y;
-		//		//test every cell around it
-
-		//		if (getPlayersBoard()[arroundVal]->getType() != CellTypes::SHIP)
-		//		{
-		//		
-		//			for (int i = -4; i < 5; i++)
-		//			{
-		//				for (int j = -4; j < 5; j++)
-		//				{
-		//					int testPos = (14 + i) + j;
-		//					//while not out of bound low
-		//					if ((TestCell - testPos) > 0)
-		//					{
-		//						//while not out of bounds high
-		//						if (TestCell + testPos < 100)
-		//						{
-		//							//while not ourselves
-		//							if (i + j != 0)
-		//							{
-		//								surroundCells.push_back(getPlayersBoard()[arroundVal]);
-		//							}
-		//						}
-		//					}
-		//				}
-		//			}
-
-		//			for (auto it = surroundCells.begin(); it != surroundCells.end(); it++)
-		//			{
-		//				if ((*it)->getType() == CellTypes::SHIP)
-		//				{
-		//					getPlayersBoard()[arroundVal]->setShotChance(getPlayersBoard()[arroundVal]->getShotChance() + difficulty);
-		//				}
-		//			}
-
-		//			surroundCells.clear();
-		//		}
-		//		else
-		//		{
-		//			getPlayersBoard()[arroundVal]->setShotChance(difficulty * 10);
-		//		}
-		//	}
-		//}
-
 	}
 }
 
@@ -151,7 +97,7 @@ bool ServerClient::AIShoot(ServerClient* _openent)
 					CellHOLD = _openent->getPlayersBoard()[it];
 					// if we have found a cell to shoot
 					shoot = true;
-					counter = 5;
+					counter = 3;
 				}
 
 				if (shoot == true)
@@ -187,6 +133,7 @@ bool ServerClient::AIShoot(ServerClient* _openent)
 
 }
 
+//loads in a premade board for the AI to use
 void ServerClient::AILoadLevel()
 {
 	m_AIBoard = LoadIn::loadFile("Level1", m_AIBoard);

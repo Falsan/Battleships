@@ -8,6 +8,15 @@
 #include "BattleShipsGame.h"
 #include <memory>
 #include "ChatLog.h"
+enum ACTIONS
+{
+	SHOOT= 1,
+	BOARD,
+	JOIN,
+	PING,
+	MESSAGE,
+	NAME,
+};
 
 
 typedef std::chrono::high_resolution_clock Clock;
@@ -16,7 +25,7 @@ class ChatServer
 {
 public:
 	ChatServer(std::vector<ServerClient*> _listOfClients, sf::SocketSelector& _selector);
-	~ChatServer() = default;
+	~ChatServer();
 
 	const int SERVER_PORT = 53000;
 
