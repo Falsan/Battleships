@@ -11,14 +11,17 @@ Game::Game(sf::TcpSocket& thisClient)
 	//all initial creation for the game goes here
 	userCommand = " ";
 	commandNumber = NULL;
-	windowLength = 800;
-	windowWidth = 600;
+	//windowLength = 800;
+	//windowWidth = 600;
 	inputHandler = new InputManager;
 	packetHandler = new PacketManager;
-	phase = PLAYERIDENT;
+	//phase = PLAYERIDENT;
 	m_BoardManager = new BoardManager;
 	AIBoard = new BoardManager;
 	m_chatLog = new ChatLog;
+	audioManager = new AudioManager;
+	audioManager->loadSoundFromFile();
+	audioManager->loadSound();
 //	window = new sf::RenderWindow(sf::VideoMode(windowLength, windowWidth), windowName);
 	
 //	font.loadFromFile("arial.ttf");
@@ -32,7 +35,7 @@ Game::Game(sf::TcpSocket& thisClient)
 
 Game::~Game()
 {
-
+	delete audioManager;
 	delete inputHandler;
 	delete packetHandler;
 	delete m_BoardManager;
@@ -42,14 +45,6 @@ Game::~Game()
 	//all deletion goes here
 }
 
-void Game::setup(sf::TcpSocket& thisClient)
-{
-	//threads launch here
-	//sf::RenderWindow window(sf::VideoMode(800, 600), "Battleships");
-	//any leftover variables are set up
-	
-	//begins update loop
-}
 
 void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 {
@@ -57,7 +52,11 @@ void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 
 	winCon = 0;
 
-	std::thread renderThread(&Game::render, this);
+	//audioManager->connectionSound->play();
+	//audioManager->music->play();
+	m_chatLog->addToChatLog("Arg! Welcome to battleships! Type /help for help.");
+	m_chatLog->printLog();
+	//std::thread renderThread(&Game::render, this);
 	std::thread inputThread(&Game::gameInputHandle, this);
 	
 	while (winCon == 0)
@@ -65,73 +64,23 @@ void Game::update(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
 
 		packetHandler->heartBeat(userCommand, thisClient, selector, commandNumber ,serverID, m_BoardManager, AIBoard, shot, winCon);
 
-		resolution(thisClient, selector);
+		//render();
 
-		render();
+		/*if (userCommand != " ")
+		{
+			audioManager->chatPingSound->play();
+		}
+		else if (userCommand == "/name")
+		{
+			audioManager->chatPingSound->play();
+		}*/
+		if (userCommand == "Shoot")
+		{
+			audioManager->shotSound->play();
+		}
+
 
 	}
-	
-}
-
-void Game::resolution(sf::TcpSocket& thisClient, sf::SocketSelector* selector)
-{
-
-	switch (phase)
-	{
-	case PhaseEnum::PLAYERIDENT:
-		
-		//ask the player their name
-		m_chatLog->addToChatLog("Please input a name:");
-		
-		
-		break;
-
-	case PhaseEnum::WAIT:
-
-		m_chatLog->addToChatLog("Please wait while we find you a game...");
-		commandNumber = 3;
-		userCommand = " ";
-		break;
-
-	case PhaseEnum::BOARDSETUP:
-
-		//send the player input to the server
-		m_chatLog->addToChatLog("Please place your ships:");
-		
-		break;
-
-
-	case PhaseEnum::BOARDPLAY:
-		
-		m_chatLog->addToChatLog("Please select a position to fire");
-		//send the player input to server
-
-		//get the map to be displayed
-
-		//ask the server if a win has been made
-
-		//if there is a win, say that 
-		break;
-
-	case PhaseEnum::WIN:
-
-		//if the server report was a win, then say win
-
-		//if the server report was a lose, say lose
-
-		//display the last map
-
-		//send a quit command to the server after a minute
-		break;
-
-	default:
-		m_chatLog->addToChatLog("Error");
-		break;
-	}
-}
-
-void Game::render()
-{
 	
 }
 
@@ -140,16 +89,12 @@ void Game::gameInputHandle()
 	while (true)
 	{
 		userCommand = inputHandler->pollInput(commandNumber, m_BoardManager, AIBoard, m_chatLog, shot);
+		m_chatLog->addToChatLog("Sent!");
+		m_chatLog->printLog();
 	}
 	
 }
 
-void Game::gamePacketHandle(sf::TcpSocket& thisClient)
-{
-	//auto map = std::async(std::launch::async, &PacketManager::recieveMapUpdate);
-
-	//displayedMap = packetHandler->recieveMapUpdate(thisClient);
-}
 
 /*socket.setBlocking(false);
 

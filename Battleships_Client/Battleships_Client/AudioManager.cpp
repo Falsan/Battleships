@@ -4,6 +4,11 @@ AudioManager::AudioManager()
 {
 	connectionSoundBuffer = createSoundBuffer();
 	connectionSound = createSound();
+	shotSoundBuffer = createSoundBuffer();
+	shotSound = createSound();
+	chatPingSoundBuffer = createSoundBuffer();
+	chatPingSound = createSound();
+	music = new sf::Music;
 }
 
 AudioManager::~AudioManager()
@@ -17,6 +22,9 @@ void AudioManager::loadSoundFromFile(/*std::ifstream m_dataFile*/)
 	//m_dataFile >> connectionSoundFile;
 	//m_dataFile.close();
 	connectionSoundFile = "connectionSound.wav";
+	shotSoundFile = "Shot.wav";
+	seaString = "Sea.wav";
+	chatPingSoundFile = "ping.wav";
 }
 
 sf::SoundBuffer* AudioManager::createSoundBuffer()
@@ -31,6 +39,13 @@ sf::Sound* AudioManager::createSound()
 
 void AudioManager::loadSound()
 {
+	music->openFromFile(seaString);
 	connectionSoundBuffer->loadFromFile(connectionSoundFile);
 	connectionSound->setBuffer(*connectionSoundBuffer);
+
+	shotSoundBuffer->loadFromFile(shotSoundFile);
+	shotSound->setBuffer(*shotSoundBuffer);
+
+	chatPingSoundBuffer->loadFromFile(chatPingSoundFile);
+	chatPingSound->setBuffer(*chatPingSoundBuffer);
 }
