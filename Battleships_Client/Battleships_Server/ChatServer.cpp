@@ -3,28 +3,45 @@
 #include <chrono>
 #include <iostream>
 #include <thread>
-
-#include <mutex>
 #include <iomanip>      
 #include "CellTypes.h"
-
-
-
-
-ChatServer::ChatServer(std::vector<ServerClient*> _listOfClients, sf::SocketSelector& _selector)
+//This line is 90 chars long ------------------------------------------------------------
+ChatServer::ChatServer(std::vector<ServerClient*> _listOfClients,
+	sf::SocketSelector& _selector)
 {
 	m_listOfClients = _listOfClients;
 	m_selector = _selector;
 	m_chatLog = new ChatLog;
 }
+ChatServer::~ChatServer()
+{
+	//if the game and AI have been initalized delete them
+	delete m_chatLog;
+	if (m_Game)
+	{
+		delete m_Game;
+	}
+	if (m_AI)
+	{
+		delete m_AI;
+	}
+
+	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
+	{
+		(*it)->getPlayersBoard().clear();
+		(*it)->getAIBoard().clear();
+		delete (*it);
+	}
+
+}
 
 void ChatServer::update()
 {
-	/*if (m_chatLog)
+	if (m_chatLog)
 	{
 		printNumOfConnectedClients();
 		m_chatLog->printLog();
-	}*/
+	}
 }
 
 
@@ -47,7 +64,8 @@ void ChatServer::bindServerPort(sf::SocketSelector& selector, sf::TcpListener& l
 	selector.add(listerner);
 }
 
-void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>& sockets, sf::TcpListener& listener)
+void ChatServer::listen(sf::SocketSelector& selector, 
+	std::vector<ServerClient*>& sockets, sf::TcpListener& listener)
 {
 	sf::Packet  inPacket;
 	std::vector<Cell*> HoldBoard;
@@ -70,7 +88,8 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>
 				if (listener.accept(*m_client->getSocket()) != sf::Socket::Done)
 				{
 					//throw error
-					m_chatLog->addToChatLog("Error, listener could not accept the client");
+					m_chatLog->addToChatLog
+						("Error, listener could not accept the client");
 					
 					//delete the created client setup since it is no longer needed
 					delete m_client;
@@ -108,6 +127,7 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>
 						int ID;
 						int actionID;
 						std::string confirm = "A";
+						std::string chatLogText;
 						sf::Packet HOLD;
 						//If the user had disconnected
 						
@@ -119,15 +139,15 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>
 
 						//finds the client that this is applicable to
 						ServerClient * clientHOLD = findClientWithID(ID);
-
-						//The second part of the message will always be the ID of what the user wants to say
+						//The second part of the message 
+						//will always be the ID of what the user wants to say
 						inPacket >> actionID;
 
 						//swaps to the appropriate element based on in sent requet marker
 						switch (actionID)
 						{
 							//shoot at board
-						case 1:
+						case ACTIONS::SHOOT:
 							//If this player is currently in session
 							if (clientHOLD->getGame())
 							{
@@ -146,49 +166,48 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>
 							}
 							break;
 							//receve a board
-						case 2:
-						
-							
-							handelRecevedBoard(inPacket, clientHOLD);
+						case ACTIONS::BOARD:
+							chatLogText = " Receved board form ";
 								
-							
+							m_chatLog->addToChatLog(chatLogText);
+							handelRecevedBoard(inPacket, clientHOLD);
 							messageAllClients();
 							break;
 							//Join a game 
-						case 3:
+						case ACTIONS::JOIN:
 							if (prepareGame(clientHOLD) == 2)
 							{
+								chatLogText = "Player Joins a game.";
+								m_chatLog->addToChatLog(chatLogText);
+
 								//With two players ready the game starts
 								startGame(m_PlayerOne/*, m_PlayerTwo*/);
 							}
 							messageAllClients();
 							break;
 							//Ping
-						case 4:
+						case ACTIONS::PING:
 							//If we have clients that we are pinging
 							if (currentPing < m_listOfClients.size())
 							{
 								handelPing(RecevedTime);
 							}
-							//messageAllClients();
 							break;
-						case 5:
+						case ACTIONS::MESSAGE:
 							handelChat(inPacket);
-
 							break;
-						case 6:
-							setNickName(clientHOLD,inPacket);
-
+						case ACTIONS::NAME:
+							setNickName(clientHOLD, inPacket);
 							messageAllClients();
 							break;
 						}
-					
 					}
 				}
 			}
 		}
 		else
 		{
+			//Send a ping out to the current client
 			if ((m_listOfClients.size() > 0) && (pingSent == false))
 			{
 				//current client has responded so is not timing out
@@ -207,23 +226,24 @@ void ChatServer::listen(sf::SocketSelector& selector, std::vector<ServerClient*>
 				m_listOfClients[currentPing]->getSocket()->send(pingPack);
 
 				pingSent = true;
-			}
+			}//This removes the client if they miss a set number of pings 
+			//Deactivated due to disconnect issue but functional
 			else if ((m_listOfClients.size() > 0) && (pingSent == true))
 			{
-				//If the client has not responed to the inital ping increase the time out values 
+				//If the client has not responed to the inital 
+				//ping increase the time out values 
 				setTimeOut(getTimeOut() +1);
 				//if we have reached the limit of the time out values
 				if (getTimeOut() >= timeOutlimit)
 				{
 					//alterClientList(0, m_listOfClients[currentPing]); 
 				}
-
-
 			}
 		}
 	}
 }
 
+//Hanels the incomming messages from the client requesting connection
 void ChatServer::handelClientConnect(ServerClient* _inClient)
 {
 	//pullout the current number of connected users
@@ -241,7 +261,8 @@ void ChatServer::handelClientConnect(ServerClient* _inClient)
 
 	_inClient->getSocket()->send(p);
 }
-
+//tests if any ships remain on a players board during each shot
+//and return this to the client
 int ChatServer::winTest()
 {
 	int AIcounter = 0;
@@ -261,7 +282,8 @@ int ChatServer::winTest()
 
 	int playerCounter = 0;
 
-	for (auto it = (m_AI->getOppenent())->getPlayersBoard().begin(); it != (m_AI->getOppenent())->getPlayersBoard().end(); it++)
+	for (auto it = (m_AI->getOppenent())->getPlayersBoard().begin(); it !=
+		(m_AI->getOppenent())->getPlayersBoard().end(); it++)
 	{
 		if ((*it)->getType() == CellTypes::SHIP)
 		{
@@ -277,6 +299,10 @@ int ChatServer::winTest()
 	return 0;
 }
 
+//due to client lockup a "procking" message was required to be sent to the
+//currntly pinged client, this has now been copeted to retun a message to the
+//one client
+//also serves a mini output mannager
 void ChatServer::messageAllClients(std::string _in)
 {
 	sf::Packet out;
@@ -299,20 +325,25 @@ void ChatServer::messageAllClients(std::string _in)
 	}
 }
 
+//Once a game has started handels a player shootin at there oponents board
 std::string ChatServer::handelShot(ServerClient * _inClient, sf::Packet _inPacket)
 {
+	int winCon;
+	//passes there values to the current games update function
 	if (_inClient->getGame()->update(_inPacket, _inClient))
 	{
+		// a possativly returned value
+		//could be haneled by a number but the client requred it to be thus:
 		return "ShotTrue";
 	}
 	else
 	{
+		//In the current set up a determined miss causes the the AI to begin its turn
 		m_AI->AIShoot(m_AI->getOppenent());
 		return "ShotFalse";
 	}
-
-	int winCon;
-
+	
+	//The board is then tested for a win condition once the player or AI take a shot
 	winCon = winTest();
 
 	if (winCon == 1)
@@ -325,10 +356,7 @@ std::string ChatServer::handelShot(ServerClient * _inClient, sf::Packet _inPacke
 	}
 }
 
-
-
-
-
+//Changes  a user to have a nick name of the users chousing
 void ChatServer::setNickName(ServerClient* _inClient, sf::Packet _inPacket)
 {
 	std::string nickName;
@@ -347,6 +375,7 @@ void ChatServer::setNickName(ServerClient* _inClient, sf::Packet _inPacket)
 	_inClient->setNickName(nickName);
 }
 
+//adds the chat to our local log and forwards the message to all other clients
 void ChatServer::handelChat(sf::Packet _inPacket)
 {
 	sf::Packet outPacket;
@@ -366,6 +395,7 @@ void ChatServer::handelChat(sf::Packet _inPacket)
 	}
 }
 
+//handels how a compiled receved board will be directed
 void ChatServer::handelRecevedBoard(sf::Packet _inPacket, ServerClient* _inClient)
 {
 	std::vector<int> inBoardlocs;
@@ -388,7 +418,7 @@ void ChatServer::handelRecevedBoard(sf::Packet _inPacket, ServerClient* _inClien
 
 }
 
-
+//handels an input of type Ping
 void ChatServer::handelPing(Clock::time_point _RecevedTime)
 {
 	m_listOfClients[currentPing]->setLastPongVal(_RecevedTime);
@@ -396,32 +426,43 @@ void ChatServer::handelPing(Clock::time_point _RecevedTime)
 	currentPing++;
 }
 
+//The output and draw of the program called by the drawing thread and allowed to 
+//loop in its own time
 void ChatServer::printNumOfConnectedClients()
 {
-		// V Remove for final V
+	//Slow but effecive
 		system("CLS");
-		std::cout << "Server is running" << std::endl << "Room currently [" << m_listOfClients.size() << "] connected clients" << std::endl;
+		std::cout << "Server is running" << std::endl <<
+			"Room currently [" << m_listOfClients.size()
+			<< "] connected clients" << std::endl;
 		int numPrinted = 1;
 
 		std::cout << "++++++ Currently running games ++++++" << std::endl;
 
+		//once a game has begun prints out the current players, in this case the AI takes 
+		//The role of player 2
 		if (m_Game)
 		{
 			Draw::drawBoard(m_Game->getPlayerOne()->getPlayersBoard());
 			Draw::drawBoard(m_AI->getAIBoard());
-			std::cout << "Current game: BattleShips" << std::endl << "Current Players:" << m_PlayerOne->getClientID() << " VS " << /*m_PlayerTwo->getClientID()*/ "AI" << std::endl;
+			std::cout << "Current game: BattleShips" << std::endl << "Current Players:"
+				<< m_PlayerOne->getClientID() << " VS "
+				<< /*m_PlayerTwo->getClientID()*/ "AI" << std::endl;
 		}
 		else
 		{
 			std::cout << "No games currently running" << std::endl;
 		}
 
+		//Showing all currently connected clients and there current pings
 		std::cout << "++++++	Current client ping	 ++++++" << std::endl;
-
+		//Only do this if someone is actaly in the room
 		if (m_listOfClients.size() > 0)
 		{
 			for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
 			{
+				//Depending on wether or not the client has elected to give them
+				//selves a nick name displays that name or the default ID
 				if ((*it)->getNickName() == "NULL")
 				{
 					std::cout << (*it)->getClientID() << " > ";
@@ -431,12 +472,12 @@ void ChatServer::printNumOfConnectedClients()
 					std::cout << (*it)->getClientID() << (*it)->getNickName() << " > ";
 				}
 
-				//	if (std::chrono::duration_cast<std::chrono::milliseconds>(((*it)->getLastPing() - (*it)->getLastPong())).count() > 0)
-				//	{
-				(*it)->setDuration(std::chrono::duration_cast<std::chrono::milliseconds>(((*it)->getLastPing() - (*it)->getLastPong())).count());
-				//}
+				(*it)->setDuration(std::chrono::duration_cast<std::chrono::milliseconds>
+					(((*it)->getLastPing() - (*it)->getLastPong())).count());
+
 				//Making the ping val readable
-				std::cout << ((*it)->getDuration() / m_listOfClients.size()) << "ms" << std::endl;
+				std::cout << ((*it)->getDuration() / m_listOfClients.size())
+					<< "ms" << std::endl;
 
 				numPrinted++;
 			}
@@ -467,6 +508,7 @@ void ChatServer::removeClientWithSocket(sf::TcpSocket* _id)
 	}
 }
 
+//searches our list for an ID and return that user for use
 ServerClient * ChatServer::findClientWithID(int _ID)
 {
 	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
@@ -479,14 +521,16 @@ ServerClient * ChatServer::findClientWithID(int _ID)
 	return nullptr;
 }
 
-
+//Create an ID for the new joining client based off of the highest prior AI
+//for example 1,2,3,4 -> client 3 leaves -> 1,2,4 -> new client would receve a value of 5
 int ChatServer::genID()
 {
 	//Create a generic ID for the user
 	//loop through all of the users
 	int currentHigh = 1;
 
-	//In order to ensure that users are not give matching values we always give them the highest
+	//In order to ensure that users are not give matching values
+	//we always give them the highest
 	for (auto it = m_listOfClients.begin(); it != m_listOfClients.end(); it++)
 	{
 		if ((*it)->getClientID()> currentHigh);
@@ -498,6 +542,8 @@ int ChatServer::genID()
 	return currentHigh;
 }
 
+//when a player requests to join a game they are placed in to holding untill 
+//an opponent is ready in the current state the player is automaticly placed verse an AI
 int ChatServer::prepareGame(ServerClient * _player)
 {
 	//If playerOne is not a null pointer I.E. not currently containing a player
@@ -505,6 +551,7 @@ int ChatServer::prepareGame(ServerClient * _player)
 	{
 		//asign the player to the slot
 		m_PlayerOne = _player;
+		//Normaly this would return a 1 signifying that a player is still required
 		return 2;
 	}
 	//Otherwise test if player two is avalable
@@ -524,31 +571,31 @@ int ChatServer::prepareGame(ServerClient * _player)
 	return 0;
 }
 
-//Create a new game with the players who are now ready
+//Create a new game with the players who are now ready,
+//This would be were the two players are placed agnest on anther
+//and allow for shooting and return to take place based on there
+//turn order
 bool ChatServer::startGame(ServerClient* _P1/*, Client* _P2*/)
 {
-
+	//Since this is based around The Ai, it not takes the place of the
+	//the second palyer
 	m_AI = new ServerClient();
+	//takes one of our levels and loads it in 
 	m_AI->AILoadLevel();
+	//infoms the AI who there oponent is
 	m_AI->setOponent(_P1);
 
+	//ditto with the player
 	_P1->setOponent(m_AI);
 
 	//create a new game 
 	m_Game = new BattleShipsGame(_P1,m_AI);
+
 	//Inform the players that this is there game
 	_P1->setGame(m_Game);
 
+	//sets up the nodes required to run the AI
 	_P1->setAINodes(1);
-
-	//_P2->setGame(m_Game);
-
-	//_P1->setOponent(_P2);
-	//_P2->setOponent(_P1);
-
-	//place the game on a new thread
-	//std::thread(&m_Game, BattleShipsGame(_P1, _P2));
-
 
 	return false;
 }
